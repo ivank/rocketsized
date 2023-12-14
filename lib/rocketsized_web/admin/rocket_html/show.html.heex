@@ -1,0 +1,15 @@
+<.header>
+  Rocket <%= @vehicle.name %>
+  <:subtitle>This is a rocket from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/admin/rockets/#{@vehicle}/edit"}>
+      <.button>Edit vehicle</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @vehicle.name %></:item>
+</.list>
+
+<.back navigate={~p"/admin/rockets"}>Back to rockets</.back>

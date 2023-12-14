@@ -1,0 +1,23 @@
+<.header>
+  Listing Rockets
+  <:actions>
+    <.link href={~p"/admin/rockets/new"}>
+      <.button>New Rocket</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="rockets" rows={@vehicles} row_click={&JS.navigate(~p"/admin/rockets/#{&1}")}>
+  <:col :let={vehicle} label="Name"><%= vehicle.name %></:col>
+  <:action :let={vehicle}>
+    <div class="sr-only">
+      <.link navigate={~p"/admin/rockets/#{vehicle}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/admin/rockets/#{vehicle}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={vehicle}>
+    <.link href={~p"/admin/rockets/#{vehicle}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

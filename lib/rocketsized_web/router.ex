@@ -10,6 +10,10 @@ defmodule RocketsizedWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :admin do
+    plug :put_layout, html: {RocketsizedWeb.Layouts, :admin}
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -25,6 +29,12 @@ defmodule RocketsizedWeb.Router do
     resources "/motors", MotorController
     resources "/stages", StageController
     resources "/launches", LaunchController
+  end
+
+  scope "/admin", RocketsizedWeb.Admin do
+    pipe_through [:browser, :admin]
+
+    resources "/rockets", RocketController
   end
 
   # Other scopes may use custom stacks.

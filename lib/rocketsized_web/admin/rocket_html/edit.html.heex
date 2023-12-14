@@ -1,0 +1,8 @@
+<.header>
+  Edit Rocket <%= @vehicle.id %>
+  <:subtitle>Use this form to manage vehicle records in your database.</:subtitle>
+</.header>
+
+<.rocket_form changeset={@changeset} action={~p"/admin/rockets/#{@vehicle}"} />
+
+<.back navigate={~p"/vehicles"}>Back to rockets</.back>
