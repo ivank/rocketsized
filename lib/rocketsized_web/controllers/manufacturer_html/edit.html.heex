@@ -1,0 +1,8 @@
+<.header>
+  Edit Manufacturer <%= @manufacturer.id %>
+  <:subtitle>Use this form to manage manufacturer records in your database.</:subtitle>
+</.header>
+
+<.manufacturer_form changeset={@changeset} action={~p"/manufacturers/#{@manufacturer}"} />
+
+<.back navigate={~p"/manufacturers"}>Back to manufacturers</.back>

@@ -1,0 +1,8 @@
+<.header>
+  Edit Country <%= @country.id %>
+  <:subtitle>Use this form to manage country records in your database.</:subtitle>
+</.header>
+
+<.country_form changeset={@changeset} action={~p"/countries/#{@country}"} />
+
+<.back navigate={~p"/countries"}>Back to countries</.back>

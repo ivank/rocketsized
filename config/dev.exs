@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :rocketsized, Rocketsized.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "rocketsized-admin",
+  password: "rocketsized-pass",
   hostname: "localhost",
-  database: "rocketsized_dev",
+  database: "rocketsized",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

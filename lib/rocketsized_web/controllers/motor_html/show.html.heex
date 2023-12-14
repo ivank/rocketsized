@@ -1,0 +1,20 @@
+<.header>
+  Motor <%= @motor.id %>
+  <:subtitle>This is a motor record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/motors/#{@motor}/edit"}>
+      <.button>Edit motor</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Cycle"><%= @motor.cycle %></:item>
+  <:item title="Isp space"><%= @motor.isp_space %></:item>
+  <:item title="Isp sea"><%= @motor.isp_sea %></:item>
+  <:item title="Thrust"><%= @motor.thrust %></:item>
+  <:item title="Chamber pressure"><%= @motor.chamber_pressure %></:item>
+  <:item title="Weight"><%= @motor.weight %></:item>
+</.list>
+
+<.back navigate={~p"/motors"}>Back to motors</.back>

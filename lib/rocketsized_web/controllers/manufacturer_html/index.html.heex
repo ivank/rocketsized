@@ -1,0 +1,28 @@
+<.header>
+  Listing Manufacturers
+  <:actions>
+    <.link href={~p"/manufacturers/new"}>
+      <.button>New Manufacturer</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="manufacturers"
+  rows={@manufacturers}
+  row_click={&JS.navigate(~p"/manufacturers/#{&1}")}
+>
+  <:col :let={manufacturer} label="Name"><%= manufacturer.name %></:col>
+  <:col :let={manufacturer} label="Flag"><%= manufacturer.flag %></:col>
+  <:action :let={manufacturer}>
+    <div class="sr-only">
+      <.link navigate={~p"/manufacturers/#{manufacturer}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/manufacturers/#{manufacturer}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={manufacturer}>
+    <.link href={~p"/manufacturers/#{manufacturer}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

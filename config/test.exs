@@ -6,8 +6,8 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :rocketsized, Rocketsized.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "rocketsized-admin",
+  password: "rocketsized-pass",
   hostname: "localhost",
   database: "rocketsized_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,

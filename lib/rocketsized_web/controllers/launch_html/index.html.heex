@@ -1,0 +1,25 @@
+<.header>
+  Listing Launches
+  <:actions>
+    <.link href={~p"/launches/new"}>
+      <.button>New Launch</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="launches" rows={@launches} row_click={&JS.navigate(~p"/launches/#{&1}")}>
+  <:col :let={launch} label="Launched at"><%= launch.launched_at %></:col>
+  <:col :let={launch} label="Status"><%= launch.status %></:col>
+  <:col :let={launch} label="Details"><%= launch.details %></:col>
+  <:action :let={launch}>
+    <div class="sr-only">
+      <.link navigate={~p"/launches/#{launch}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/launches/#{launch}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={launch}>
+    <.link href={~p"/launches/#{launch}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

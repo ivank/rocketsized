@@ -12,7 +12,7 @@ defmodule RocketsizedWeb do
   component, etc, so keep them short and clean, focused
   on imports, uses and aliases.
 
-  Do NOT define functions inside the quoted expressions
+  Do NOT define functions inside the quoted expressures
   below. Instead, define additional modules and import
   those modules here.
   """

@@ -1,0 +1,12 @@
+version: "3.1"
+
+services:
+  pg:
+    image: postgres:16
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: rocketsized
+      POSTGRES_USER: rocketsized-admin
+      POSTGRES_PASSWORD: rocketsized-pass

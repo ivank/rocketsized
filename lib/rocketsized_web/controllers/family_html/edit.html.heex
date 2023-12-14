@@ -1,0 +1,8 @@
+<.header>
+  Edit Family <%= @family.id %>
+  <:subtitle>Use this form to manage family records in your database.</:subtitle>
+</.header>
+
+<.family_form changeset={@changeset} action={~p"/families/#{@family}"} />
+
+<.back navigate={~p"/families"}>Back to families</.back>

@@ -18,6 +18,13 @@ defmodule RocketsizedWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    resources "/countries", CountryController
+    resources "/manufacturers", ManufacturerController
+    resources "/families", FamilyController
+    resources "/vehicles", VehicleController
+    resources "/motors", MotorController
+    resources "/stages", StageController
+    resources "/launches", LaunchController
   end
 
   # Other scopes may use custom stacks.

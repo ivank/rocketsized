@@ -1,0 +1,20 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+  <.input
+    field={f[:cycle]}
+    type="select"
+    label="Cycle"
+    prompt="Choose a value"
+    options={Ecto.Enum.values(Rocketsized.Rocket.Motor, :cycle)}
+  />
+  <.input field={f[:isp_space]} type="number" label="Isp space" step="any" />
+  <.input field={f[:isp_sea]} type="number" label="Isp sea" step="any" />
+  <.input field={f[:thrust]} type="number" label="Thrust" step="any" />
+  <.input field={f[:chamber_pressure]} type="number" label="Chamber pressure" step="any" />
+  <.input field={f[:weight]} type="number" label="Weight" step="any" />
+  <:actions>
+    <.button>Save Motor</.button>
+  </:actions>
+</.simple_form>

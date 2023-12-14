@@ -1,0 +1,15 @@
+<.header>
+  Stage <%= @stage.id %>
+  <:subtitle>This is a stage record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/stages/#{@stage}/edit"}>
+      <.button>Edit stage</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Propellant"><%= @stage.propellant %></:item>
+</.list>
+
+<.back navigate={~p"/stages"}>Back to stages</.back>

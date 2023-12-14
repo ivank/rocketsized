@@ -1,0 +1,8 @@
+<.header>
+  Edit Motor <%= @motor.id %>
+  <:subtitle>Use this form to manage motor records in your database.</:subtitle>
+</.header>
+
+<.motor_form changeset={@changeset} action={~p"/motors/#{@motor}"} />
+
+<.back navigate={~p"/motors"}>Back to motors</.back>

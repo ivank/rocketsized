@@ -1,0 +1,8 @@
+<.header>
+  New Country
+  <:subtitle>Use this form to manage country records in your database.</:subtitle>
+</.header>
+
+<.country_form changeset={@changeset} action={~p"/countries"} />
+
+<.back navigate={~p"/countries"}>Back to countries</.back>

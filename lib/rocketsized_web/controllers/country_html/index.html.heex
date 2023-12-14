@@ -1,0 +1,26 @@
+<.header>
+  Listing Countries
+  <:actions>
+    <.link href={~p"/countries/new"}>
+      <.button>New Country</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="countries" rows={@countries} row_click={&JS.navigate(~p"/countries/#{&1}")}>
+  <:col :let={country} label="Name"><%= country.name %></:col>
+  <:col :let={country} label="Flag">
+    <img src={"data:image/svg+xml;base64," <> Base.encode64(country.flag)} width="32" />
+  </:col>
+  <:action :let={country}>
+    <div class="sr-only">
+      <.link navigate={~p"/countries/#{country}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/countries/#{country}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={country}>
+    <.link href={~p"/countries/#{country}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

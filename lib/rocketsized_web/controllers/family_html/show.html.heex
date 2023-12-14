@@ -1,0 +1,15 @@
+<.header>
+  Family <%= @family.id %>
+  <:subtitle>This is a family record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/families/#{@family}/edit"}>
+      <.button>Edit family</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @family.name %></:item>
+</.list>
+
+<.back navigate={~p"/families"}>Back to families</.back>

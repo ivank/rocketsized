@@ -1,0 +1,28 @@
+<.header>
+  Listing Motors
+  <:actions>
+    <.link href={~p"/motors/new"}>
+      <.button>New Motor</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="motors" rows={@motors} row_click={&JS.navigate(~p"/motors/#{&1}")}>
+  <:col :let={motor} label="Cycle"><%= motor.cycle %></:col>
+  <:col :let={motor} label="Isp space"><%= motor.isp_space %></:col>
+  <:col :let={motor} label="Isp sea"><%= motor.isp_sea %></:col>
+  <:col :let={motor} label="Thrust"><%= motor.thrust %></:col>
+  <:col :let={motor} label="Chamber pressure"><%= motor.chamber_pressure %></:col>
+  <:col :let={motor} label="Weight"><%= motor.weight %></:col>
+  <:action :let={motor}>
+    <div class="sr-only">
+      <.link navigate={~p"/motors/#{motor}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/motors/#{motor}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={motor}>
+    <.link href={~p"/motors/#{motor}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
