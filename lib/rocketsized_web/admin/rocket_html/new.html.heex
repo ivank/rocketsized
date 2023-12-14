@@ -1,7 +1,7 @@
-<.header>
+<.admin_header>
   New Rocket
-  <:subtitle>Use this form to manage rockets in your database.</:subtitle>
-</.header>
+  <:breadcrumb navigate={~p"/admin/rockets"}>Rockets</:breadcrumb>
+</.admin_header>
 
 <.rocket_form changeset={@changeset} action={~p"/admin/rockets"} />
 

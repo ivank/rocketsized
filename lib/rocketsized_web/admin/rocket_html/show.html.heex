@@ -1,12 +1,12 @@
-<.header>
-  Rocket <%= @vehicle.name %>
-  <:subtitle>This is a rocket from your database.</:subtitle>
+<.admin_header>
+  <%= @vehicle.name %>
+  <:breadcrumb navigate={~p"/admin/rockets"}>Rockets</:breadcrumb>
   <:actions>
     <.link href={~p"/admin/rockets/#{@vehicle}/edit"}>
       <.button>Edit vehicle</.button>
     </.link>
   </:actions>
-</.header>
+</.admin_header>
 
 <.list>
   <:item title="Name"><%= @vehicle.name %></:item>

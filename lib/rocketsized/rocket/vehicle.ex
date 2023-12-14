@@ -2,13 +2,14 @@ defmodule Rocketsized.Rocket.Vehicle do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @states [:planned, :in_development, :operational, :retired, :canceled]
+
   schema "vehicles" do
     field :name, :string
     field :source, :string
     field :height, :float
 
-    field :state, Ecto.Enum,
-      values: [:planned, :in_development, :operational, :retired, :canceled]
+    field :state, Ecto.Enum, values: @states
 
     belongs_to :family, Rocketsized.Rocket.Family
     belongs_to :country, Rocketsized.Creator.Country
@@ -17,6 +18,10 @@ defmodule Rocketsized.Rocket.Vehicle do
     has_many :manufacturers, through: [:vehicle_manufacturers, :manufacturer]
 
     timestamps()
+  end
+
+  def states() do
+    @states
   end
 
   @doc false

@@ -1,7 +1,8 @@
-<.header>
-  Edit Rocket <%= @vehicle.id %>
-  <:subtitle>Use this form to manage vehicle records in your database.</:subtitle>
-</.header>
+<.admin_header>
+  Edit
+  <:breadcrumb navigate={~p"/admin/rockets"}>Rockets</:breadcrumb>
+  <:breadcrumb navigate={~p"/admin/rockets/#{@vehicle}"}><%= @vehicle.name %></:breadcrumb>
+</.admin_header>
 
 <.rocket_form changeset={@changeset} action={~p"/admin/rockets/#{@vehicle}"} />
 

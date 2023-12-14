@@ -3,6 +3,13 @@
     Oops, something went wrong! Please check the errors below.
   </.error>
   <.input field={f[:name]} type="text" label="Name" />
+  <.input
+    field={f[:state]}
+    type="select"
+    options={Rocketsized.Rocket.Vehicle.states()}
+    label="State"
+  />
+  <.input field={f[:height]} type="text" label="Height" />
   <:actions>
     <.button>Save Rocket</.button>
   </:actions>

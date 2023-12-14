@@ -1,11 +1,11 @@
-<.header>
-  Listing Rockets
+<.admin_header>
+  Rockets
   <:actions>
     <.link href={~p"/admin/rockets/new"}>
       <.button>New Rocket</.button>
     </.link>
   </:actions>
-</.header>
+</.admin_header>
 
 <.table id="rockets" rows={@vehicles} row_click={&JS.navigate(~p"/admin/rockets/#{&1}")}>
   <:col :let={vehicle} label="Name"><%= vehicle.name %></:col>
