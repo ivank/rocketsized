@@ -8,7 +8,17 @@
 </.admin_header>
 
 <.table id="rockets" rows={@resources} row_click={&JS.navigate(~p"/admin/rockets/#{&1}")}>
+  <:col :let={resource} label="Image" class="w-10">
+    <img
+      :if={resource.image}
+      src={Rocketsized.Vehicle.Image.url({resource.image, resource}, signed: true)}
+      class="h-8"
+    />
+  </:col>
   <:col :let={resource} label="Name"><%= resource.name %></:col>
+  <:col :let={resource} label="Country"><%= resource.country.name %></:col>
+  <:col :let={resource} label="Is Published"><%= resource.is_published %></:col>
+  <:col :let={resource} label="State"><%= resource.state %></:col>
   <:action :let={resource}>
     <div class="sr-only">
       <.link navigate={~p"/admin/rockets/#{resource}"}>Show</.link>

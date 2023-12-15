@@ -13,6 +13,43 @@
 
 <.list>
   <:item title="Name"><%= @resource.name %></:item>
+  <:item title="Country">
+    <.link
+      href={~p"/admin/countries/#{@resource.country}"}
+      class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+    >
+      <%= @resource.country.name %>m
+    </.link>
+  </:item>
+  <:item title="Organizations">
+    <ul>
+      <li :for={org <- @resource.manufacturers}>
+        <.link
+          href={~p"/admin/orgs/#{org}"}
+          class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+        >
+          <%= org.name %>
+        </.link>
+      </li>
+    </ul>
+  </:item>
+  <:item title="Height"><%= @resource.height %>m</:item>
+  <:item title="State"><%= @resource.state %></:item>
+  <:item title="Is Published"><%= @resource.is_published %></:item>
+  <:item title="Source">
+    <.link
+      href={@resource.source}
+      class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+    >
+      <%= @resource.source %>
+    </.link>
+  </:item>
+  <:item title="Image">
+    <img
+      src={Rocketsized.Vehicle.Image.url({@resource.image, @resource}, signed: true)}
+      class="max-h-64"
+    />
+  </:item>
 </.list>
 
 <.back navigate={~p"/admin/rockets"}>Back to rockets</.back>

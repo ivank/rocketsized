@@ -5,7 +5,7 @@ defmodule RocketsizedWeb.Admin.RocketController do
   alias Rocketsized.Rocket.Vehicle
 
   def index(conn, _params) do
-    conn |> render(:index, resources: Rocket.list_vehicles())
+    conn |> render(:index, resources: Rocket.list_vehicles_with_data())
   end
 
   def new(conn, _params) do
@@ -25,7 +25,7 @@ defmodule RocketsizedWeb.Admin.RocketController do
   end
 
   def show(conn, %{"id" => id}) do
-    render(conn, :show, resource: Rocket.get_vehicle!(id))
+    render(conn, :show, resource: Rocket.get_vehicle_with_data!(id))
   end
 
   def edit(conn, %{"id" => id}) do

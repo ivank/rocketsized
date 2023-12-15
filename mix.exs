@@ -50,7 +50,9 @@ defmodule Rocketsized.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:crawly, "~> 0.16.0"}
+      {:crawly, "~> 0.16.0"},
+      {:waffle, "~> 1.1.7"},
+      {:waffle_ecto, "~> 0.0.12"}
     ]
   end
 

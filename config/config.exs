@@ -18,6 +18,9 @@ config :crawly,
     {Rocketsized.Datasource.UpsertPipeline}
   ]
 
+config :waffle,
+  storage: Waffle.Storage.Local
+
 config :rocketsized,
   ecto_repos: [Rocketsized.Repo]
 

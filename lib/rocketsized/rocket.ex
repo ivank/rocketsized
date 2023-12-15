@@ -117,6 +117,10 @@ defmodule Rocketsized.Rocket do
     Repo.all(Vehicle)
   end
 
+  def list_vehicles_with_data do
+    Repo.all(Vehicle) |> Repo.preload([:country])
+  end
+
   @doc """
   Gets a single vehicle.
 
@@ -132,6 +136,10 @@ defmodule Rocketsized.Rocket do
 
   """
   def get_vehicle!(id), do: Repo.get!(Vehicle, id)
+
+  def get_vehicle_with_data!(id) do
+    Repo.get!(Vehicle, id) |> Repo.preload([:country, :manufacturers])
+  end
 
   @doc """
   Creates a vehicle.
