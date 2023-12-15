@@ -8,6 +8,8 @@ defmodule Rocketsized.Creator.Country do
     field :flag, :string
     field :source, :string
 
+    has_many :vehicles, Rocketsized.Rocket.Vehicle
+
     timestamps()
   end
 

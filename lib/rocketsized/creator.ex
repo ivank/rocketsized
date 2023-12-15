@@ -38,6 +38,24 @@ defmodule Rocketsized.Creator do
   def get_country!(id), do: Repo.get!(Country, id)
 
   @doc """
+  Gets a single country with all the vehicles belonging to it.
+
+  Raises `Ecto.NoResultsError` if the Country does not exist.
+
+  ## Examples
+
+      iex> get_country_with_vehicles!(123)
+      %Country{}
+
+      iex> get_country_with_vehicles!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_country_with_vehicles!(id) do
+    Repo.get!(Country, id) |> Repo.preload([:vehicles])
+  end
+
+  @doc """
   Creates a country.
 
   ## Examples

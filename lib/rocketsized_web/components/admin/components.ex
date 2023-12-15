@@ -68,7 +68,7 @@ defmodule RocketsizedWeb.Admin.Components do
   end
 
   attr :navigate, :string, required: true
-  attr :active, :boolean, default: false
+  attr :current_path, :string, required: true
   attr :icon, :string, required: false
   attr :class, :string, default: nil
   attr :rest, :global
@@ -76,6 +76,9 @@ defmodule RocketsizedWeb.Admin.Components do
   slot :inner_block, required: true
 
   def sidebar_link(assigns) do
+    assigns =
+      assign(assigns, :active, String.starts_with?(assigns.current_path, assigns.navigate))
+
     ~H"""
     <.link
       navigate={@navigate}
@@ -102,6 +105,8 @@ defmodule RocketsizedWeb.Admin.Components do
     """
   end
 
+  attr :current_path, :string, required: true
+
   def sidebar(assigns) do
     ~H"""
     <div class="flex h-16 shrink-0 items-center">
@@ -114,8 +119,26 @@ defmodule RocketsizedWeb.Admin.Components do
     <nav class="flex flex-1 flex-col">
       <ul role="list" class="-mx-2 space-y-1">
         <li>
-          <.sidebar_link navigate={~p"/admin/rockets"} icon="hero-rocket-launch" active={true}>
+          <.sidebar_link
+            navigate={~p"/admin/rockets"}
+            icon="hero-rocket-launch"
+            current_path={@current_path}
+          >
             Rockets
+          </.sidebar_link>
+          <.sidebar_link
+            navigate={~p"/admin/manufacturers"}
+            icon="hero-building-office-2"
+            current_path={@current_path}
+          >
+            Manufacturers
+          </.sidebar_link>
+          <.sidebar_link
+            navigate={~p"/admin/countries"}
+            icon="hero-globe-alt"
+            current_path={@current_path}
+          >
+            Countries
           </.sidebar_link>
         </li>
       </ul>

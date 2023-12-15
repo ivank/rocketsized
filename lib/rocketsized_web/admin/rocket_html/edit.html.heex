@@ -1,9 +1,9 @@
 <.admin_header>
   Edit
   <:breadcrumb navigate={~p"/admin/rockets"}>Rockets</:breadcrumb>
-  <:breadcrumb navigate={~p"/admin/rockets/#{@vehicle}"}><%= @vehicle.name %></:breadcrumb>
+  <:breadcrumb navigate={~p"/admin/rockets/#{@resource}"}><%= @resource.name %></:breadcrumb>
 </.admin_header>
 
-<.rocket_form changeset={@changeset} action={~p"/admin/rockets/#{@vehicle}"} />
+<.rocket_form changeset={@changeset} action={~p"/admin/rockets/#{@resource}"} />
 
 <.back navigate={~p"/vehicles"}>Back to rockets</.back>

@@ -1,0 +1,30 @@
+<.admin_header>
+  <%= @resource.name %>
+  <:breadcrumb navigate={~p"/admin/countries"}>Countries</:breadcrumb>
+  <:actions>
+    <.link href={~p"/admin/countries/#{@resource}/edit"}>
+      <.button>Edit country</.button>
+    </.link>
+    <.link href={~p"/admin/countries/#{@resource}"} method="delete" data-confirm="Are you sure?">
+      <.button>Delete</.button>
+    </.link>
+  </:actions>
+</.admin_header>
+
+<.list>
+  <:item title="Name"><%= @resource.name %></:item>
+  <:item title="Code"><%= @resource.code %></:item>
+  <:item title="Flag">
+    <img
+      :if={@resource.flag}
+      src={"data:image/svg+xml;base64," <> Base.encode64(@resource.flag)}
+      class="h-8"
+    />
+  </:item>
+</.list>
+
+<.table id="rockets" rows={@resource.vehicles} row_click={&JS.navigate(~p"/admin/rockets/#{&1}")}>
+  <:col :let={vehicle} label="Name"><%= vehicle.name %></:col>
+</.table>
+
+<.back navigate={~p"/admin/countries"}>Back to countries</.back>

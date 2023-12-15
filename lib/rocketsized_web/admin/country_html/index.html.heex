@@ -1,0 +1,26 @@
+<.admin_header>
+  Rockets
+  <:actions>
+    <.link href={~p"/admin/countries/new"}>
+      <.button>New Country</.button>
+    </.link>
+  </:actions>
+</.admin_header>
+
+<.table id="countries" rows={@resources} row_click={&JS.navigate(~p"/admin/countries/#{&1}")}>
+  <:col :let={resource} label="Flag" class="w-10">
+    <img
+      :if={resource.flag}
+      src={"data:image/svg+xml;base64," <> Base.encode64(resource.flag)}
+      class="h-8"
+    />
+  </:col>
+  <:col :let={resource} label="Code" class="w-6"><%= resource.code %></:col>
+  <:col :let={resource} label="Name"><%= resource.name %></:col>
+  <:action :let={resource}>
+    <div class="sr-only">
+      <.link navigate={~p"/admin/countries/#{resource}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/admin/countries/#{resource}/edit"}>Edit</.link>
+  </:action>
+</.table>

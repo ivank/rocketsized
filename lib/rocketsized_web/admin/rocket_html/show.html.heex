@@ -1,15 +1,18 @@
 <.admin_header>
-  <%= @vehicle.name %>
+  <%= @resource.name %>
   <:breadcrumb navigate={~p"/admin/rockets"}>Rockets</:breadcrumb>
   <:actions>
-    <.link href={~p"/admin/rockets/#{@vehicle}/edit"}>
+    <.link href={~p"/admin/rockets/#{@resource}/edit"}>
       <.button>Edit vehicle</.button>
+    </.link>
+    <.link href={~p"/admin/countries/#{@resource}"} method="delete" data-confirm="Are you sure?">
+      Delete
     </.link>
   </:actions>
 </.admin_header>
 
 <.list>
-  <:item title="Name"><%= @vehicle.name %></:item>
+  <:item title="Name"><%= @resource.name %></:item>
 </.list>
 
 <.back navigate={~p"/admin/rockets"}>Back to rockets</.back>
