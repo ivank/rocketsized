@@ -127,11 +127,11 @@ defmodule RocketsizedWeb.Admin.Components do
             Rockets
           </.sidebar_link>
           <.sidebar_link
-            navigate={~p"/admin/manufacturers"}
+            navigate={~p"/admin/orgs"}
             icon="hero-building-office-2"
             current_path={@current_path}
           >
-            Manufacturers
+            Organizations
           </.sidebar_link>
           <.sidebar_link
             navigate={~p"/admin/countries"}

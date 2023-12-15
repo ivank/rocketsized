@@ -3,9 +3,9 @@
   <:breadcrumb navigate={~p"/admin/rockets"}>Rockets</:breadcrumb>
   <:actions>
     <.link href={~p"/admin/rockets/#{@resource}/edit"}>
-      <.button>Edit vehicle</.button>
+      <.button>Edit rocket</.button>
     </.link>
-    <.link href={~p"/admin/countries/#{@resource}"} method="delete" data-confirm="Are you sure?">
+    <.link href={~p"/admin/rockets/#{@resource}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
   </:actions>

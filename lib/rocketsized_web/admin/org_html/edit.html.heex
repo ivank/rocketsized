@@ -1,0 +1,9 @@
+<.admin_header>
+  Edit
+  <:breadcrumb navigate={~p"/admin/orgs"}>Organizations</:breadcrumb>
+  <:breadcrumb navigate={~p"/admin/orgs/#{@resource}"}><%= @resource.name %></:breadcrumb>
+</.admin_header>
+
+<.resource_form changeset={@changeset} action={~p"/admin/orgs/#{@resource}"} />
+
+<.back navigate={~p"/vehicles"}>Back to organizations</.back>

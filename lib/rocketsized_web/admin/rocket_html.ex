@@ -10,5 +10,5 @@ defmodule RocketsizedWeb.Admin.RocketHTML do
   attr :changeset, Ecto.Changeset, required: true
   attr :action, :string, required: true
 
-  def rocket_form(assigns)
+  def resource_form(assigns)
 end

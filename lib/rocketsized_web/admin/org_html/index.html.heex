@@ -1,0 +1,23 @@
+<.admin_header>
+  Rockets
+  <:actions>
+    <.link href={~p"/admin/orgs/new"}>
+      <.button>New Organization</.button>
+    </.link>
+  </:actions>
+</.admin_header>
+
+<.table id="orgs" rows={@resources} row_click={&JS.navigate(~p"/admin/orgs/#{&1}")}>
+  <:col :let={resource} label="Name"><%= resource.name %></:col>
+  <:action :let={resource}>
+    <div class="sr-only">
+      <.link navigate={~p"/admin/orgs/#{resource}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/admin/orgs/#{resource}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={resource}>
+    <.link href={~p"/admin/orgs/#{resource}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

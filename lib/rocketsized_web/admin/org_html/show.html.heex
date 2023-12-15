@@ -1,0 +1,22 @@
+<.admin_header>
+  <%= @resource.name %>
+  <:breadcrumb navigate={~p"/admin/orgs"}>Organizations</:breadcrumb>
+  <:actions>
+    <.link href={~p"/admin/orgs/#{@resource}/edit"}>
+      <.button>Edit organization</.button>
+    </.link>
+    <.link href={~p"/admin/orgs/#{@resource}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:actions>
+</.admin_header>
+
+<.list>
+  <:item title="Name"><%= @resource.name %></:item>
+</.list>
+
+<.table id="rockets" rows={@resource.vehicles} row_click={&JS.navigate(~p"/admin/rockets/#{&1}")}>
+  <:col :let={vehicle} label="Name"><%= vehicle.name %></:col>
+</.table>
+
+<.back navigate={~p"/admin/orgs"}>Back to organizations</.back>

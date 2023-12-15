@@ -1,8 +1,8 @@
-defmodule RocketsizedWeb.Admin.CountryHTML do
+defmodule RocketsizedWeb.Admin.OrgHTML do
   use RocketsizedWeb, :html
   import RocketsizedWeb.Admin.Components
 
-  embed_templates "country_html/*"
+  embed_templates "org_html/*"
 
   @doc """
   Renders a vehicle form.

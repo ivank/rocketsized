@@ -36,6 +36,7 @@ defmodule RocketsizedWeb.Router do
 
     resources "/rockets", RocketController
     resources "/countries", CountryController
+    resources "/orgs", OrgController
   end
 
   # Other scopes may use custom stacks.
