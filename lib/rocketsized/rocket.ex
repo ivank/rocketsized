@@ -138,7 +138,7 @@ defmodule Rocketsized.Rocket do
   def get_vehicle!(id), do: Repo.get!(Vehicle, id)
 
   def get_vehicle_with_data!(id) do
-    Repo.get!(Vehicle, id) |> Repo.preload([:country, :manufacturers])
+    Repo.get!(Vehicle, id) |> Repo.preload([:country, :manufacturers, :vehicle_manufacturers])
   end
 
   @doc """

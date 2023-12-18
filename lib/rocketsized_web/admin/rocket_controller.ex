@@ -3,13 +3,19 @@ defmodule RocketsizedWeb.Admin.RocketController do
 
   alias Rocketsized.Rocket
   alias Rocketsized.Rocket.Vehicle
+  alias Rocketsized.Creator
 
   def index(conn, _params) do
     conn |> render(:index, resources: Rocket.list_vehicles_with_data())
   end
 
   def new(conn, _params) do
-    conn |> render(:new, changeset: Rocket.change_vehicle(%Vehicle{}))
+    conn
+    |> render(:new,
+      changeset: Rocket.change_vehicle(%Vehicle{}),
+      countries: Creator.list_countries(),
+      manufacturers: Creator.list_manufacturers()
+    )
   end
 
   def create(conn, %{"resource" => params}) do
@@ -20,22 +26,37 @@ defmodule RocketsizedWeb.Admin.RocketController do
         |> redirect(to: ~p"/admin/rockets/#{resource}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        conn |> render(:new, changeset: changeset)
+        conn
+        |> render(:new,
+          changeset: changeset,
+          countries: Creator.list_countries(),
+          manufacturers: Creator.list_manufacturers()
+        )
     end
   end
 
+  @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     render(conn, :show, resource: Rocket.get_vehicle_with_data!(id))
   end
 
   def edit(conn, %{"id" => id}) do
-    resource = Rocket.get_vehicle!(id)
+    resource = Rocket.get_vehicle_with_data!(id)
     changeset = Rocket.change_vehicle(resource)
-    conn |> render(:edit, resource: resource, changeset: changeset)
+
+    IO.inspect(changeset.data)
+
+    conn
+    |> render(:edit,
+      resource: resource,
+      changeset: changeset,
+      countries: Creator.list_countries(),
+      manufacturers: Creator.list_manufacturers()
+    )
   end
 
   def update(conn, %{"id" => id, "resource" => params}) do
-    resource = Rocket.get_vehicle!(id)
+    resource = Rocket.get_vehicle_with_data!(id)
 
     case Rocket.update_vehicle(resource, params) do
       {:ok, resource} ->

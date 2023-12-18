@@ -9,6 +9,8 @@ defmodule RocketsizedWeb.Admin.RocketHTML do
   """
   attr :changeset, Ecto.Changeset, required: true
   attr :action, :string, required: true
+  attr :countries, :list
+  attr :manufacturers, :list
 
   def resource_form(assigns)
 end

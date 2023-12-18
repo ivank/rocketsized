@@ -17,7 +17,8 @@ defmodule Rocketsized.Rocket.Vehicle do
     belongs_to :family, Rocketsized.Rocket.Family
     belongs_to :country, Rocketsized.Creator.Country
 
-    has_many :vehicle_manufacturers, Rocketsized.Rocket.VehicleManufacturer
+    has_many :vehicle_manufacturers, Rocketsized.Rocket.VehicleManufacturer, on_replace: :delete
+
     has_many :manufacturers, through: [:vehicle_manufacturers, :manufacturer]
 
     timestamps()
@@ -30,8 +31,12 @@ defmodule Rocketsized.Rocket.Vehicle do
   @doc false
   def changeset(vehicle, attrs) do
     vehicle
-    |> cast(attrs, [:name, :source, :height, :state, :is_published])
+    |> cast(attrs, [:name, :source, :height, :state, :is_published, :country_id])
     |> cast_attachments(attrs, [:image])
+    |> cast_assoc(:vehicle_manufacturers,
+      with: &Rocketsized.Rocket.VehicleManufacturer.changeset/2,
+      drop_param: :manufacturer_delete
+    )
     |> validate_required_on_field_value(:is_published, %{
       true => [:name, :image, :is_published, :height, :state],
       false => [:name]

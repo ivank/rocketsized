@@ -4,6 +4,12 @@
   </.error>
   <.input field={f[:name]} type="text" label="Name" />
   <.input
+    field={f[:country_id]}
+    type="select"
+    label="Country"
+    options={Enum.map(@countries, &{&1.name, &1.id})}
+  />
+  <.input
     field={f[:state]}
     type="select"
     options={Rocketsized.Rocket.Vehicle.states()}

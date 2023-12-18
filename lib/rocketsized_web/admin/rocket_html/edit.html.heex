@@ -4,6 +4,11 @@
   <:breadcrumb navigate={~p"/admin/rockets/#{@resource}"}><%= @resource.name %></:breadcrumb>
 </.admin_header>
 
-<.resource_form changeset={@changeset} action={~p"/admin/rockets/#{@resource}"} />
+<.resource_form
+  changeset={@changeset}
+  action={~p"/admin/rockets/#{@resource}"}
+  countries={@countries}
+  manufacturers={@manufacturers}
+/>
 
 <.back navigate={~p"/vehicles"}>Back to rockets</.back>
