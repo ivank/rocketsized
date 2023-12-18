@@ -21,6 +21,8 @@ config :crawly,
 config :waffle,
   storage: Waffle.Storage.Local
 
+config :flop, repo: Rocketsized.Repo
+
 config :rocketsized,
   ecto_repos: [Rocketsized.Repo]
 

@@ -22,13 +22,15 @@ defmodule RocketsizedWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    resources "/countries", CountryController
-    resources "/manufacturers", ManufacturerController
-    resources "/families", FamilyController
-    resources "/vehicles", VehicleController
-    resources "/motors", MotorController
-    resources "/stages", StageController
-    resources "/launches", LaunchController
+
+    live "/rocketgrid", RocketgridLive.Index, :index
+
+    live "/vehicles", VehicleLive.Index, :index
+    live "/vehicles/new", VehicleLive.Index, :new
+    live "/vehicles/:id/edit", VehicleLive.Index, :edit
+
+    live "/vehicles/:id", VehicleLive.Show, :show
+    live "/vehicles/:id/show/edit", VehicleLive.Show, :edit
   end
 
   scope "/admin", RocketsizedWeb.Admin do

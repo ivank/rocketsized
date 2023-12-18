@@ -3,6 +3,21 @@ defmodule Rocketsized.Rocket.Vehicle do
   use Waffle.Ecto.Schema
   import Ecto.Changeset
 
+  @derive {
+    Flop.Schema,
+    filterable: [:id, :name, :state, :country_id, :manufacturer_ids],
+    sortable: [:height, :name, :state, :country_id],
+    adapter_opts: [
+      join_fields: [
+        manufacturer_ids: [
+          binding: :vehicle_manufacturers,
+          field: :id,
+          ecto_type: :integer
+        ]
+      ]
+    ]
+  }
+
   @states [:planned, :in_development, :operational, :retired, :canceled]
 
   schema "vehicles" do

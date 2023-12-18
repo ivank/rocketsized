@@ -32,15 +32,15 @@ defmodule Rocketsized.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.7.2"},
-      {:phoenix_ecto, "~> 4.4"},
-      {:ecto_sql, "~> 3.6"},
+      {:phoenix, "~> 1.7.10"},
+      {:phoenix_ecto, "~> 4.4.3"},
+      {:ecto_sql, "~> 3.11.1"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 3.3"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.18.16"},
+      {:phoenix_html, "~> 3.3.3"},
+      {:phoenix_live_reload, "~> 1.4.1", only: :dev},
+      {:phoenix_live_view, "~> 0.20.1"},
       {:floki, ">= 0.33.0"},
-      {:phoenix_live_dashboard, "~> 0.7.2"},
+      {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.3"},
@@ -52,7 +52,9 @@ defmodule Rocketsized.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:crawly, "~> 0.16.0"},
       {:waffle, "~> 1.1.7"},
-      {:waffle_ecto, "~> 0.0.12"}
+      {:waffle_ecto, "~> 0.0.12"},
+      {:flop, "~> 0.24.1"},
+      {:flop_phoenix, "~> 0.22.4"}
     ]
   end
 

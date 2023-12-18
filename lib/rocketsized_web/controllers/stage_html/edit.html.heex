@@ -1,8 +1,0 @@
-<.header>
-  Edit Stage <%= @stage.id %>
-  <:subtitle>Use this form to manage stage records in your database.</:subtitle>
-</.header>
-
-<.stage_form changeset={@changeset} action={~p"/stages/#{@stage}"} />
-
-<.back navigate={~p"/stages"}>Back to stages</.back>

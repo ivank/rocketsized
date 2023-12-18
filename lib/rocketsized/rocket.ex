@@ -493,4 +493,16 @@ defmodule Rocketsized.Rocket do
   def change_motor(%Motor{} = motor, attrs \\ %{}) do
     Motor.changeset(motor, attrs)
   end
+
+  def list_vehicles_with_params(params) do
+    opts = [for: Vehicle]
+
+    with {:ok, %Flop{} = flop} <- Flop.validate(params, opts),
+         {data, meta} <- Flop.run(Vehicle, flop, opts) do
+      max_height =
+        from(p in Vehicle, select: max(p.height)) |> Flop.query(flop, opts) |> Repo.one()
+
+      {:ok, {data, meta, max_height}}
+    end
+  end
 end
