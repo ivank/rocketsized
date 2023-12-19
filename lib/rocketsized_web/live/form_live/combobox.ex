@@ -14,8 +14,28 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
         phx-target={@myself}
         phx-keyup="search"
         aria-controls="options"
+        phx-hook="combobox"
         aria-expanded="false"
       />
+
+      <div
+        :if={not Enum.empty?(@options)}
+        id={"#{@id}_options"}
+        class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md flex flex-col bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 sm:text-sm"
+        role="listbox"
+      >
+        <button
+          :for={{id, value} <- @options}
+          class="relative text-left block py-2 pl-3 pr-9 text-gray-900 focus:text-white focus:outline-none focus:bg-indigo-600"
+          role="option"
+          name={@name}
+          tabindex="0"
+          value={id}
+          type="submit"
+        >
+          <span class="truncate"><%= value %></span>
+        </button>
+      </div>
 
       <ul
         :if={not Enum.empty?(@items)}
@@ -42,27 +62,6 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
           </div>
         </li>
       </ul>
-
-      <div
-        :if={not Enum.empty?(@options)}
-        class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-        id="options"
-        role="listbox"
-      >
-        <button
-          :for={{id, value} <- @options}
-          class="relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 focus-within:text-white focus-within:bg-indigo-600"
-          role="option"
-          name={@name}
-          tabindex="0"
-          value={id}
-          type="submit"
-        >
-          <div class="flex">
-            <span class="truncate"><%= value %></span>
-          </div>
-        </button>
-      </div>
     </div>
     """
   end

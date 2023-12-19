@@ -519,4 +519,12 @@ defmodule Rocketsized.Rocket do
   defp join_vehicle_assoc(query, :manufacturers) do
     join(query, :inner, [v], assoc(v, :manufacturers), as: :manufacturers)
   end
+
+  def search_vehicles(q) do
+    Repo.all(from m in Vehicle, where: ilike(m.name, ^"#{q}%"), select: {m.id, m.name}, limit: 5)
+  end
+
+  def list_vehicles_by_ids(ids) do
+    Repo.all(from m in Vehicle, where: m.id in ^ids, select: {m.id, m.name}, limit: 10)
+  end
 end

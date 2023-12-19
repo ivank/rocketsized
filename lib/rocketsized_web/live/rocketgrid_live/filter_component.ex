@@ -1,4 +1,5 @@
 defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
+  alias Rocketsized.Rocket
   alias Rocketsized.Creator
   use RocketsizedWeb, :live_component
 
@@ -22,9 +23,13 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
           :let={f}
           form={@form}
           fields={[
-            name: [
-              label: "Name",
-              op: :ilike_and
+            id: [
+              label: "Rockets",
+              type: "combobox",
+              op: :in,
+              multiple: true,
+              search: &Rocket.search_vehicles/1,
+              to_options: &Rocket.list_vehicles_by_ids/1
             ],
             manufacturer_ids: [
               label: "Manufacturers",

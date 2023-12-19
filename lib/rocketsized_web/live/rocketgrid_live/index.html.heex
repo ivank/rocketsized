@@ -33,17 +33,28 @@
 
   <main class="py-10 lg:pl-72">
     <div class="px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-5">
-        <div :for={rocket <- @rockets} class="flex flex-col items-center justify-end h-[100vh]">
-          <img
-            src={Rocketsized.Vehicle.Image.url({rocket.image, rocket}, signed: true)}
-            style={"height:calc((100vh - 200px)*(#{rocket.height} / #{@max_height}));"}
-          />
-          <p>
+      <div class={[
+        "grid border-t border-r border-gray-100",
+        case length(@rockets) do
+          1 -> "grid-cols-2"
+          2 -> "grid-cols-2"
+          3 -> "grid-cols-3"
+          4 -> "grid-cols-4"
+          _ -> "grid-cols-5"
+        end
+      ]}>
+        <div
+          :for={rocket <- @rockets}
+          class="flex flex-col h-[calc(100vh-80px)] border-b border-l border-gray-100"
+        >
+          <div class="flex-grow flex flex-col items-center justify-end">
+            <img
+              src={Rocketsized.Vehicle.Image.url({rocket.image, rocket}, signed: true)}
+              style={"height:calc((100vh - 120px) * (#{rocket.height} / #{@max_height}));"}
+            />
+          </div>
+          <p class="text-lg text-center h-10 truncate flex flex-col items-center justify-center">
             <%= rocket.name %>
-          </p>
-          <p>
-            <%= rocket.height %>/<%= @max_height %>
           </p>
         </div>
       </div>
