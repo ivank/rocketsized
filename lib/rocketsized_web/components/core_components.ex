@@ -354,6 +354,24 @@ defmodule RocketsizedWeb.CoreComponents do
     """
   end
 
+  def input(%{type: "combobox"} = assigns) do
+    ~H"""
+    <div phx-feedback-for={@name}>
+      <.label for={@id}><%= @label %></.label>
+
+      <.live_component
+        module={RocketsizedWeb.FormLive.ComboboxComponent}
+        id={@id}
+        value={@value}
+        name={@name}
+        {@rest}
+      />
+
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    """
+  end
+
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""

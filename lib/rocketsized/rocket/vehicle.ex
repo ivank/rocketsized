@@ -11,7 +11,7 @@ defmodule Rocketsized.Rocket.Vehicle do
       join_fields: [
         manufacturer_ids: [
           binding: :vehicle_manufacturers,
-          field: :id,
+          field: :manufacturer_id,
           ecto_type: :integer
         ]
       ]

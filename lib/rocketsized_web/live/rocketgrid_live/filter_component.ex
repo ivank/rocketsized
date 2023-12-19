@@ -1,4 +1,5 @@
 defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
+  alias Rocketsized.Creator
   use RocketsizedWeb, :live_component
 
   import Flop.Phoenix
@@ -15,6 +16,8 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
     ~H"""
     <div>
       <.form for={@form} id={@id} phx-target={@target} phx-change={@on_change} phx-submit={@on_change}>
+        <.hidden_inputs_for_filter form={@form} />
+
         <.filter_fields
           :let={f}
           form={@form}
@@ -22,6 +25,22 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
             name: [
               label: "Name",
               op: :ilike_and
+            ],
+            manufacturer_ids: [
+              label: "Manufacturers",
+              type: "combobox",
+              op: :in,
+              multiple: true,
+              search: &Creator.search_manufacturers/1,
+              to_options: &Creator.list_manufacturers_by_ids/1
+            ],
+            country_id: [
+              label: "Countries",
+              type: "combobox",
+              op: :in,
+              multiple: true,
+              search: &Creator.search_countries/1,
+              to_options: &Creator.list_countries_by_ids/1
             ],
             state: [
               label: "State",
@@ -34,7 +53,7 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
           <.input field={f.field} label={f.label} type={f.type} phx-debounce={120} {f.rest} />
         </.filter_fields>
 
-        <button class="button" name="reset">reset</button>
+        <button type="reset" class="button" name="reset">reset</button>
       </.form>
     </div>
     """

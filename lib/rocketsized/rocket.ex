@@ -498,11 +498,25 @@ defmodule Rocketsized.Rocket do
     opts = [for: Vehicle]
 
     with {:ok, %Flop{} = flop} <- Flop.validate(params, opts),
-         {data, meta} <- Flop.run(Vehicle, flop, opts) do
+         {data, meta} <-
+           Vehicle
+           |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
+           |> Flop.run(flop, opts) do
       max_height =
-        from(p in Vehicle, select: max(p.height)) |> Flop.query(flop, opts) |> Repo.one()
+        from(p in Vehicle, select: max(p.height))
+        |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
+        |> Flop.query(flop, opts)
+        |> Repo.one()
 
       {:ok, {data, meta, max_height}}
     end
+  end
+
+  defp join_vehicle_assoc(query, :vehicle_manufacturers) do
+    join(query, :inner, [v], assoc(v, :vehicle_manufacturers), as: :vehicle_manufacturers)
+  end
+
+  defp join_vehicle_assoc(query, :manufacturers) do
+    join(query, :inner, [v], assoc(v, :manufacturers), as: :manufacturers)
   end
 end
