@@ -1,10 +1,12 @@
 defmodule Rocketsized.Creator.Manufacturer do
   use Ecto.Schema
+  use Waffle.Ecto.Schema
   import Ecto.Changeset
 
   schema "manufacturers" do
     field :name, :string
-    field :logo, :string
+    field :short_name, :string
+    field :logo, Rocketsized.Manufacturer.Logo.Type
     field :source, :string
 
     has_many :vehicle_manufacturers, Rocketsized.Rocket.VehicleManufacturer
@@ -16,7 +18,8 @@ defmodule Rocketsized.Creator.Manufacturer do
   @doc false
   def changeset(manufacturer, attrs) do
     manufacturer
-    |> cast(attrs, [:name, :flag, :source])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :source, :short_name])
+    |> cast_attachments(attrs, [:logo])
+    |> validate_required([:name, :logo, :short_name])
   end
 end

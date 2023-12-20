@@ -1,8 +1,16 @@
-<.simple_form :let={f} for={@changeset} action={@action} as={:resource}>
+<.simple_form :let={f} for={@changeset} action={@action} as={:resource} multipart>
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
   <.input field={f[:name]} type="text" label="Name" />
+  <.input field={f[:short_name]} type="text" label="Short Name" />
+  <.input
+    field={f[:logo]}
+    type="file"
+    label="Logo"
+    accept="image/svg+xml,image/png,image/jpeg,image/jpg"
+  />
+  <.input field={f[:source]} type="text" label="Source" />
   <:actions>
     <.button>Save Organization</.button>
   </:actions>

@@ -3,6 +3,8 @@
     Oops, something went wrong! Please check the errors below.
   </.error>
   <.input field={f[:name]} type="text" label="Name" />
+  <.input field={f[:native_name]} type="text" label="Native" />
+  <.input field={f[:alternative_name]} type="text" label="Alternative" />
   <.input
     field={f[:country_id]}
     type="select"
@@ -16,7 +18,10 @@
     label="State"
   />
   <.input field={f[:height]} type="text" label="Height" />
+  <.input field={f[:diameter]} type="text" label="Diameter" />
   <.input field={f[:image]} type="file" label="Image" accept="image/svg+xml,image/png" />
+  <.input field={f[:description]} type="textarea" label="Description" />
+  <.input field={f[:source]} type="text" label="Source" />
   <.input field={f[:is_published]} type="checkbox" label="Is Published" />
   <:actions>
     <.button>Save Rocket</.button>

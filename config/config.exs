@@ -21,7 +21,12 @@ config :crawly,
 config :waffle,
   storage: Waffle.Storage.Local
 
-config :flop, repo: Rocketsized.Repo
+config :flop,
+  repo: Rocketsized.Repo
+
+config :flop_phoenix,
+  pagination: [opts: {RocketsizedWeb.Admin.Flop, :pagination_opts}],
+  table: [opts: {RocketsizedWeb.Admin.Flop, :table_opts}]
 
 config :rocketsized,
   ecto_repos: [Rocketsized.Repo]

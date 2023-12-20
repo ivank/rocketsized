@@ -2,12 +2,14 @@
   <%= @resource.name %>
   <:breadcrumb navigate={~p"/admin/countries"}>Countries</:breadcrumb>
   <:actions>
-    <.link href={~p"/admin/countries/#{@resource}/edit"}>
-      <.button>Edit country</.button>
-    </.link>
-    <.link href={~p"/admin/countries/#{@resource}"} method="delete" data-confirm="Are you sure?">
-      <.button>Delete</.button>
-    </.link>
+    <div class="flex items-center gap-x-3">
+      <.link href={~p"/admin/countries/#{@resource}/edit"}>
+        <.button>Edit country</.button>
+      </.link>
+      <.link href={~p"/admin/countries/#{@resource}"} method="delete" data-confirm="Are you sure?">
+        <.button>Delete</.button>
+      </.link>
+    </div>
   </:actions>
 </.admin_header>
 
@@ -17,7 +19,7 @@
   <:item title="Flag">
     <img
       :if={@resource.flag}
-      src={"data:image/svg+xml;base64," <> Base.encode64(@resource.flag)}
+      src={Rocketsized.Country.Flag.url({@resource.flag, @resource}, signed: true)}
       class="h-8"
     />
   </:item>
@@ -27,4 +29,11 @@
   <:col :let={vehicle} label="Name"><%= vehicle.name %></:col>
 </.table>
 
-<.back navigate={~p"/admin/countries"}>Back to countries</.back>
+<div class="mt-6 flex items-center gap-x-6">
+  <.link href={~p"/admin/countries"}>
+    <.icon name="hero-chevron-left" /> Back to countries
+  </.link>
+  <.link href={~p"/admin/countries/#{@resource}/edit"}>
+    <.button>Edit country</.button>
+  </.link>
+</div>

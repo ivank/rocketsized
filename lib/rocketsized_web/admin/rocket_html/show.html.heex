@@ -2,17 +2,21 @@
   <%= @resource.name %>
   <:breadcrumb navigate={~p"/admin/rockets"}>Rockets</:breadcrumb>
   <:actions>
-    <.link href={~p"/admin/rockets/#{@resource}/edit"}>
-      <.button>Edit rocket</.button>
-    </.link>
-    <.link href={~p"/admin/rockets/#{@resource}"} method="delete" data-confirm="Are you sure?">
-      Delete
-    </.link>
+    <div class="flex items-center gap-x-3">
+      <.link href={~p"/admin/rockets/#{@resource}/edit"}>
+        <.button>Edit rocket</.button>
+      </.link>
+      <.link href={~p"/admin/rockets/#{@resource}"} method="delete" data-confirm="Are you sure?">
+        Delete
+      </.link>
+    </div>
   </:actions>
 </.admin_header>
 
 <.list>
   <:item title="Name"><%= @resource.name %></:item>
+  <:item title="Alternative"><%= @resource.alternative_name %></:item>
+  <:item title="Native Name"><%= @resource.native_name %></:item>
   <:item title="Country">
     <.link
       :if={@resource.country}
@@ -35,8 +39,10 @@
     </ul>
   </:item>
   <:item title="Height"><%= @resource.height %>m</:item>
+  <:item title="Diameter"><%= @resource.diameter %>m</:item>
   <:item title="State"><%= @resource.state %></:item>
   <:item title="Is Published"><%= @resource.is_published %></:item>
+  <:item title="Description"><%= @resource.description %></:item>
   <:item title="Source">
     <.link
       href={@resource.source}
@@ -53,4 +59,11 @@
   </:item>
 </.list>
 
-<.back navigate={~p"/admin/rockets"}>Back to rockets</.back>
+<div class="mt-6 flex items-center gap-x-6">
+  <.link href={~p"/admin/rockets"}>
+    <.icon name="hero-chevron-left" /> Back to rockets
+  </.link>
+  <.link href={~p"/admin/rockets/#{@resource}/edit"}>
+    <.button>Edit rocket</.button>
+  </.link>
+</div>

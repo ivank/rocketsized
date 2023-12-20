@@ -8,6 +8,14 @@
 </.admin_header>
 
 <.table id="orgs" rows={@resources} row_click={&JS.navigate(~p"/admin/orgs/#{&1}")}>
+  <:col :let={resource} label="Logo" class="w-10">
+    <img
+      :if={resource.logo}
+      src={Rocketsized.Manufacturer.Logo.url({resource.logo, resource}, signed: true)}
+      class="w-8"
+    />
+  </:col>
+  <:col :let={resource} label="Short Name"><%= resource.short_name %></:col>
   <:col :let={resource} label="Name"><%= resource.name %></:col>
   <:action :let={resource}>
     <div class="sr-only">

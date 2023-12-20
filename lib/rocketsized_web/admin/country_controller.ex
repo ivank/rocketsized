@@ -13,7 +13,7 @@ defmodule RocketsizedWeb.Admin.CountryController do
   end
 
   def create(conn, %{"resource" => params}) do
-    case Creator.create_country(params |> Map.update("flag", nil, &File.read!(&1.path))) do
+    case Creator.create_country(params) do
       {:ok, resource} ->
         conn
         |> put_flash(:info, "Country created successfully.")
@@ -37,17 +37,13 @@ defmodule RocketsizedWeb.Admin.CountryController do
   def update(conn, %{"id" => id, "resource" => params}) do
     resource = Creator.get_country!(id)
 
-    case Creator.update_country(
-           resource,
-           params |> Map.update("flag", resource.flag, &File.read!(&1.path))
-         ) do
+    case Creator.update_country(resource, params) do
       {:ok, resource} ->
         conn
         |> put_flash(:info, "Country updated successfully.")
         |> redirect(to: ~p"/admin/countries/#{resource}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset)
         conn |> render(:edit, resource: resource, changeset: changeset)
     end
   end

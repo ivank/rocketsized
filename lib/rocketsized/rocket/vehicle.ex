@@ -26,6 +26,10 @@ defmodule Rocketsized.Rocket.Vehicle do
     field :height, :float
     field :is_published, :boolean, default: false
     field :image, Rocketsized.Vehicle.Image.Type
+    field :description, :string
+    field :native_name, :string
+    field :alternative_name, :string
+    field :diameter, :float
 
     field :state, Ecto.Enum, values: @states
 
@@ -46,14 +50,25 @@ defmodule Rocketsized.Rocket.Vehicle do
   @doc false
   def changeset(vehicle, attrs) do
     vehicle
-    |> cast(attrs, [:name, :source, :height, :state, :is_published, :country_id])
+    |> cast(attrs, [
+      :name,
+      :source,
+      :height,
+      :diameter,
+      :state,
+      :is_published,
+      :country_id,
+      :description,
+      :native_name,
+      :alternative_name
+    ])
     |> cast_attachments(attrs, [:image])
     |> cast_assoc(:vehicle_manufacturers,
       with: &Rocketsized.Rocket.VehicleManufacturer.changeset/2,
       drop_param: :manufacturer_delete
     )
     |> validate_required_on_field_value(:is_published, %{
-      true => [:name, :image, :is_published, :height, :state],
+      true => [:name, :image, :is_published, :height, :state, :country_id],
       false => [:name]
     })
   end

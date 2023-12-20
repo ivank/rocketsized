@@ -117,7 +117,7 @@ defmodule Rocketsized.Rocket do
     Repo.all(Vehicle)
   end
 
-  def list_vehicles_with_data do
+  def list_vehicles_admin do
     Repo.all(Vehicle) |> Repo.preload([:country])
   end
 
@@ -496,14 +496,16 @@ defmodule Rocketsized.Rocket do
 
   def list_vehicles_with_params(params) do
     opts = [for: Vehicle]
+    query = from(p in Vehicle, where: p.is_published == true)
 
     with {:ok, %Flop{} = flop} <- Flop.validate(params, opts),
          {data, meta} <-
-           Vehicle
+           query
            |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
            |> Flop.run(flop, opts) do
       max_height =
-        from(p in Vehicle, select: max(p.height))
+        query
+        |> select([p], max(p.height))
         |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
         |> Flop.query(flop, opts)
         |> Repo.one()

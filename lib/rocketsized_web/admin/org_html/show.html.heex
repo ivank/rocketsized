@@ -2,21 +2,46 @@
   <%= @resource.name %>
   <:breadcrumb navigate={~p"/admin/orgs"}>Organizations</:breadcrumb>
   <:actions>
-    <.link href={~p"/admin/orgs/#{@resource}/edit"}>
-      <.button>Edit organization</.button>
-    </.link>
-    <.link href={~p"/admin/orgs/#{@resource}"} method="delete" data-confirm="Are you sure?">
-      Delete
-    </.link>
+    <div class="flex items-center gap-x-3">
+      <.link href={~p"/admin/orgs/#{@resource}/edit"}>
+        <.button>Edit organization</.button>
+      </.link>
+      <.link href={~p"/admin/orgs/#{@resource}"} method="delete" data-confirm="Are you sure?">
+        Delete
+      </.link>
+    </div>
   </:actions>
 </.admin_header>
 
 <.list>
+  <:item title="Short Name"><%= @resource.short_name %></:item>
   <:item title="Name"><%= @resource.name %></:item>
+  <:item title="Logo">
+    <img
+      :if={@resource.logo}
+      src={Rocketsized.Manufacturer.Logo.url({@resource.logo, @resource}, signed: true)}
+      class="h-8"
+    />
+  </:item>
+  <:item title="Source">
+    <.link
+      href={@resource.source}
+      class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+    >
+      <%= @resource.source %>
+    </.link>
+  </:item>
 </.list>
 
 <.table id="rockets" rows={@resource.vehicles} row_click={&JS.navigate(~p"/admin/rockets/#{&1}")}>
   <:col :let={vehicle} label="Name"><%= vehicle.name %></:col>
 </.table>
 
-<.back navigate={~p"/admin/orgs"}>Back to organizations</.back>
+<div class="mt-6 flex items-center gap-x-6">
+  <.link href={~p"/admin/orgs"}>
+    <.icon name="hero-chevron-left" /> Back to orgs
+  </.link>
+  <.link href={~p"/admin/orgs/#{@resource}/edit"}>
+    <.button>Edit org</.button>
+  </.link>
+</div>
