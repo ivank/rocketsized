@@ -1,6 +1,6 @@
 defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
   alias Rocketsized.Rocket
-  alias Rocketsized.Creator
+  # alias Rocketsized.Creator
   use RocketsizedWeb, :live_component
 
   import Flop.Phoenix
@@ -23,35 +23,13 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
           :let={f}
           form={@form}
           fields={[
-            id: [
-              label: "Rockets",
+            search: [
+              label: "Search",
               type: "combobox",
               op: :in,
               multiple: true,
-              search: &Rocket.search_vehicles/1,
-              to_options: &Rocket.list_vehicles_by_ids/1
-            ],
-            manufacturer_ids: [
-              label: "Manufacturers",
-              type: "combobox",
-              op: :in,
-              multiple: true,
-              search: &Creator.search_manufacturers/1,
-              to_options: &Creator.list_manufacturers_by_ids/1
-            ],
-            country_id: [
-              label: "Countries",
-              type: "combobox",
-              op: :in,
-              multiple: true,
-              search: &Creator.search_countries/1,
-              to_options: &Creator.list_countries_by_ids/1
-            ],
-            state: [
-              label: "State",
-              type: "select",
-              prompt: "",
-              options: Rocketsized.Rocket.Vehicle.states()
+              search: &Rocket.search_token_items/1,
+              to_options: &Rocket.list_token_items_ids/1
             ]
           ]}
         >

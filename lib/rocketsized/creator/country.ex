@@ -6,7 +6,7 @@ defmodule Rocketsized.Creator.Country do
   schema "countries" do
     field :code, :string
     field :name, :string
-    field :flag, Rocketsized.Country.Flag.Type
+    field :flag, Rocketsized.Creator.Country.Flag.Type
     field :source, :string
 
     has_many :vehicles, Rocketsized.Rocket.Vehicle

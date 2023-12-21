@@ -4,6 +4,8 @@ defmodule Rocketsized.Rocket do
   """
 
   import Ecto.Query, warn: false
+  alias Rocketsized.Creator.Manufacturer
+  alias Rocketsized.Creator.Country
   alias Rocketsized.Repo
 
   alias Rocketsized.Rocket.Family
@@ -496,18 +498,21 @@ defmodule Rocketsized.Rocket do
 
   def list_vehicles_with_params(params) do
     opts = [for: Vehicle]
-    query = from(p in Vehicle, where: p.is_published == true)
 
-    with {:ok, %Flop{} = flop} <- Flop.validate(params, opts),
-         {data, meta} <-
-           query
-           |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
-           |> Flop.run(flop, opts) do
+    with {:ok, %Flop{} = flop} <- Flop.validate(params, opts) do
+      flop = flop
+
+      query =
+        from(p in Vehicle, where: p.is_published == true)
+        |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
+
+      {data, meta} =
+        from(p in query, order_by: [desc: p.height], group_by: p.id) |> Flop.run(flop, opts)
+
       max_height =
         query
         |> select([p], max(p.height))
-        |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
-        |> Flop.query(flop, opts)
+        |> Flop.query(Flop.reset_order(flop), opts)
         |> Repo.one()
 
       {:ok, {data, meta, max_height}}
@@ -528,5 +533,82 @@ defmodule Rocketsized.Rocket do
 
   def list_vehicles_by_ids(ids) do
     Repo.all(from m in Vehicle, where: m.id in ^ids, select: {m.id, m.name}, limit: 10)
+  end
+
+  def search_token_items(q) do
+    vehicles =
+      from(i in Vehicle,
+        where: ilike(fragment("concat(?, ' ', ?)", i.name, i.alternative_name), ^"%#{q}%"),
+        where: i.is_published == true,
+        select: %{
+          type: "vehicle",
+          id: i.id,
+          name: i.name,
+          sub: i.alternative_name,
+          image: i.image
+        }
+      )
+
+    countries =
+      from(i in Country,
+        where: ilike(i.name, ^"%#{q}%"),
+        select: %{type: "country", id: i.id, name: i.name, sub: "", image: i.flag}
+      )
+
+    manufacturers =
+      from(i in Manufacturer,
+        where: ilike(fragment("concat(?, ' ', ?)", i.name, i.short_name), ^"%#{q}%"),
+        select: %{type: "manufacturer", id: i.id, name: i.short_name, sub: i.name, image: i.logo}
+      )
+
+    Repo.all(from(vehicles |> union(^countries) |> union(^manufacturers), limit: 8))
+  end
+
+  def list_token_items_ids(token_ids) do
+    [first | rest] =
+      token_ids
+      |> Enum.map(&Rocketsized.Ecto.Token.Type.load(&1))
+      |> Rocketsized.Ecto.Token.Item.to_valid_list()
+      |> Rocketsized.Ecto.Token.Item.to_group_ids()
+      |> Enum.map(fn
+        {:vehicle, ids} ->
+          from i in Vehicle,
+            where: i.id in ^ids,
+            where: i.is_published == true,
+            select: %{
+              type: "vehicle",
+              id: i.id,
+              name: i.name,
+              sub: i.alternative_name,
+              image: i.image,
+              source: i.source
+            }
+
+        {:country, ids} ->
+          from i in Country,
+            where: i.id in ^ids,
+            select: %{
+              type: "country",
+              id: i.id,
+              name: i.name,
+              sub: "",
+              image: i.flag,
+              source: i.source
+            }
+
+        {:manufacturer, ids} ->
+          from i in Manufacturer,
+            where: i.id in ^ids,
+            select: %{
+              type: "manufacturer",
+              id: i.id,
+              name: i.short_name,
+              sub: i.name,
+              image: i.logo,
+              source: i.source
+            }
+      end)
+
+    Repo.all(from(Enum.reduce(rest, first, fn acc, query -> union(acc, ^query) end), limit: 20))
   end
 end

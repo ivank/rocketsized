@@ -15,6 +15,7 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
         phx-keyup="search"
         aria-controls="options"
         phx-hook="combobox"
+        phx-click-away="clear"
         aria-expanded="false"
       />
 
@@ -25,36 +26,70 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
         role="listbox"
       >
         <button
-          :for={{id, value} <- @options}
+          :for={option <- @options}
           class="relative text-left block py-2 pl-3 pr-9 text-gray-900 focus:text-white focus:outline-none focus:bg-indigo-600"
           role="option"
           name={@name}
           tabindex="0"
-          value={id}
+          value={"#{option.type}|#{option.id}"}
           type="submit"
         >
-          <span class="truncate"><%= value %></span>
+          <div class="flex flex-row items-center">
+            <img
+              :if={option.type == "vehicle"}
+              src={Rocketsized.Rocket.Vehicle.Image.url({option.image, option}, signed: true)}
+              class="rotate-90 w-8 h-8 object-contain"
+            />
+            <img
+              :if={option.type == "country"}
+              src={Rocketsized.Creator.Country.Flag.url({option.image, option}, signed: true)}
+              class="w-8 h-8 object-contain"
+            />
+            <img
+              :if={option.type == "manufacturer"}
+              src={Rocketsized.Creator.Manufacturer.Logo.url({option.image, option}, signed: true)}
+              class="w-8 h-8 object-contain"
+            />
+            <div class="ml-3 truncate">
+              <p class="truncate"><%= option.name %></p>
+              <p :if={option.sub} class="truncate text-gray-400"><%= option.sub %></p>
+            </div>
+          </div>
         </button>
       </div>
 
-      <ul
-        :if={not Enum.empty?(@items)}
-        role="list"
-        class="divide-y divide-gray-100 rounded-md border border-gray-200"
-      >
-        <li
-          :for={{id, item} <- @items}
-          class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6"
-        >
-          <input type="hidden" value={id} name={@name} id={"#{@id}_#{id}"} />
-          <div class="flex w-0 flex-1 items-center">
-            <%= item %>
+      <ul :if={not Enum.empty?(@items)} role="list" class="divide-y divide-gray-100">
+        <li :for={item <- @items} class="flex items-center p-2 text-sm leading-6">
+          <input
+            type="hidden"
+            value={"#{item.type}|#{item.id}"}
+            name={@name}
+            id={"#{@id}_#{item.type}_#{item.id}"}
+          />
+          <img
+            :if={item.type == "vehicle"}
+            src={Rocketsized.Rocket.Vehicle.Image.url({item.image, item}, signed: true)}
+            class="rotate-90 w-8 h-8 object-contain"
+          />
+          <img
+            :if={item.type == "country"}
+            src={Rocketsized.Creator.Country.Flag.url({item.image, item}, signed: true)}
+            class="w-8 h-8 object-contain"
+          />
+          <img
+            :if={item.type == "manufacturer"}
+            src={Rocketsized.Creator.Manufacturer.Logo.url({item.image, item}, signed: true)}
+            class="w-8 h-8 object-contain"
+          />
+          <div class="ml-3 truncate flex-grow">
+            <p class="truncate"><%= item.name %></p>
+            <p :if={item.sub} class="truncate text-gray-400"><%= item.sub %></p>
           </div>
-          <div class="ml-4 flex flex-shrink-0 space-x-4">
+          <div class="ml-4 space-x-4">
             <button
               tabindex="0"
               type="submit"
-              phx-click={JS.set_attribute({"disabled", true}, to: "##{@id}_#{id}")}
+              phx-click={JS.set_attribute({"disabled", true}, to: "##{@id}_#{item.type}_#{item.id}")}
               class="rounded-md bg-white font-medium text-gray-900 hover:text-gray-600"
             >
               <.icon name="hero-x-mark" />
@@ -79,5 +114,10 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
     {:noreply,
      socket
      |> assign(:options, search.(value))}
+  end
+
+  @impl true
+  def handle_event("clear", _event, socket) do
+    {:noreply, socket |> assign(options: [])}
   end
 end

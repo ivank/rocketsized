@@ -6,7 +6,7 @@ defmodule Rocketsized.Creator.Manufacturer do
   schema "manufacturers" do
     field :name, :string
     field :short_name, :string
-    field :logo, Rocketsized.Manufacturer.Logo.Type
+    field :logo, Rocketsized.Creator.Manufacturer.Logo.Type
     field :source, :string
 
     has_many :vehicle_manufacturers, Rocketsized.Rocket.VehicleManufacturer

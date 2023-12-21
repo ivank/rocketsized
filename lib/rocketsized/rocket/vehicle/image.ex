@@ -1,4 +1,4 @@
-defmodule Rocketsized.Vehicle.Image do
+defmodule Rocketsized.Rocket.Vehicle.Image do
   use Waffle.Definition
   use Waffle.Ecto.Definition
 

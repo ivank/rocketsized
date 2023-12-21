@@ -1,4 +1,4 @@
-defmodule Rocketsized.Manufacturer.Logo do
+defmodule Rocketsized.Creator.Manufacturer.Logo do
   use Waffle.Definition
   use Waffle.Ecto.Definition
 

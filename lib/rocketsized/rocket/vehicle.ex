@@ -5,7 +5,7 @@ defmodule Rocketsized.Rocket.Vehicle do
 
   @derive {
     Flop.Schema,
-    filterable: [:id, :name, :state, :country_id, :manufacturer_ids],
+    filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search],
     sortable: [:height, :name, :state, :country_id],
     adapter_opts: [
       join_fields: [
@@ -13,6 +13,14 @@ defmodule Rocketsized.Rocket.Vehicle do
           binding: :vehicle_manufacturers,
           field: :manufacturer_id,
           ecto_type: :integer
+        ]
+      ],
+      custom_fields: [
+        search: [
+          bindings: [:vehicle_manufacturers],
+          filter: {Rocketsized.Rocket.Vehicle.Filter, :search, []},
+          ecto_type: Rocketsized.Ecto.Token.Type,
+          operators: [:in]
         ]
       ]
     ]
@@ -25,7 +33,7 @@ defmodule Rocketsized.Rocket.Vehicle do
     field :source, :string
     field :height, :float
     field :is_published, :boolean, default: false
-    field :image, Rocketsized.Vehicle.Image.Type
+    field :image, Rocketsized.Rocket.Vehicle.Image.Type
     field :description, :string
     field :native_name, :string
     field :alternative_name, :string

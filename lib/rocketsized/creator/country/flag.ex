@@ -1,4 +1,4 @@
-defmodule Rocketsized.Country.Flag do
+defmodule Rocketsized.Creator.Country.Flag do
   use Waffle.Definition
   use Waffle.Ecto.Definition
 
