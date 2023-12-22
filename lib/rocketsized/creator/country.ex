@@ -6,6 +6,7 @@ defmodule Rocketsized.Creator.Country do
   schema "countries" do
     field :code, :string
     field :name, :string
+    field :short_name, :string
     field :flag, Rocketsized.Creator.Country.Flag.Type
     field :source, :string
 
@@ -17,8 +18,8 @@ defmodule Rocketsized.Creator.Country do
   @doc false
   def changeset(country, attrs) do
     country
-    |> cast(attrs, [:name, :code, :source])
+    |> cast(attrs, [:name, :short_name, :code, :source])
     |> cast_attachments(attrs, [:flag])
-    |> validate_required([:name, :code, :flag])
+    |> validate_required([:name, :short_name, :code, :flag])
   end
 end

@@ -135,24 +135,6 @@ defmodule Rocketsized.Creator do
     Repo.all(Manufacturer)
   end
 
-  def search_manufacturers(q) do
-    Repo.all(
-      from m in Manufacturer, where: ilike(m.name, ^"#{q}%"), select: {m.id, m.name}, limit: 5
-    )
-  end
-
-  def list_manufacturers_by_ids(ids) do
-    Repo.all(from m in Manufacturer, where: m.id in ^ids, select: {m.id, m.name}, limit: 10)
-  end
-
-  def search_countries(q) do
-    Repo.all(from m in Country, where: ilike(m.name, ^"#{q}%"), select: {m.id, m.name}, limit: 5)
-  end
-
-  def list_countries_by_ids(ids) do
-    Repo.all(from m in Country, where: m.id in ^ids, select: {m.id, m.name}, limit: 10)
-  end
-
   @doc """
   Gets a single manufacturer.
 

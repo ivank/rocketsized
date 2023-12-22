@@ -4,8 +4,6 @@ defmodule Rocketsized.Rocket do
   """
 
   import Ecto.Query, warn: false
-  alias Rocketsized.Creator.Manufacturer
-  alias Rocketsized.Creator.Country
   alias Rocketsized.Repo
 
   alias Rocketsized.Rocket.Family
@@ -527,88 +525,28 @@ defmodule Rocketsized.Rocket do
     join(query, :inner, [v], assoc(v, :manufacturers), as: :manufacturers)
   end
 
-  def search_vehicles(q) do
-    Repo.all(from m in Vehicle, where: ilike(m.name, ^"#{q}%"), select: {m.id, m.name}, limit: 5)
+  alias Rocketsized.Rocket.VehicleFilter
+
+  def list_vehicle_filters_by_query(q) do
+    from(vh in VehicleFilter,
+      where: ilike(vh.title, ^"#{q}%"),
+      or_where: ilike(vh.subtitle, ^"#{q}%"),
+      limit: 10
+    )
+    |> Repo.all()
   end
 
-  def list_vehicles_by_ids(ids) do
-    Repo.all(from m in Vehicle, where: m.id in ^ids, select: {m.id, m.name}, limit: 10)
-  end
-
-  def search_token_items(q) do
-    vehicles =
-      from(i in Vehicle,
-        where: ilike(fragment("concat(?, ' ', ?)", i.name, i.alternative_name), ^"%#{q}%"),
-        where: i.is_published == true,
-        select: %{
-          type: "vehicle",
-          id: i.id,
-          name: i.name,
-          sub: i.alternative_name,
-          image: i.image
-        }
-      )
-
-    countries =
-      from(i in Country,
-        where: ilike(i.name, ^"%#{q}%"),
-        select: %{type: "country", id: i.id, name: i.name, sub: "", image: i.flag}
-      )
-
-    manufacturers =
-      from(i in Manufacturer,
-        where: ilike(fragment("concat(?, ' ', ?)", i.name, i.short_name), ^"%#{q}%"),
-        select: %{type: "manufacturer", id: i.id, name: i.short_name, sub: i.name, image: i.logo}
-      )
-
-    Repo.all(from(vehicles |> union(^countries) |> union(^manufacturers), limit: 8))
-  end
-
-  def list_token_items_ids(token_ids) do
-    [first | rest] =
-      token_ids
-      |> Enum.map(&Rocketsized.Ecto.Token.Type.load(&1))
-      |> Rocketsized.Ecto.Token.Item.to_valid_list()
-      |> Rocketsized.Ecto.Token.Item.to_group_ids()
-      |> Enum.map(fn
-        {:vehicle, ids} ->
-          from i in Vehicle,
-            where: i.id in ^ids,
-            where: i.is_published == true,
-            select: %{
-              type: "vehicle",
-              id: i.id,
-              name: i.name,
-              sub: i.alternative_name,
-              image: i.image,
-              source: i.source
-            }
-
-        {:country, ids} ->
-          from i in Country,
-            where: i.id in ^ids,
-            select: %{
-              type: "country",
-              id: i.id,
-              name: i.name,
-              sub: "",
-              image: i.flag,
-              source: i.source
-            }
-
-        {:manufacturer, ids} ->
-          from i in Manufacturer,
-            where: i.id in ^ids,
-            select: %{
-              type: "manufacturer",
-              id: i.id,
-              name: i.short_name,
-              sub: i.name,
-              image: i.logo,
-              source: i.source
-            }
+  def list_vehicle_filters_by_ids(ids) do
+    groups =
+      ids
+      |> Enum.map(&VehicleFilter.Type.load(&1))
+      |> VehicleFilter.Type.to_valid_list()
+      |> Enum.group_by(& &1.type, & &1.id)
+      |> Enum.map(fn {type, ids} ->
+        dynamic([vf], vf.type == ^type and vf.id in ^ids)
       end)
+      |> Enum.reduce(fn group, query -> dynamic([_], ^query or ^group) end)
 
-    Repo.all(from(Enum.reduce(rest, first, fn acc, query -> union(acc, ^query) end), limit: 20))
+    from(vf in VehicleFilter, where: ^groups, limit: 20) |> Repo.all()
   end
 end

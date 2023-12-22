@@ -28,8 +28,8 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
               type: "combobox",
               op: :in,
               multiple: true,
-              search: &Rocket.search_token_items/1,
-              to_options: &Rocket.list_token_items_ids/1
+              search: &Rocket.list_vehicle_filters_by_query/1,
+              to_options: &Rocket.list_vehicle_filters_by_ids/1
             ]
           ]}
         >

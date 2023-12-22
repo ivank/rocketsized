@@ -31,28 +31,28 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
           role="option"
           name={@name}
           tabindex="0"
-          value={"#{option.type}|#{option.id}"}
+          value={with {:ok, value} <- Rocketsized.Rocket.VehicleFilter.Type.dump(option), do: value}
           type="submit"
         >
           <div class="flex flex-row items-center">
             <img
-              :if={option.type == "vehicle"}
-              src={Rocketsized.Rocket.Vehicle.Image.url({option.image, option}, signed: true)}
+              :if={option.type == :vehicle}
+              src={Rocketsized.Rocket.Vehicle.Image.url({option.image, option})}
               class="rotate-90 w-8 h-8 object-contain"
             />
             <img
-              :if={option.type == "country"}
-              src={Rocketsized.Creator.Country.Flag.url({option.image, option}, signed: true)}
+              :if={option.type == :country}
+              src={Rocketsized.Creator.Country.Flag.url({option.image, option})}
               class="w-8 h-8 object-contain"
             />
             <img
-              :if={option.type == "manufacturer"}
-              src={Rocketsized.Creator.Manufacturer.Logo.url({option.image, option}, signed: true)}
+              :if={option.type == :manufacturer}
+              src={Rocketsized.Creator.Manufacturer.Logo.url({option.image, option})}
               class="w-8 h-8 object-contain"
             />
             <div class="ml-3 truncate">
-              <p class="truncate"><%= option.name %></p>
-              <p :if={option.sub} class="truncate text-gray-400"><%= option.sub %></p>
+              <p class="truncate"><%= option.title %></p>
+              <p :if={option.subtitle} class="truncate text-gray-400"><%= option.subtitle %></p>
             </div>
           </div>
         </button>
@@ -62,34 +62,39 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
         <li :for={item <- @items} class="flex items-center p-2 text-sm leading-6">
           <input
             type="hidden"
-            value={"#{item.type}|#{item.id}"}
+            value={with {:ok, value} <- Rocketsized.Rocket.VehicleFilter.Type.dump(item), do: value}
             name={@name}
-            id={"#{@id}_#{item.type}_#{item.id}"}
+            id={"#{@id}_#{with {:ok, value} <- Rocketsized.Rocket.VehicleFilter.Type.dump(item), do: value}"}
           />
           <img
-            :if={item.type == "vehicle"}
-            src={Rocketsized.Rocket.Vehicle.Image.url({item.image, item}, signed: true)}
+            :if={item.type == :vehicle}
+            src={Rocketsized.Rocket.Vehicle.Image.url({item.image, item})}
             class="rotate-90 w-8 h-8 object-contain"
           />
           <img
-            :if={item.type == "country"}
-            src={Rocketsized.Creator.Country.Flag.url({item.image, item}, signed: true)}
+            :if={item.type == :country}
+            src={Rocketsized.Creator.Country.Flag.url({item.image, item})}
             class="w-8 h-8 object-contain"
           />
           <img
-            :if={item.type == "manufacturer"}
-            src={Rocketsized.Creator.Manufacturer.Logo.url({item.image, item}, signed: true)}
+            :if={item.type == :manufacturer}
+            src={Rocketsized.Creator.Manufacturer.Logo.url({item.image, item})}
             class="w-8 h-8 object-contain"
           />
           <div class="ml-3 truncate flex-grow">
-            <p class="truncate"><%= item.name %></p>
-            <p :if={item.sub} class="truncate text-gray-400"><%= item.sub %></p>
+            <p class="truncate"><%= item.title %></p>
+            <p :if={item.subtitle} class="truncate text-gray-400"><%= item.subtitle %></p>
           </div>
           <div class="ml-4 space-x-4">
             <button
               tabindex="0"
               type="submit"
-              phx-click={JS.set_attribute({"disabled", true}, to: "##{@id}_#{item.type}_#{item.id}")}
+              phx-click={
+                JS.set_attribute({"disabled", true},
+                  to:
+                    "##{@id}_#{with {:ok, value} <- Rocketsized.Rocket.VehicleFilter.Type.dump(item), do: value}"
+                )
+              }
               class="rounded-md bg-white font-medium text-gray-900 hover:text-gray-600"
             >
               <.icon name="hero-x-mark" />
