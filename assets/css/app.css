@@ -6,3 +6,10 @@
 html {
   font-family: "Space Grotesk", system-ui, sans-serif;
 }
+
+
+@layer components {
+  .tooltip {
+    @apply invisible absolute z-10 rounded border min-w-max border-gray-200 bg-gray-100 px-3 py-2 text-sm opacity-0 transition-opacity group-hover:visible group-hover:opacity-100
+  }
+}

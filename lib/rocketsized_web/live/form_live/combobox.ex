@@ -17,17 +17,18 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
         phx-hook="combobox"
         phx-click-away="clear"
         aria-expanded="false"
+        placeholder="China, Soyuz, Aerojet"
       />
 
       <div
         :if={not Enum.empty?(@options)}
         id={"#{@id}_options"}
-        class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md flex flex-col bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 sm:text-sm"
+        class="absolute z-10 mt-1 flex max-h-60 w-full flex-col overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 sm:text-sm"
         role="listbox"
       >
         <button
           :for={option <- @options}
-          class="relative text-left block py-2 pl-3 pr-9 text-gray-900 focus:text-white focus:outline-none focus:bg-indigo-600"
+          class="relative block py-2 pr-9 pl-3 text-left text-gray-900 focus:bg-indigo-600 focus:text-white focus:outline-none"
           role="option"
           name={@name}
           tabindex="0"
@@ -38,17 +39,17 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
             <img
               :if={option.type == :vehicle}
               src={Rocketsized.Rocket.Vehicle.Image.url({option.image, option})}
-              class="-rotate-90 w-8 h-8 object-contain"
+              class="h-8 w-8 -rotate-90 object-contain"
             />
             <img
               :if={option.type == :country}
               src={Rocketsized.Creator.Country.Flag.url({option.image, option})}
-              class="w-8 h-8 object-contain"
+              class="h-8 w-8 object-contain"
             />
             <img
               :if={option.type == :manufacturer}
               src={Rocketsized.Creator.Manufacturer.Logo.url({option.image, option})}
-              class="w-8 h-8 object-contain"
+              class="h-8 w-8 object-contain"
             />
             <div class="ml-3 truncate">
               <p class="truncate"><%= option.title %></p>
@@ -69,19 +70,19 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
           <img
             :if={item.type == :vehicle}
             src={Rocketsized.Rocket.Vehicle.Image.url({item.image, item})}
-            class="-rotate-90 w-8 h-8 object-contain"
+            class="h-8 w-8 -rotate-90 object-contain"
           />
           <img
             :if={item.type == :country}
             src={Rocketsized.Creator.Country.Flag.url({item.image, item})}
-            class="w-8 h-8 object-contain"
+            class="h-8 w-8 object-contain"
           />
           <img
             :if={item.type == :manufacturer}
             src={Rocketsized.Creator.Manufacturer.Logo.url({item.image, item})}
-            class="w-8 h-8 object-contain"
+            class="h-8 w-8 object-contain"
           />
-          <div class="ml-3 truncate flex-grow">
+          <div class="ml-3 flex-grow truncate">
             <p class="truncate"><%= item.title %></p>
             <p :if={item.subtitle} class="truncate text-gray-400"><%= item.subtitle %></p>
           </div>

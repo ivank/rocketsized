@@ -44,8 +44,6 @@ defmodule RocketsizedWeb.Admin.RocketController do
     resource = Rocket.get_vehicle_with_data!(id)
     changeset = Rocket.change_vehicle(resource)
 
-    IO.inspect(changeset.data)
-
     conn
     |> render(:edit,
       resource: resource,

@@ -6,6 +6,7 @@
         id="filter"
         module={RocketsizedWeb.RocketgridLive.FilterComponent}
         on_change="update-filter"
+        on_reset="reset-filter"
         meta={@meta}
       />
     </div>
@@ -55,14 +56,16 @@
         class="h-[calc(100vh-theme(space.4))] bg-gradient-171 via-gray-50/10 justify-stretch flex flex-col overflow-clip rounded from-gray-100 to-gray-100 px-4 py-2"
       >
         <div class="flex flex-grow flex-col items-center justify-end">
-          <div
+          <a
             data-height={rocket.height}
+            href={rocket.source}
+            target="_blank"
             class={[
               "relative",
               "before:content-[attr(data-height)'m'] before:right-[50%] before:absolute before:top-0 before:w-40 before:border-gray-400 before:text-right",
               if(rocket.height <= @max_height - 10,
                 do: "before:-translate-y-[100%] before:border-b",
-                else: "before:border-t before:pr-4"
+                else: "before:border-t before:pr-6"
               )
             ]}
           >
@@ -70,7 +73,7 @@
               src={Rocketsized.Rocket.Vehicle.Image.url({rocket.image, rocket}, signed: true)}
               style={"height:calc((100vh - (16px + 4px + 56px + 16px)) * (#{rocket.height} / #{@max_height}));"}
             />
-          </div>
+          </a>
         </div>
         <div class="mt-2 flex h-14 flex-row items-end">
           <a
@@ -87,7 +90,7 @@
               }
               class="h-6 w-8 object-contain"
             />
-            <div class="-translate-y-[100%] invisible absolute -top-2 left-0 z-10 flex min-w-max flex-row rounded border border-gray-200 bg-gray-100 px-3 py-2 text-sm opacity-0 transition-opacity group-hover:visible group-hover:opacity-100">
+            <div class="-translate-y-[100%] tooltip -top-2 left-0 flex flex-row ">
               <img
                 src={
                   Rocketsized.Creator.Country.Flag.url({rocket.country.flag, rocket.country},
@@ -110,7 +113,7 @@
             <p :if={rocket.native_name} class="text-xs"><%= rocket.native_name %></p>
             <h2 class="-mt-0.5 text-lg"><%= rocket.name %></h2>
           </a>
-          <div class="flex w-8 flex-col">
+          <div class="flex w-8 flex-col gap-1">
             <a
               :for={manufacturer <- rocket.manufacturers}
               title={manufacturer.name}
@@ -126,7 +129,7 @@
                 }
                 class="h-6 w-8 object-contain"
               />
-              <div class="-translate-y-[100%] invisible absolute -top-2 right-0 z-10 flex min-w-max flex-row rounded border border-gray-200 bg-gray-100 px-3 py-2 text-sm opacity-0 transition-opacity group-hover:visible group-hover:opacity-100">
+              <div class="-translate-y-[100%] tooltip -top-2 right-0 flex flex-row">
                 <img
                   src={
                     Rocketsized.Creator.Manufacturer.Logo.url({manufacturer.logo, manufacturer},
