@@ -5,9 +5,12 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
 
   @impl Phoenix.LiveView
   def handle_params(params, _, socket) do
-    case Rocket.list_vehicles_with_params(params) do
+    case Rocket.list_vehicles_with_params(params |> Map.put_new("page_size", 16)) do
       {:ok, {rockets, meta, max_height}} ->
-        {:noreply, assign(socket, %{rockets: rockets, meta: meta, max_height: max_height})}
+        {:noreply,
+         socket
+         |> stream(:rockets, rockets, reset: true)
+         |> assign(%{meta: meta, max_height: max_height})}
 
       {:error, _meta} ->
         # This will reset invalid parameters. Alternatively, you can assign
@@ -21,5 +24,19 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
   def handle_event("update-filter", params, socket) do
     params = Map.delete(params, "_target")
     {:noreply, push_patch(socket, to: ~p"/rocketgrid?#{params}")}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("next-page", _, socket) do
+    flop = Flop.to_next_page(socket.assigns.meta.flop, socket.assigns.meta.total_pages)
+    {rockets, meta} = Rocket.list_vehicles_with_flop(flop)
+    {:noreply, socket |> stream(:rockets, rockets) |> assign(:meta, meta)}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("prev-page", _, socket) do
+    flop = Flop.to_previous_page(socket.assigns.meta.flop)
+    {rockets, meta} = Rocket.list_vehicles_with_flop(flop)
+    {:noreply, socket |> stream(:rockets, rockets) |> assign(:meta, meta)}
   end
 end

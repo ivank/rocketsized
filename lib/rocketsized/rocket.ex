@@ -498,23 +498,33 @@ defmodule Rocketsized.Rocket do
     opts = [for: Vehicle]
 
     with {:ok, %Flop{} = flop} <- Flop.validate(params, opts) do
-      flop = flop
+      {data, meta} = list_vehicles_with_flop(flop)
+      max_height = max_height_vehicles_with_flop(flop)
 
-      query =
-        from(p in Vehicle, where: p.is_published == true)
-        |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
-
-      {data, meta} =
-        from(p in query, order_by: [desc: p.height], group_by: p.id) |> Flop.run(flop, opts)
-
-      max_height =
-        query
-        |> select([p], max(p.height))
-        |> Flop.query(Flop.reset_order(flop), opts)
-        |> Repo.one()
-
-      {:ok, {data |> Repo.preload([:manufacturers, :country]), meta, max_height}}
+      {:ok, {data, meta, max_height}}
     end
+  end
+
+  def max_height_vehicles_with_flop(%Flop{} = flop) do
+    opts = [for: Vehicle, default_limit: 1000]
+
+    from(p in Vehicle, where: p.is_published == true, select: max(p.height))
+    |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
+    |> Flop.query(flop, opts)
+    |> Repo.one()
+  end
+
+  def list_vehicles_with_flop(%Flop{} = flop) do
+    opts = [for: Vehicle, default_limit: 8]
+
+    from(p in Vehicle,
+      where: p.is_published == true,
+      order_by: [desc: p.height],
+      group_by: p.id,
+      preload: [:manufacturers, :country]
+    )
+    |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
+    |> Flop.run(flop, opts)
   end
 
   defp join_vehicle_assoc(query, :vehicle_manufacturers) do

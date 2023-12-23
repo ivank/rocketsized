@@ -32,18 +32,26 @@
   </div>
 
   <main class="lg:pl-72">
-    <div class={[
-      "grid border-gray-100 gap-2 p-2",
-      case length(@rockets) do
-        1 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
-        2 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
-        3 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3"
-        4 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-        _ -> "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-      end
-    ]}>
+    <div
+      id="grid"
+      phx-update="stream"
+      phx-viewport-top={@meta.has_previous_page? && "prev-page"}
+      phx-viewport-bottom={@meta.has_next_page? && "next-page"}
+      phx-page-loading
+      class={[
+        "grid border-gray-100 gap-2 p-2",
+        case @meta.total_count do
+          1 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
+          2 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
+          3 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3"
+          4 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+          _ -> "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+        end
+      ]}
+    >
       <div
-        :for={rocket <- @rockets}
+        :for={{id, rocket} <- @streams.rockets}
+        id={id}
         class="flex flex-col h-[calc(100vh-theme(space.4))] bg-gradient-171 from-gray-100 via-gray-50/10 to-gray-100 rounded px-4 py-2 justify-stretch"
       >
         <div class="flex-grow flex flex-col items-center justify-end">
