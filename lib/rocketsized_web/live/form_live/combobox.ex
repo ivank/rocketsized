@@ -38,7 +38,7 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
             <img
               :if={option.type == :vehicle}
               src={Rocketsized.Rocket.Vehicle.Image.url({option.image, option})}
-              class="rotate-90 w-8 h-8 object-contain"
+              class="-rotate-90 w-8 h-8 object-contain"
             />
             <img
               :if={option.type == :country}
@@ -69,7 +69,7 @@ defmodule RocketsizedWeb.FormLive.ComboboxComponent do
           <img
             :if={item.type == :vehicle}
             src={Rocketsized.Rocket.Vehicle.Image.url({item.image, item})}
-            class="rotate-90 w-8 h-8 object-contain"
+            class="-rotate-90 w-8 h-8 object-contain"
           />
           <img
             :if={item.type == :country}

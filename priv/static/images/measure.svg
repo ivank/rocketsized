@@ -1,0 +1,20 @@
+<svg
+  width="5px"
+  height="1000px"
+  viewBox="0 0 5 1000"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <pattern id="big" viewBox="0,0,5,100" width="100%" height="10%">
+      <line x1="0.5" y1="0.5" x2="4.5" y2="0.5" stroke="black" />
+      <line x1="0.5" y1="50.5" x2="3.5" y2="50.5" stroke="black" />
+    </pattern>
+    <pattern id="small" viewBox="0,0,5,10" width="100%" height="1%">
+      <line x1="0.5" y1="0.5" x2="2.5" y2="0.5" stroke="gray" />
+    </pattern>
+  </defs>
+  <line x1="0.5" y1="0.5" x2="0.5" y2="995.5" stroke="black" />
+  <rect width="5" height="1000" fill="url(#big)" />
+  <rect width="5" height="1000" fill="url(#small)" />
+</svg>

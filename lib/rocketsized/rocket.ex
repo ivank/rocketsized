@@ -513,7 +513,7 @@ defmodule Rocketsized.Rocket do
         |> Flop.query(Flop.reset_order(flop), opts)
         |> Repo.one()
 
-      {:ok, {data, meta, max_height}}
+      {:ok, {data |> Repo.preload([:manufacturers, :country]), meta, max_height}}
     end
   end
 
