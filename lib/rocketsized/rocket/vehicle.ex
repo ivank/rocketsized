@@ -7,6 +7,10 @@ defmodule Rocketsized.Rocket.Vehicle do
     Flop.Schema,
     filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search],
     sortable: [:height, :name, :state, :country_id],
+    default_order: %{order_by: [:height], order_directions: [:desc]},
+    default_limit: 16,
+    default_pagination_type: :first,
+    max_limit: 50,
     adapter_opts: [
       join_fields: [
         manufacturer_ids: [

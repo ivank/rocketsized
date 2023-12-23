@@ -35,34 +35,46 @@
     <div
       id="grid"
       phx-update="stream"
-      phx-viewport-top={@meta.has_previous_page? && "prev-page"}
-      phx-viewport-bottom={@meta.has_next_page? && "next-page"}
+      phx-viewport-top={
+        @meta.has_previous_page? && JS.push("paginate", value: %{"to" => "previous"})
+      }
+      phx-viewport-bottom={@meta.has_next_page? && JS.push("paginate", value: %{"to" => "next"})}
       phx-page-loading
       class={[
-        "grid border-gray-100 gap-2 p-2",
-        case @meta.total_count do
-          1 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
-          2 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
-          3 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3"
-          4 -> "grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-          _ -> "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-        end
+        "grid gap-2 border-gray-100 p-2",
+        @meta.total_count == 1 && "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2",
+        @meta.total_count == 2 && "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2",
+        @meta.total_count == 3 && "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3",
+        @meta.total_count == 4 && "grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4",
+        @meta.total_count > 4 && "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
       ]}
     >
       <div
         :for={{id, rocket} <- @streams.rockets}
         id={id}
-        class="flex flex-col h-[calc(100vh-theme(space.4))] bg-gradient-171 from-gray-100 via-gray-50/10 to-gray-100 rounded px-4 py-2 justify-stretch"
+        class="h-[calc(100vh-theme(space.4))] bg-gradient-171 via-gray-50/10 justify-stretch flex flex-col overflow-clip rounded from-gray-100 to-gray-100 px-4 py-2"
       >
-        <div class="flex-grow flex flex-col items-center justify-end">
-          <img
-            src={Rocketsized.Rocket.Vehicle.Image.url({rocket.image, rocket}, signed: true)}
-            style={"height:calc((100vh - (16px + 4px + 56px + 16px)) * (#{rocket.height} / #{@max_height}));"}
-          />
+        <div class="flex flex-grow flex-col items-center justify-end">
+          <div
+            data-height={rocket.height}
+            class={[
+              "relative",
+              "before:content-[attr(data-height)'m'] before:right-[50%] before:absolute before:top-0 before:w-40 before:border-gray-400 before:text-right",
+              if(rocket.height <= @max_height - 10,
+                do: "before:-translate-y-[100%] before:border-b",
+                else: "before:border-t before:pr-4"
+              )
+            ]}
+          >
+            <img
+              src={Rocketsized.Rocket.Vehicle.Image.url({rocket.image, rocket}, signed: true)}
+              style={"height:calc((100vh - (16px + 4px + 56px + 16px)) * (#{rocket.height} / #{@max_height}));"}
+            />
+          </div>
         </div>
-        <div class="mt-2 h-14 flex flex-row items-end">
+        <div class="mt-2 flex h-14 flex-row items-end">
           <a
-            class="w-8 relative group"
+            class="group relative w-8"
             title={rocket.country.name}
             target="_blank"
             href={rocket.country.source}
@@ -75,7 +87,7 @@
               }
               class="h-6 w-8 object-contain"
             />
-            <div class="invisible absolute flex flex-row -top-2 left-0 z-10 min-w-max -translate-y-[100%] rounded bg-gray-100 px-3 py-2 text-sm opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 border border-gray-200">
+            <div class="-translate-y-[100%] invisible absolute -top-2 left-0 z-10 flex min-w-max flex-row rounded border border-gray-200 bg-gray-100 px-3 py-2 text-sm opacity-0 transition-opacity group-hover:visible group-hover:opacity-100">
               <img
                 src={
                   Rocketsized.Creator.Country.Flag.url({rocket.country.flag, rocket.country},
@@ -84,22 +96,26 @@
                 }
                 class="h-16 w-20 object-contain"
               />
-              <div class="ml-2 w-20 flex flex-col justify-center">
+              <div class="ml-2 flex w-20 flex-col justify-center">
                 <%= rocket.country.name %>
               </div>
             </div>
           </a>
-          <div class="flex-grow pl-2 h-12 flex flex-col justify-end">
+          <a
+            class="flex h-12 flex-grow flex-col justify-end pl-2"
+            href={rocket.source}
+            target="_blank"
+          >
             <p :if={rocket.alternative_name} class="text-xs"><%= rocket.alternative_name %></p>
             <p :if={rocket.native_name} class="text-xs"><%= rocket.native_name %></p>
-            <h2 class="text-lg -mt-0.5"><%= rocket.name %></h2>
-          </div>
-          <div class="flex flex-col w-8">
+            <h2 class="-mt-0.5 text-lg"><%= rocket.name %></h2>
+          </a>
+          <div class="flex w-8 flex-col">
             <a
               :for={manufacturer <- rocket.manufacturers}
               title={manufacturer.name}
               target="_blank"
-              class="relative group"
+              class="group relative"
               href={manufacturer.source}
             >
               <img
@@ -110,7 +126,7 @@
                 }
                 class="h-6 w-8 object-contain"
               />
-              <div class="invisible absolute flex flex-row -top-2 right-0 z-10 min-w-max -translate-y-[100%] rounded bg-gray-100 px-3 py-2 text-sm opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 border border-gray-200">
+              <div class="-translate-y-[100%] invisible absolute -top-2 right-0 z-10 flex min-w-max flex-row rounded border border-gray-200 bg-gray-100 px-3 py-2 text-sm opacity-0 transition-opacity group-hover:visible group-hover:opacity-100">
                 <img
                   src={
                     Rocketsized.Creator.Manufacturer.Logo.url({manufacturer.logo, manufacturer},
@@ -119,7 +135,7 @@
                   }
                   class="h-20 w-20 object-contain"
                 />
-                <div class="ml-2 w-28 flex flex-col justify-center">
+                <div class="ml-2 flex w-28 flex-col justify-center">
                   <%= manufacturer.name %>
                 </div>
               </div>

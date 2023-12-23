@@ -17,8 +17,6 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
     ~H"""
     <div>
       <.form for={@form} id={@id} phx-target={@target} phx-change={@on_change} phx-submit={@on_change}>
-        <.hidden_inputs_for_filter form={@form} />
-
         <.filter_fields
           :let={f}
           form={@form}

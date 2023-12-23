@@ -5,7 +5,7 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
 
   @impl Phoenix.LiveView
   def handle_params(params, _, socket) do
-    case Rocket.list_vehicles_with_params(params |> Map.put_new("page_size", 16)) do
+    case Rocket.list_vehicles_with_params(params) do
       {:ok, {rockets, meta, max_height}} ->
         {:noreply,
          socket
@@ -27,15 +27,15 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("next-page", _, socket) do
-    flop = Flop.to_next_page(socket.assigns.meta.flop, socket.assigns.meta.total_pages)
-    {rockets, meta} = Rocket.list_vehicles_with_flop(flop)
-    {:noreply, socket |> stream(:rockets, rockets) |> assign(:meta, meta)}
-  end
+  def handle_event("paginate", %{"to" => to}, socket) do
+    direction =
+      case to do
+        "next" -> :next
+        "previous" -> :previous
+      end
 
-  @impl Phoenix.LiveView
-  def handle_event("prev-page", _, socket) do
-    flop = Flop.to_previous_page(socket.assigns.meta.flop)
+    flop = Flop.set_cursor(socket.assigns.meta, direction)
+
     {rockets, meta} = Rocket.list_vehicles_with_flop(flop)
     {:noreply, socket |> stream(:rockets, rockets) |> assign(:meta, meta)}
   end

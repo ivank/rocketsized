@@ -495,7 +495,12 @@ defmodule Rocketsized.Rocket do
   end
 
   def list_vehicles_with_params(params) do
-    opts = [for: Vehicle]
+    opts = [
+      for: Vehicle
+      # default_limit: 16,
+      # default_pagination_type: :first,
+      # pagination_types: [:first, :last]
+    ]
 
     with {:ok, %Flop{} = flop} <- Flop.validate(params, opts) do
       {data, meta} = list_vehicles_with_flop(flop)
@@ -506,11 +511,11 @@ defmodule Rocketsized.Rocket do
   end
 
   def max_height_vehicles_with_flop(%Flop{} = flop) do
-    opts = [for: Vehicle, default_limit: 1000]
+    opts = [for: Vehicle]
 
     from(p in Vehicle, where: p.is_published == true, select: max(p.height))
     |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
-    |> Flop.query(flop, opts)
+    |> Flop.query(flop |> Flop.reset_order(), opts)
     |> Repo.one()
   end
 

@@ -59,7 +59,7 @@ defmodule RocketsizedWeb.Admin.Components do
             <%= render_slot(@inner_block) %>
           </h2>
         </div>
-        <div :if={@actions != []} class="mt-4 flex flex-shrink-0 md:ml-4 md:mt-0">
+        <div :if={@actions != []} class="mt-4 flex flex-shrink-0 md:mt-0 md:ml-4">
           <%= render_slot(@actions) %>
         </div>
       </div>
