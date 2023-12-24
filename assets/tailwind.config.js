@@ -13,6 +13,9 @@ module.exports = {
       fontFamily: {
         sans: ['"Space Grotesk"', ...defaultTheme.fontFamily.sans],
       },
+      fontSize: {
+        x2s: '0.5rem',
+      },
       backgroundImage: {
         'gradient-171': 'linear-gradient(171deg, var(--tw-gradient-stops))',
       },

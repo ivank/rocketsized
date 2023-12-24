@@ -16,7 +16,7 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
     assigns = assign(assigns, form: Phoenix.Component.to_form(meta), meta: nil)
 
     ~H"""
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 py-4">
       <.form for={@form} id={@id} phx-target={@target} phx-change={@on_change} phx-submit={@on_change}>
         <.filter_fields
           :let={f}

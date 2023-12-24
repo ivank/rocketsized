@@ -1,44 +1,77 @@
-<div>
-  <!-- Static sidebar for desktop -->
-  <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-    <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6">
-      <div class="flex h-16 shrink-0 items-center gap-2">
-        <img class="h-8 w-auto" src="/images/logo.svg" alt="Rocketsized Logo" />
-        <h1 class="text-2xl font-bold">Rocketsized</h1>
-      </div>
-      <p>
-        Search and compare various launch vehicle heights
-      </p>
-
-      <.live_component
-        id="filter"
-        module={RocketsizedWeb.RocketgridLive.FilterComponent}
-        on_change="update-filter"
-        on_reset="reset-filter"
-        meta={@meta}
-      />
-    </div>
-  </div>
-
-  <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
-    <button
-      type="button"
-      class="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-      phx-click={JS.exec("data-show", to: "#sidebar")}
+<div class="mx-auto max-w-screen-2xl">
+  <nav class="sticky top-0 z-40">
+    <div class="bg-gray-900/80 fixed inset-0 hidden" id="bg" />
+    <div
+      id="filter"
+      class="absolute z-50 hidden w-full lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col"
+      phx-click-away={JS.exec("data-hide", to: "#filter")}
+      phx-window-keydown={JS.exec("data-hide", to: "#filter")}
+      phx-key="escape"
+      data-show={
+        JS.show(
+          transition:
+            {"transition ease-in-out duration-300 transform", "-translate-y-full",
+             "translate-y-0"}
+        )
+        |> JS.show(
+          to: "#bg",
+          transition: {"transition-opacity ease-linear duration-300", "opacity-0", "opacity-100"}
+        )
+        |> JS.add_class("overflow-hidden", to: "body")
+        |> JS.focus_first()
+      }
+      data-hide={
+        JS.hide(
+          transition:
+            {"transition ease-in-out duration-300 transform", "translate-y-0",
+             "-translate-y-full"}
+        )
+        |> JS.hide(
+          to: "#bg",
+          transition: {"transition-opacity ease-linear duration-300", "opacity-100", "opacity-0"}
+        )
+        |> JS.hide(
+          to: "#sidebar-close",
+          transition: {"transition-opacity ease-in-out duration-300", "opacity-100", "opacity-0"}
+        )
+        |> JS.remove_class("overflow-hidden", to: "body")
+        |> JS.pop_focus()
+      }
     >
-      <span class="sr-only">Open sidebar</span>
-      <.icon name="hero-bars-3" />
-    </button>
-    <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
-    <a href="#">
-      <span class="sr-only">Your profile</span>
-      <img
-        class="h-8 w-8 rounded-full bg-gray-50"
-        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-        alt=""
-      />
-    </a>
-  </div>
+      <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6">
+        <div class="flex h-16 shrink-0 items-center gap-2">
+          <img class="h-8 w-auto" src="/images/logo.svg" alt="Rocketsized Logo" />
+          <h1 class="text-2xl font-bold">Rocketsized</h1>
+        </div>
+        <p>
+          Search and compare various launch vehicle heights
+        </p>
+
+        <.live_component
+          id="filter-form"
+          module={RocketsizedWeb.RocketgridLive.FilterComponent}
+          on_change="update-filter"
+          on_reset="reset-filter"
+          meta={@meta}
+        />
+      </div>
+    </div>
+
+    <div class="flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+      <button
+        type="button"
+        class="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+        phx-click={JS.exec("data-show", to: "#filter")}
+      >
+        <span class="sr-only">Open sidebar</span>
+        <.icon name="hero-bars-3" />
+      </button>
+      <div class="flex flex-1 items-center gap-2">
+        <h1 class="text-lg font-bold">Rocketsized</h1>
+      </div>
+      <img class="h-8 w-auto" src="/images/logo.svg" alt="Rocketsized Logo" />
+    </div>
+  </nav>
 
   <main class="lg:pl-72">
     <div
@@ -49,19 +82,17 @@
       }
       phx-viewport-bottom={@meta.has_next_page? && JS.push("paginate", value: %{"to" => "next"})}
       phx-page-loading
-      class={[
-        "grid gap-2 border-gray-100 p-2",
-        @meta.total_count == 1 && "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2",
-        @meta.total_count == 2 && "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2",
-        @meta.total_count == 3 && "grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3",
-        @meta.total_count == 4 && "grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4",
-        @meta.total_count > 4 && "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-      ]}
+      class="grid grid-cols-2 gap-2 border-gray-100 p-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+      style={"--max-height:#{@max_height}"}
     >
       <div
         :for={{id, rocket} <- @streams.rockets}
         id={id}
-        class="h-[calc(100vh-theme(space.4))] bg-gradient-171 via-gray-50/10 justify-stretch flex flex-col overflow-clip rounded from-gray-100 to-gray-100 px-4 py-2"
+        style={"--height:#{rocket.height}"}
+        class={[
+          "bg-gradient-171 via-gray-50/10 justify-stretch flex flex-col overflow-clip rounded from-gray-100 to-gray-100 px-2 py-2 sm:px-4",
+          "h-[calc(60vh-theme(space.4))] sm:h-[calc(100vh-theme(space.4))]"
+        ]}
       >
         <div class="flex flex-grow flex-col items-center justify-end">
           <a
@@ -79,7 +110,7 @@
           >
             <img
               src={Rocketsized.Rocket.Vehicle.Image.url({rocket.image, rocket}, signed: true)}
-              style={"height:calc((100vh - (16px + 4px + 56px + 16px)) * (#{rocket.height} / #{@max_height}));"}
+              class="h-[calc((60vh-theme(space.24))*(var(--height)/var(--max-height)))] sm:h-[calc((100vh-theme(space.20))*(var(--height)/var(--max-height)))]"
             />
           </a>
         </div>
@@ -96,7 +127,7 @@
                   signed: true
                 )
               }
-              class="h-6 w-8 object-contain"
+              class="h-4 w-6 object-contain sm:h-6 sm:w-8"
             />
             <div class="-translate-y-[100%] tooltip -top-2 left-0 flex flex-row ">
               <img
@@ -113,15 +144,17 @@
             </div>
           </a>
           <a
-            class="flex h-12 flex-grow flex-col justify-end pl-2"
+            class="flex h-12 flex-grow flex-col justify-end sm:pl-2"
             href={rocket.source}
             target="_blank"
           >
-            <p :if={rocket.alternative_name} class="text-xs"><%= rocket.alternative_name %></p>
-            <p :if={rocket.native_name} class="text-xs"><%= rocket.native_name %></p>
-            <h2 class="-mt-0.5 text-lg"><%= rocket.name %></h2>
+            <p :if={rocket.alternative_name} class="text-x2s sm:text-xs">
+              <%= rocket.alternative_name %>
+            </p>
+            <p :if={rocket.native_name} class="text-x2s sm:text-xs"><%= rocket.native_name %></p>
+            <h2 class="text-xs sm:-mt-0.5 sm:text-lg"><%= rocket.name %></h2>
           </a>
-          <div class="flex w-8 flex-col gap-1">
+          <div class="flex w-6 flex-col gap-1 sm:w-8">
             <a
               :for={manufacturer <- rocket.manufacturers}
               title={manufacturer.name}
@@ -135,7 +168,7 @@
                     signed: true
                   )
                 }
-                class="h-6 w-8 object-contain"
+                class="h-4 w-6 object-contain sm:h-6 sm:w-8"
               />
               <div class="-translate-y-[100%] tooltip -top-2 right-0 flex flex-row">
                 <img
