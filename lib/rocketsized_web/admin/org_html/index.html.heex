@@ -1,8 +1,8 @@
 <.admin_header>
   Rockets
   <:actions>
-    <.link href={~p"/admin/orgs/new"}>
-      <.button>New Organization</.button>
+    <.link href={~p"/admin/orgs/new"} class="btn btn-primary">
+      new organization
     </.link>
   </:actions>
 </.admin_header>
@@ -18,14 +18,6 @@
   <:col :let={resource} label="Short Name"><%= resource.short_name %></:col>
   <:col :let={resource} label="Name"><%= resource.name %></:col>
   <:action :let={resource}>
-    <div class="sr-only">
-      <.link navigate={~p"/admin/orgs/#{resource}"}>Show</.link>
-    </div>
-    <.link navigate={~p"/admin/orgs/#{resource}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={resource}>
-    <.link href={~p"/admin/orgs/#{resource}"} method="delete" data-confirm="Are you sure?">
-      Delete
-    </.link>
+    <.link navigate={~p"/admin/orgs/#{resource}/edit"} class="btn btn-secondary">edit</.link>
   </:action>
 </.table>

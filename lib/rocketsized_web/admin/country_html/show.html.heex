@@ -3,11 +3,16 @@
   <:breadcrumb navigate={~p"/admin/countries"}>Countries</:breadcrumb>
   <:actions>
     <div class="flex items-center gap-x-3">
-      <.link href={~p"/admin/countries/#{@resource}/edit"}>
-        <.button>Edit country</.button>
+      <.link href={~p"/admin/countries/#{@resource}/edit"} class="btn btn-primary">
+        edit country
       </.link>
-      <.link href={~p"/admin/countries/#{@resource}"} method="delete" data-confirm="Are you sure?">
-        <.button>Delete</.button>
+      <.link
+        href={~p"/admin/countries/#{@resource}"}
+        method="delete"
+        data-confirm="Are you sure?"
+        class="btn btn-danger"
+      >
+        delete
       </.link>
     </div>
   </:actions>
@@ -31,10 +36,10 @@
 </.table>
 
 <div class="mt-6 flex items-center gap-x-6">
-  <.link href={~p"/admin/countries"}>
-    <.icon name="hero-chevron-left" /> Back to countries
+  <.link href={~p"/admin/countries"} class="btn btn-soft">
+    <.icon name="hero-arrow-left-solid" class="h-3 w-3" /> back to countries
   </.link>
-  <.link href={~p"/admin/countries/#{@resource}/edit"}>
-    <.button>Edit country</.button>
+  <.link href={~p"/admin/countries/#{@resource}/edit"} class="btn btn-primary">
+    edit country
   </.link>
 </div>

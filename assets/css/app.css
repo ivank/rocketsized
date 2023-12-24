@@ -3,13 +3,26 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
-html {
-  font-family: "Space Grotesk", system-ui, sans-serif;
-}
-
-
 @layer components {
+  html {
+    @apply text-sky-900 font-sans
+  }
   .tooltip {
     @apply invisible absolute z-10 rounded border min-w-max border-gray-200 bg-gray-100 px-3 py-2 text-sm opacity-0 transition-opacity group-hover:visible group-hover:opacity-100
+  }
+  .btn {
+    @apply rounded-md px-2.5 py-1.5 text-sm shadow-sm font-semibold
+  }
+  .btn-soft {
+    @apply bg-orange-50 text-orange-600 hover:bg-orange-100
+  }
+  .btn-primary {
+    @apply bg-orange-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600
+  }
+  .btn-secondary {
+    @apply bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50
+  }
+  .btn-danger {
+    @apply bg-rose-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600
   }
 }

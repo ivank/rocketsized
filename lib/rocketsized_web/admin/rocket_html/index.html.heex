@@ -1,8 +1,8 @@
 <.admin_header>
   Rockets
   <:actions>
-    <.link href={~p"/admin/rockets/new"}>
-      <.button>New Rocket</.button>
+    <.link href={~p"/admin/rockets/new"} class="btn btn-primary">
+      new rocket
     </.link>
   </:actions>
 </.admin_header>
@@ -20,14 +20,6 @@
   <:col :let={resource} label="Is Published"><%= resource.is_published %></:col>
   <:col :let={resource} label="State"><%= resource.state %></:col>
   <:action :let={resource}>
-    <div class="sr-only">
-      <.link navigate={~p"/admin/rockets/#{resource}"}>Show</.link>
-    </div>
-    <.link navigate={~p"/admin/rockets/#{resource}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={resource}>
-    <.link href={~p"/admin/rockets/#{resource}"} method="delete" data-confirm="Are you sure?">
-      Delete
-    </.link>
+    <.link navigate={~p"/admin/rockets/#{resource}/edit"} class="btn btn-secondary">edit</.link>
   </:action>
 </.table>

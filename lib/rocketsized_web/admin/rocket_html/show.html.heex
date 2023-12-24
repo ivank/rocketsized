@@ -3,11 +3,16 @@
   <:breadcrumb navigate={~p"/admin/rockets"}>Rockets</:breadcrumb>
   <:actions>
     <div class="flex items-center gap-x-3">
-      <.link href={~p"/admin/rockets/#{@resource}/edit"}>
-        <.button>Edit rocket</.button>
+      <.link href={~p"/admin/rockets/#{@resource}/edit"} class="btn btn-primary">
+        edit rocket
       </.link>
-      <.link href={~p"/admin/rockets/#{@resource}"} method="delete" data-confirm="Are you sure?">
-        Delete
+      <.link
+        href={~p"/admin/rockets/#{@resource}"}
+        method="delete"
+        data-confirm="Are you sure?"
+        class="btn btn-danger"
+      >
+        delete
       </.link>
     </div>
   </:actions>
@@ -60,10 +65,10 @@
 </.list>
 
 <div class="mt-6 flex items-center gap-x-6">
-  <.link href={~p"/admin/rockets"}>
-    <.icon name="hero-chevron-left" /> Back to rockets
+  <.link href={~p"/admin/rockets"} class="btn btn-soft">
+    <.icon name="hero-chevron-left" /> back to rockets
   </.link>
-  <.link href={~p"/admin/rockets/#{@resource}/edit"}>
-    <.button>Edit rocket</.button>
+  <.link href={~p"/admin/rockets/#{@resource}/edit"} class="btn btn-primary">
+    edit rocket
   </.link>
 </div>

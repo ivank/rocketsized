@@ -1,8 +1,8 @@
 <.admin_header>
   Rockets
   <:actions>
-    <.link href={~p"/admin/countries/new"}>
-      <.button>New Country</.button>
+    <.link href={~p"/admin/countries/new"} class="btn btn-primary">
+      new country
     </.link>
   </:actions>
 </.admin_header>
@@ -19,9 +19,6 @@
   <:col :let={resource} label="Short Name"><%= resource.short_name %></:col>
   <:col :let={resource} label="Name"><%= resource.name %></:col>
   <:action :let={resource}>
-    <div class="sr-only">
-      <.link navigate={~p"/admin/countries/#{resource}"}>Show</.link>
-    </div>
-    <.link navigate={~p"/admin/countries/#{resource}/edit"}>Edit</.link>
+    <.link navigate={~p"/admin/countries/#{resource}/edit"} class="btn btn-secondary">edit</.link>
   </:action>
 </.table>

@@ -3,11 +3,16 @@
   <:breadcrumb navigate={~p"/admin/orgs"}>Organizations</:breadcrumb>
   <:actions>
     <div class="flex items-center gap-x-3">
-      <.link href={~p"/admin/orgs/#{@resource}/edit"}>
-        <.button>Edit organization</.button>
+      <.link href={~p"/admin/orgs/#{@resource}/edit"} class="btn btn-primary">
+        edit organization
       </.link>
-      <.link href={~p"/admin/orgs/#{@resource}"} method="delete" data-confirm="Are you sure?">
-        Delete
+      <.link
+        href={~p"/admin/orgs/#{@resource}"}
+        method="delete"
+        data-confirm="Are you sure?"
+        class="btn btn-danger"
+      >
+        delete
       </.link>
     </div>
   </:actions>
@@ -38,10 +43,10 @@
 </.table>
 
 <div class="mt-6 flex items-center gap-x-6">
-  <.link href={~p"/admin/orgs"}>
-    <.icon name="hero-chevron-left" /> Back to orgs
+  <.link href={~p"/admin/orgs"} class="btn btn-soft">
+    <.icon name="hero-chevron-left" /> back to orgs
   </.link>
-  <.link href={~p"/admin/orgs/#{@resource}/edit"}>
-    <.button>Edit org</.button>
+  <.link href={~p"/admin/orgs/#{@resource}/edit"} class="btn btn-primary">
+    edit org
   </.link>
 </div>

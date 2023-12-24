@@ -16,7 +16,7 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
     assigns = assign(assigns, form: Phoenix.Component.to_form(meta), meta: nil)
 
     ~H"""
-    <div>
+    <div class="flex flex-col gap-4">
       <.form for={@form} id={@id} phx-target={@target} phx-change={@on_change} phx-submit={@on_change}>
         <.filter_fields
           :let={f}
@@ -34,14 +34,17 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
         >
           <.input field={f.field} label={f.label} type={f.type} phx-debounce={120} {f.rest} />
         </.filter_fields>
+      </.form>
 
+      <div>
         <.link
           :if={Enum.any?(@form.data.filters, &(not is_nil(&1.value) and not Enum.empty?(&1.value)))}
           navigate={~p"/rocketgrid"}
+          class="btn btn-secondary"
         >
           Reset
         </.link>
-      </.form>
+      </div>
     </div>
     """
   end

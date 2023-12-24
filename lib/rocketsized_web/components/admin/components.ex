@@ -85,8 +85,8 @@ defmodule RocketsizedWeb.Admin.Components do
       class={[
         "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
         if(@active,
-          do: "bg-gray-50 text-indigo-600",
-          else: "text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+          do: "bg-gray-50 text-orange-600",
+          else: "text-gray-700 hover:text-orange-600 hover:bg-gray-50"
         ),
         @class
       ]}
@@ -96,7 +96,7 @@ defmodule RocketsizedWeb.Admin.Components do
         name={@icon}
         class={[
           "h-6 w-6 shrink-0",
-          if(@active, do: "text-indigo-600", else: "text-gray-400 group-hover:text-indigo-600")
+          if(@active, do: "text-orange-600", else: "text-gray-400 group-hover:text-orange-600")
         ]}
       />
 
@@ -109,12 +109,9 @@ defmodule RocketsizedWeb.Admin.Components do
 
   def sidebar(assigns) do
     ~H"""
-    <div class="flex h-16 shrink-0 items-center">
-      <img
-        class="h-8 w-auto"
-        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-        alt="Your Company"
-      /> Rocketsized
+    <div class="flex h-16 shrink-0 items-center gap-2">
+      <img class="h-8 w-auto" src="/images/logo.svg" alt="Rocketsized Logo" />
+      <h1 class="text-2xl font-bold">Admin</h1>
     </div>
     <nav class="flex flex-1 flex-col">
       <ul role="list" class="-mx-2 space-y-1">
