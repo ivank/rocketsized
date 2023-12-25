@@ -13,17 +13,14 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
          |> assign(%{meta: meta, max_height: max_height})}
 
       {:error, _meta} ->
-        # This will reset invalid parameters. Alternatively, you can assign
-        # only the meta and render the errors, or you can ignore the error
-        # case entirely.
-        {:noreply, push_navigate(socket, to: ~p"/rocketgrid")}
+        {:noreply, push_navigate(socket, to: ~p"/")}
     end
   end
 
   @impl Phoenix.LiveView
   def handle_event("update-filter", params, socket) do
     params = Map.delete(params, "_target")
-    {:noreply, push_patch(socket, to: ~p"/rocketgrid?#{params}")}
+    {:noreply, push_patch(socket, to: ~p"/?#{params}")}
   end
 
   @impl Phoenix.LiveView

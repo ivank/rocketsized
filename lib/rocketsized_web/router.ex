@@ -1,6 +1,8 @@
 defmodule RocketsizedWeb.Router do
   use RocketsizedWeb, :router
 
+  import RocketsizedWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule RocketsizedWeb.Router do
     plug :put_root_layout, {RocketsizedWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :admin do
@@ -21,9 +24,7 @@ defmodule RocketsizedWeb.Router do
   scope "/", RocketsizedWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
-
-    live "/rocketgrid", RocketgridLive.Index, :index
+    live "/", RocketgridLive.Index, :index
 
     live "/vehicles", VehicleLive.Index, :index
     live "/vehicles/new", VehicleLive.Index, :new
@@ -31,14 +32,6 @@ defmodule RocketsizedWeb.Router do
 
     live "/vehicles/:id", VehicleLive.Show, :show
     live "/vehicles/:id/show/edit", VehicleLive.Show, :edit
-  end
-
-  scope "/admin", RocketsizedWeb.Admin do
-    pipe_through [:browser, :admin]
-
-    resources "/rockets", RocketController
-    resources "/countries", CountryController
-    resources "/orgs", OrgController
   end
 
   # Other scopes may use custom stacks.
@@ -61,5 +54,51 @@ defmodule RocketsizedWeb.Router do
       live_dashboard "/dashboard", metrics: RocketsizedWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", RocketsizedWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    live_session :redirect_if_user_is_authenticated,
+      on_mount: [{RocketsizedWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/users/register", UserRegistrationLive, :new
+      live "/users/log_in", UserLoginLive, :new
+      live "/users/reset_password", UserForgotPasswordLive, :new
+      live "/users/reset_password/:token", UserResetPasswordLive, :edit
+    end
+
+    post "/users/log_in", UserSessionController, :create
+  end
+
+  scope "/", RocketsizedWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :require_authenticated_user,
+      on_mount: [{RocketsizedWeb.UserAuth, :ensure_authenticated}] do
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+    end
+  end
+
+  scope "/", RocketsizedWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+
+    live_session :current_user,
+      on_mount: [{RocketsizedWeb.UserAuth, :mount_current_user}] do
+      live "/users/confirm/:token", UserConfirmationLive, :edit
+      live "/users/confirm", UserConfirmationInstructionsLive, :new
+    end
+  end
+
+  scope "/admin", RocketsizedWeb.Admin do
+    pipe_through [:browser, :admin, :require_authenticated_user, :require_admin_user]
+
+    resources "/rockets", RocketController
+    resources "/countries", CountryController
+    resources "/orgs", OrgController
   end
 end

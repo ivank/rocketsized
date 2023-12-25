@@ -1,12 +1,13 @@
 <div class="mx-auto max-w-screen-2xl">
   <nav class="sticky top-0 z-40">
-    <div class="bg-gray-900/80 fixed inset-0 hidden" id="bg" />
+    <div
+      class="bg-gray-900/80 fixed inset-0 hidden"
+      id="bg"
+      phx-click={JS.exec("data-hide", to: "#filter")}
+    />
     <div
       id="filter"
       class="absolute z-50 hidden w-full lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col"
-      phx-click-away={JS.exec("data-hide", to: "#filter")}
-      phx-window-keydown={JS.exec("data-hide", to: "#filter")}
-      phx-key="escape"
       data-show={
         JS.show(
           transition:
@@ -18,7 +19,7 @@
           transition: {"transition-opacity ease-linear duration-300", "opacity-0", "opacity-100"}
         )
         |> JS.add_class("overflow-hidden", to: "body")
-        |> JS.focus_first()
+        |> JS.focus(to: "#flop_filters_0_value")
       }
       data-hide={
         JS.hide(
@@ -38,10 +39,14 @@
         |> JS.pop_focus()
       }
     >
-      <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6">
-        <div class="flex h-16 shrink-0 items-center gap-2">
+      <div class="flex grow flex-col gap-y-6 overflow-y-auto bg-white p-6">
+        <div class="flex h-8 shrink-0 items-center gap-2">
           <img class="h-8 w-auto" src="/images/logo.svg" alt="Rocketsized Logo" />
-          <h1 class="text-2xl font-bold">Rocketsized</h1>
+          <h1 class="flex-grow text-2xl font-bold">Rocketsized</h1>
+
+          <button class="lg:hidden" phx-click={JS.exec("data-hide", to: "#filter")}>
+            <.icon name="hero-x-mark" class="w-6 h-6" />
+          </button>
         </div>
         <p>
           Search and compare various launch vehicle heights
@@ -55,6 +60,18 @@
           meta={@meta}
         />
       </div>
+
+      <ul class="flex flex-col gap-2 p-6">
+        <li>
+          <a
+            href="https://github.com/ivank/rocketsized"
+            title="Rocketsized Opensource Github Repo"
+            target="_blank"
+          >
+            <img class="w-6" src="/images/github-mark.svg" alt="Github Octocat" />
+          </a>
+        </li>
+      </ul>
     </div>
 
     <div class="flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
@@ -110,7 +127,7 @@
           >
             <img
               src={Rocketsized.Rocket.Vehicle.Image.url({rocket.image, rocket}, signed: true)}
-              class="h-[calc((60vh-theme(space.24))*(var(--height)/var(--max-height)))] sm:h-[calc((100vh-theme(space.20))*(var(--height)/var(--max-height)))]"
+              class="h-[calc((60vh-theme(space.24))*(var(--height)/var(--max-height)))] sm:h-[calc((100vh-theme(space.24))*(var(--height)/var(--max-height)))]"
             />
           </a>
         </div>

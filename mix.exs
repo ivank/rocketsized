@@ -32,9 +32,11 @@ defmodule Rocketsized.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7.10"},
       {:phoenix_ecto, "~> 4.4.3"},
       {:ecto_sql, "~> 3.11.1"},
+      {:ecto_psql_extras, "~> 0.6"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3.3"},
       {:phoenix_live_reload, "~> 1.4.1", only: :dev},
