@@ -74,7 +74,7 @@ defmodule Rocketsized.Rocket.Vehicle do
       :native_name,
       :alternative_name
     ])
-    |> unique_constraint(:name)
+    |> unique_constraint([:name, :country_id], name: "vehicles_name_country_id_index")
     |> cast_attachments(attrs, [:image])
     |> cast_assoc(:vehicle_manufacturers,
       with: &Rocketsized.Rocket.VehicleManufacturer.changeset/2,
