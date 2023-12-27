@@ -7,10 +7,12 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
   def handle_params(params, _, socket) do
     case Rocket.list_vehicles_with_params(params) do
       {:ok, {rockets, meta, max_height}} ->
+        title = Rocket.vehicle_filters_title_for_flop(meta.flop) || "Launch vehicles list"
+
         {:noreply,
          socket
          |> stream(:rockets, rockets, reset: true)
-         |> assign(%{meta: meta, max_height: max_height, page_title: "Launch vehicles list"})}
+         |> assign(%{meta: meta, max_height: max_height, page_title: title})}
 
       {:error, _meta} ->
         {:noreply, push_navigate(socket, to: ~p"/")}

@@ -546,6 +546,7 @@ defmodule Rocketsized.Rocket do
     |> Repo.all()
   end
 
+  @spec list_vehicle_filters_by_ids(list(String.t())) :: list(VehicleFilter.t())
   def list_vehicle_filters_by_ids(ids) do
     groups =
       ids
@@ -558,5 +559,28 @@ defmodule Rocketsized.Rocket do
       |> Enum.reduce(fn group, query -> dynamic([_], ^query or ^group) end)
 
     from(vf in VehicleFilter, where: ^groups, limit: 20) |> Repo.all()
+  end
+
+  @spec vehicle_filters_title_for_flop(Flop.t()) :: String.t() | nil
+  def vehicle_filters_title_for_flop(%Flop{} = flop) do
+    with %Flop{filters: filters} <- flop,
+         %Flop.Filter{value: value} <- Enum.find(filters, &(&1.field == :search)) do
+      items = list_vehicle_filters_by_ids(value)
+
+      if Enum.empty?(items) do
+        nil
+      else
+        for {type, filters} <- items |> Enum.group_by(& &1.type) do
+          filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
+
+          case type do
+            :country -> "From #{filters_title}"
+            :vehicle -> "#{filters_title}"
+            :manufacturer -> "By #{filters_title}"
+          end
+        end
+        |> Enum.join(" or ")
+      end
+    end
   end
 end
