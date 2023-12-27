@@ -10,7 +10,7 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
         {:noreply,
          socket
          |> stream(:rockets, rockets, reset: true)
-         |> assign(%{meta: meta, max_height: max_height})}
+         |> assign(%{meta: meta, max_height: max_height, page_title: "Launch vehicles list"})}
 
       {:error, _meta} ->
         {:noreply, push_navigate(socket, to: ~p"/")}
@@ -25,15 +25,11 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
 
   @impl Phoenix.LiveView
   def handle_event("paginate", %{"to" => to}, socket) do
-    direction =
-      case to do
-        "next" -> :next
-        "previous" -> :previous
-      end
-
-    flop = Flop.set_cursor(socket.assigns.meta, direction)
-
+    flop = Flop.set_cursor(socket.assigns.meta, direction(to))
     {rockets, meta} = Rocket.list_vehicles_with_flop(flop)
     {:noreply, socket |> stream(:rockets, rockets) |> assign(:meta, meta)}
   end
+
+  defp direction(_to = "next"), do: :next
+  defp direction(_to = "previous"), do: :previous
 end
