@@ -1,18 +1,12 @@
 # Rocketsized
 
-To start your Phoenix server:
+A small hobby project to list and compare various launch vehicles against one another. I've always seen those rockets lined up side by side but its always a one-off thing, I wanted an automated tool that could do that for any combination of rockets.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+Also a way to take a look at and learn elixir and phoenix, which I was unfamiliar with until now.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Project is developed with elixir and phoenix.
+Deployed at [rocketsized.com](https://rocketsized.com)
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Copyright
 
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Apache License 2 - 2023 Ivan Kerin, Read the [LICENSE](./LICENSE) file.

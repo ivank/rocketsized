@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: docker-compose up -d
+      - uses: ./.github/actions/setup-elixir
+
+      - name: Check Formatting
+        run: mix format --check-formatted
+
+      - name: Run tests
+        run: mix test
+
+      - run: fly deploy
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

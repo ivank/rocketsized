@@ -1,0 +1,22 @@
+name: 'Install and compile elixir'
+description: 'Install mix dependencies with mix.get and compile with mix compile. Warnings as errors'
+runs:
+  using: 'composite'
+  steps:
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: 26
+        elixir-version: 1.15.7
+    - uses: actions/cache@v2
+      path: |
+        deps
+        _build
+      key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+      restore-keys: |
+        ${{ runner.os }}-mix-
+    - name: Install dependencies
+      run: mix deps.get
+      shell: bash
+    - name: Compiles without warnings
+      run: mix compile --warnings-as-errors
+      shell: bash
