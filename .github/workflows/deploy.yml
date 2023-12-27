@@ -21,6 +21,6 @@ jobs:
       - name: Run tests
         run: mix test
 
-      - run: fly deploy
+      - run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
