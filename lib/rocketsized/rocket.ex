@@ -564,23 +564,21 @@ defmodule Rocketsized.Rocket do
   @spec vehicle_filters_title_for_flop(Flop.t()) :: String.t() | nil
   def vehicle_filters_title_for_flop(%Flop{} = flop) do
     with %Flop{filters: filters} <- flop,
-         %Flop.Filter{value: value} <- Enum.find(filters, &(&1.field == :search)) do
-      items = list_vehicle_filters_by_ids(value)
+         [%Flop.Filter{value: value}] <- filters,
+         ids = [_ | _] <- value,
+         items = [_ | _] <- list_vehicle_filters_by_ids(ids) do
+      for {type, filters} <- items |> Enum.group_by(& &1.type) do
+        filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
 
-      if Enum.empty?(items) do
-        nil
-      else
-        for {type, filters} <- items |> Enum.group_by(& &1.type) do
-          filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
-
-          case type do
-            :country -> "From #{filters_title}"
-            :vehicle -> "#{filters_title}"
-            :manufacturer -> "By #{filters_title}"
-          end
+        case type do
+          :country -> "From #{filters_title}"
+          :vehicle -> "#{filters_title}"
+          :manufacturer -> "By #{filters_title}"
         end
-        |> Enum.join(" or ")
       end
+      |> Enum.join(" or ")
+    else
+      _ -> nil
     end
   end
 end

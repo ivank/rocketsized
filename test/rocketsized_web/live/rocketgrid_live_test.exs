@@ -78,6 +78,12 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
       assert page_title(view) =~ v.name
       assert view |> has_element?("ul[role=list] > li", v.name)
       refute view |> has_element?("ul[role=list] > li", filtered_out_v.name)
+
+      view
+      |> element("#filter-form")
+      |> render_submit(%{"filters" => %{0 => %{"field" => "search", "op" => "in", "value" => []}}})
+
+      assert page_title(view) =~ "Launch vehicles list"
     end
   end
 end
