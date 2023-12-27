@@ -6,8 +6,8 @@ defmodule Rocketsized.Rocket.Vehicle do
   @derive {
     Flop.Schema,
     filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search],
-    sortable: [:height, :name, :state, :country_id],
-    default_order: %{order_by: [:height], order_directions: [:desc]},
+    sortable: [:id, :height, :name, :state, :country_id],
+    default_order: %{order_by: [:height, :id], order_directions: [:desc, :desc]},
     default_limit: 16,
     default_pagination_type: :first,
     max_limit: 50,

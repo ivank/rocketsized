@@ -8,10 +8,15 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
   defp create_vehicle(_) do
     country = country_fixture()
 
-    vehicles = [
-      vehicle_fixture(%{country_id: country.id, is_published: true, name: "big thing"}),
-      vehicle_fixture(%{country_id: country.id, is_published: true, name: "other rocket"})
-    ]
+    vehicles =
+      for item <- 1..20 do
+        vehicle_fixture(%{
+          country_id: country.id,
+          is_published: true,
+          height: 100 - item,
+          name: "rocket #{item}"
+        })
+      end
 
     %{vehicles: vehicles, country: country}
   end
@@ -21,6 +26,25 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
 
     test "render rocket list", %{conn: conn, vehicles: vehicles, country: country} do
       {:ok, _lv, html} = conn |> live(~p"/")
+
+      {page, outside} = Enum.split(vehicles, 16)
+
+      for vehicle <- page do
+        assert html =~ vehicle.name
+        assert html =~ vehicle.alternative_name
+        assert html =~ vehicle.native_name
+        assert html =~ country.name
+      end
+
+      for vehicle <- outside do
+        refute html =~ vehicle.name
+      end
+    end
+
+    test "render paginate", %{conn: conn, vehicles: vehicles, country: country} do
+      {:ok, view, _html} = conn |> live(~p"/")
+
+      html = view |> render_hook("paginate", %{"to" => "next"})
 
       for vehicle <- vehicles do
         assert html =~ vehicle.name
