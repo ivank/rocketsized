@@ -7,6 +7,21 @@ Also a way to take a look at and learn elixir and phoenix, which I was unfamilia
 Project is developed with elixir and phoenix.
 Deployed at [rocketsized.com](https://rocketsized.com)
 
+# Developing locally
+
+Should have a postgres database on localhost port 5432. Run docker compose to create one.
+
+```bash
+docker compose up -d
+```
+
+Now you can download dependencies, compile the app and run the migrations. Then you can start the local server:
+
+```bash
+mix setup
+mix phx.server
+```
+
 ## Copyright
 
 Apache License 2 - 2023 Ivan Kerin, Read the [LICENSE](./LICENSE) file.
