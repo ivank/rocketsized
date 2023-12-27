@@ -495,12 +495,7 @@ defmodule Rocketsized.Rocket do
   end
 
   def list_vehicles_with_params(params) do
-    opts = [
-      for: Vehicle
-      # default_limit: 16,
-      # default_pagination_type: :first,
-      # pagination_types: [:first, :last]
-    ]
+    opts = [for: Vehicle]
 
     with {:ok, %Flop{} = flop} <- Flop.validate(params, opts) do
       {data, meta} = list_vehicles_with_flop(flop)
@@ -520,7 +515,7 @@ defmodule Rocketsized.Rocket do
   end
 
   def list_vehicles_with_flop(%Flop{} = flop) do
-    opts = [for: Vehicle, default_limit: 8]
+    opts = [for: Vehicle]
 
     from(p in Vehicle,
       where: p.is_published == true,

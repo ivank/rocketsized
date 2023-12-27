@@ -21,12 +21,21 @@ defmodule Rocketsized.CreatorTest do
     end
 
     test "create_country/1 with valid data creates a country" do
-      valid_attrs = %{name: "some name", code: "us", flag: "some flag"}
+      valid_attrs = %{
+        name: "some name",
+        code: "us",
+        short_name: "some short",
+        flag: %Plug.Upload{
+          content_type: "image/svg",
+          filename: "org.svg",
+          path: "test/support/fixtures/images/org.svg"
+        }
+      }
 
       assert {:ok, %Country{} = country} = Creator.create_country(valid_attrs)
       assert country.name == "some name"
-      assert country.flag == "some flag"
-      assert country.code == "us"
+      assert country.short_name == "some short"
+      assert country.flag.file_name == "org.svg"
     end
 
     test "create_country/1 with invalid data returns error changeset" do
@@ -35,11 +44,11 @@ defmodule Rocketsized.CreatorTest do
 
     test "update_country/2 with valid data updates the country" do
       country = country_fixture()
-      update_attrs = %{name: "some updated name", flag: "some updated flag"}
+      update_attrs = %{name: "some updated name", short_name: "some updated short"}
 
       assert {:ok, %Country{} = country} = Creator.update_country(country, update_attrs)
       assert country.name == "some updated name"
-      assert country.flag == "some updated flag"
+      assert country.short_name == "some updated short"
     end
 
     test "update_country/2 with invalid data returns error changeset" do
@@ -78,11 +87,20 @@ defmodule Rocketsized.CreatorTest do
     end
 
     test "create_manufacturer/1 with valid data creates a manufacturer" do
-      valid_attrs = %{name: "some name", flag: "some flag"}
+      valid_attrs = %{
+        name: "some name",
+        short_name: "some short",
+        logo: %Plug.Upload{
+          content_type: "image/svg",
+          filename: "flag.svg",
+          path: "test/support/fixtures/images/flag.svg"
+        }
+      }
 
       assert {:ok, %Manufacturer{} = manufacturer} = Creator.create_manufacturer(valid_attrs)
       assert manufacturer.name == "some name"
-      assert manufacturer.flag == "some flag"
+      assert manufacturer.short_name == "some short"
+      assert manufacturer.logo.file_name == "flag.svg"
     end
 
     test "create_manufacturer/1 with invalid data returns error changeset" do
@@ -91,13 +109,23 @@ defmodule Rocketsized.CreatorTest do
 
     test "update_manufacturer/2 with valid data updates the manufacturer" do
       manufacturer = manufacturer_fixture()
-      update_attrs = %{name: "some updated name", flag: "some updated flag"}
+
+      update_attrs = %{
+        name: "some updated name",
+        short_name: "some updated short name",
+        logo: %Plug.Upload{
+          content_type: "image/svg",
+          filename: "flag.svg",
+          path: "test/support/fixtures/images/flag.svg"
+        }
+      }
 
       assert {:ok, %Manufacturer{} = manufacturer} =
                Creator.update_manufacturer(manufacturer, update_attrs)
 
       assert manufacturer.name == "some updated name"
-      assert manufacturer.flag == "some updated flag"
+      assert manufacturer.short_name == "some updated short name"
+      assert manufacturer.logo.file_name == "flag.svg"
     end
 
     test "update_manufacturer/2 with invalid data returns error changeset" do

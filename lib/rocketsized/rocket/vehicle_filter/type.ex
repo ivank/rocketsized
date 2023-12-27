@@ -1,5 +1,6 @@
 defmodule Rocketsized.Rocket.VehicleFilter.Type do
   @behaviour Ecto.Type
+  import Ecto.Query
 
   def type, do: :string
 
@@ -45,5 +46,21 @@ defmodule Rocketsized.Rocket.VehicleFilter.Type do
       fn %{type: type} -> type end,
       fn %{id: id} -> id end
     )
+  end
+
+  def search(query, %Flop.Filter{value: value, op: _op}, _opts) do
+    groups =
+      value
+      |> Enum.map(&load(&1))
+      |> to_valid_list()
+      |> to_group_ids()
+      |> Enum.map(fn
+        {:vehicle, ids} -> dynamic([v], v.id in ^ids)
+        {:country, ids} -> dynamic([v], v.country_id in ^ids)
+        {:manufacturer, ids} -> dynamic([vehicle_manufacturers: vm], vm.manufacturer_id in ^ids)
+      end)
+      |> Enum.reduce(&dynamic([_], ^&1 or ^&2))
+
+    where(query, [_], ^groups)
   end
 end

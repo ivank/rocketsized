@@ -25,7 +25,18 @@ defmodule Rocketsized.RocketFixtures do
     {:ok, vehicle} =
       attrs
       |> Enum.into(%{
-        name: "some name"
+        name: "rocket",
+        native_name: "ракета",
+        alternative_name: "BFR",
+        source: "https://example.com",
+        height: 10,
+        image: %Plug.Upload{
+          content_type: "image/svg",
+          filename: "rocket.svg",
+          path: "test/support/fixtures/images/rocket.svg"
+        },
+        diameter: 2,
+        state: :operational
       })
       |> Rocketsized.Rocket.create_vehicle()
 

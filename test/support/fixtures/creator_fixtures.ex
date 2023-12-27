@@ -11,9 +11,14 @@ defmodule Rocketsized.CreatorFixtures do
     {:ok, country} =
       attrs
       |> Enum.into(%{
-        flag: "some flag",
+        flag: %Plug.Upload{
+          content_type: "image/svg",
+          filename: "flag.svg",
+          path: "test/support/fixtures/images/flag.svg"
+        },
         code: "us",
-        name: "some name"
+        name: "some country",
+        short_name: "soco"
       })
       |> Rocketsized.Creator.create_country()
 
@@ -27,8 +32,13 @@ defmodule Rocketsized.CreatorFixtures do
     {:ok, manufacturer} =
       attrs
       |> Enum.into(%{
-        flag: "some flag",
-        name: "some name"
+        logo: %Plug.Upload{
+          content_type: "image/svg",
+          filename: "org.svg",
+          path: "test/support/fixtures/images/org.svg"
+        },
+        name: "some org",
+        short_name: "sorg"
       })
       |> Rocketsized.Creator.create_manufacturer()
 

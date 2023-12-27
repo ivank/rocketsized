@@ -81,7 +81,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:gslv]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -112,7 +112,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:ariane6]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -134,7 +134,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:shavit2]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -156,7 +156,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:tronador]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -178,7 +178,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:titan23g]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -200,7 +200,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:delta3]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -222,7 +222,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:space_shuttle]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -252,7 +252,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:saturn5]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -274,7 +274,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:atlas_able]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -296,7 +296,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:atlas3]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -318,7 +318,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:vostokK]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{
@@ -340,7 +340,7 @@ defmodule Rocketsized.DatasourceTest do
         @pages[:antares]
         |> File.read!()
         |> Floki.parse_document!()
-        |> Wikipedia.to_wikipedia_vehicle("source1")
+        |> Wikipedia.to_wikipedia_vehicles("source1")
 
       expected = [
         %Rocketsized.Datasource.WikipediaVehicle{

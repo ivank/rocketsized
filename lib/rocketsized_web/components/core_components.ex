@@ -363,7 +363,7 @@ defmodule RocketsizedWeb.CoreComponents do
       <.label for={@id}><%= @label %></.label>
 
       <.live_component
-        module={RocketsizedWeb.FormLive.ComboboxComponent}
+        module={RocketsizedWeb.RocketgridLive.ComboboxComponent}
         id={@id}
         value={@value}
         name={@name}

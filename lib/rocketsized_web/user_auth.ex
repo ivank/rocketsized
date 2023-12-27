@@ -212,7 +212,8 @@ defmodule RocketsizedWeb.UserAuth do
   end
 
   def require_admin_user(conn, _opts) do
-    if conn.assigns[:current_user] && Enum.member?(conn.assigns[:current_user].scopes, :admin) do
+    if conn.assigns[:current_user] && conn.assigns[:current_user].scopes &&
+         Enum.member?(conn.assigns[:current_user].scopes, :admin) do
       conn
     else
       conn

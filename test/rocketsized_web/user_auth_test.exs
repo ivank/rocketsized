@@ -14,7 +14,7 @@ defmodule RocketsizedWeb.UserAuthTest do
       |> Map.replace!(:secret_key_base, RocketsizedWeb.Endpoint.config(:secret_key_base))
       |> init_test_session(%{})
 
-    %{user: user_fixture(), conn: conn}
+    %{user: user_fixture(), confirmed_user: confirmed_user_fixture(), conn: conn}
   end
 
   describe "log_in_user/3" do
@@ -263,8 +263,13 @@ defmodule RocketsizedWeb.UserAuthTest do
       refute get_session(halted_conn, :user_return_to)
     end
 
-    test "does not redirect if user is authenticated", %{conn: conn, user: user} do
-      conn = conn |> assign(:current_user, user) |> UserAuth.require_authenticated_user([])
+    test "does not redirect if user is authenticated", %{
+      conn: conn,
+      confirmed_user: confirmed_user
+    } do
+      conn =
+        conn |> assign(:current_user, confirmed_user) |> UserAuth.require_authenticated_user([])
+
       refute conn.halted
       refute conn.status
     end

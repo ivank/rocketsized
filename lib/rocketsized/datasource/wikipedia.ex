@@ -85,7 +85,7 @@ defmodule Rocketsized.Datasource.Wikipedia do
 
   ## Examples
 
-      iex> html |> to_wikipedia_vehicle("https://en.wikipedia.org/wiki/Ceres-1")
+      iex> html |> to_wikipedia_vehicles("https://en.wikipedia.org/wiki/Ceres-1")
       [%WikipediaVehicle{}]
   """
   def to_wikipedia_vehicles(html, url) do

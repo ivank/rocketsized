@@ -1,4 +1,4 @@
-defmodule RocketsizedWeb.FormLive.ComboboxComponent do
+defmodule RocketsizedWeb.RocketgridLive.ComboboxComponent do
   use RocketsizedWeb, :live_component
 
   @impl true
