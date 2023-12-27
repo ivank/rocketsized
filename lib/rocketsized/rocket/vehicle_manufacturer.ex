@@ -14,10 +14,9 @@ defmodule Rocketsized.Rocket.VehicleManufacturer do
   @doc false
   def changeset(stage, attrs) do
     stage
-    |> cast(attrs, [:source])
+    |> cast(attrs, [:source, :vehicle_id, :manufacturer_id])
     |> unique_constraint([:vehicle_id, :manufacturer_id],
       name: "vehicle_manufacturers_vehicle_id_manufacturer_id_index"
     )
-    |> validate_required([:vehicle_id, :manufacturer_id])
   end
 end

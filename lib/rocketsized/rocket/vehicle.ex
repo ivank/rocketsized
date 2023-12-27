@@ -78,12 +78,24 @@ defmodule Rocketsized.Rocket.Vehicle do
     |> cast_attachments(attrs, [:image])
     |> cast_assoc(:vehicle_manufacturers,
       with: &Rocketsized.Rocket.VehicleManufacturer.changeset/2,
-      drop_param: :manufacturer_delete
+      drop_param: :drop_vehicle_manufacturers
     )
+    |> cast_add_assoc(attrs, :vehicle_manufacturers, add_param: :add_vehicle_manufacturers)
     |> validate_required_on_field_value(:is_published, %{
       true => [:name, :image, :is_published, :height, :state, :country_id],
       false => [:name]
     })
+  end
+
+  defp cast_add_assoc(%Ecto.Changeset{} = changeset, attrs, assoc, add_param: add_param) do
+    if Map.has_key?(attrs, Atom.to_string(add_param)) do
+      new = Ecto.build_assoc(changeset.data, assoc)
+      current = get_in(changeset.data, [Access.key(assoc)])
+      updated = if Ecto.assoc_loaded?(current), do: current ++ [new], else: [new]
+      %{Ecto.Changeset.put_assoc(changeset, assoc, updated) | valid?: false}
+    else
+      changeset
+    end
   end
 
   defp validate_required_on_field_value(changeset, field_name, required_map) do
