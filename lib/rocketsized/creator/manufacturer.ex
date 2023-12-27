@@ -20,6 +20,7 @@ defmodule Rocketsized.Creator.Manufacturer do
     manufacturer
     |> cast(attrs, [:name, :source, :short_name])
     |> cast_attachments(attrs, [:logo])
+    |> unique_constraint(:name)
     |> validate_required([:name, :logo, :short_name])
   end
 end
