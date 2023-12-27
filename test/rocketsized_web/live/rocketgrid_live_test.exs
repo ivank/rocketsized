@@ -25,7 +25,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
     setup [:create_vehicle]
 
     test "render rocket list", %{conn: conn, vehicles: vehicles, country: country} do
-      {:ok, _lv, html} = conn |> live(~p"/")
+      {:ok, _view, html} = conn |> live(~p"/")
 
       {page, outside} = Enum.split(vehicles, 16)
 
@@ -57,6 +57,8 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
     test "rocket filter by vehicle id", %{conn: conn, vehicles: vehicles} do
       {:ok, view, _html} = conn |> live(~p"/")
 
+      assert page_title(view) =~ "Launch vehicles list"
+
       v = List.last(vehicles)
       filtered_out_v = List.first(vehicles)
 
@@ -73,7 +75,9 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
         "filters" => %{0 => %{"field" => "search", "op" => "in", "value" => ["vehicle_#{v.id}"]}}
       })
 
+      assert page_title(view) =~ v.name
       assert view |> has_element?("ul[role=list] > li", v.name)
+      refute view |> has_element?("ul[role=list] > li", filtered_out_v.name)
     end
   end
 end
