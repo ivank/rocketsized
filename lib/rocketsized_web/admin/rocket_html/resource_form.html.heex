@@ -11,6 +11,42 @@
     label="Country"
     options={Enum.map(@countries, &{&1.name, &1.id})}
   />
+  <fieldset>
+    <legend class="text-sm font-semibold leading-6 text-gray-900">Organizations</legend>
+    <div class="grid grid-cols-2">
+      <.inputs_for :let={vm_form} field={f[:vehicle_manufacturers]}>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <.input
+              field={vm_form[:manufacturer_id]}
+              type="select"
+              class="w-full"
+              options={@manufacturers |> Enum.map(&{&1.name, &1.id})}
+            />
+          </div>
+          <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+            <input
+              type="checkbox"
+              id={Phoenix.HTML.Form.input_id(f, :drop_vehicle_manufacturers)}
+              name={Phoenix.HTML.Form.input_name(f, :drop_vehicle_manufacturers) <> "[]"}
+              value={vm_form.index}
+              class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
+            /> Remove
+          </label>
+        </div>
+      </.inputs_for>
+    </div>
+
+    <.button
+      type="submit"
+      name={Phoenix.HTML.Form.input_name(f, :add_vehicle_manufacturers)}
+      value="true"
+      class="mt-2"
+      variant="secondary"
+    >
+      <.icon name="hero-plus-circle" /> Add
+    </.button>
+  </fieldset>
   <.input
     field={f[:state]}
     type="select"
