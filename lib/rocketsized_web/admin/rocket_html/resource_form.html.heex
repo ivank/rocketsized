@@ -56,6 +56,22 @@
   <.input field={f[:height]} type="text" label="Height" />
   <.input field={f[:diameter]} type="text" label="Diameter" />
   <.input field={f[:image]} type="file" label="Image" accept="image/svg+xml,image/png" />
+
+  <fieldset>
+    <legend class="text-sm font-semibold leading-6 text-gray-900">Image Meta</legend>
+    <div class="grid grid-cols-2 gap-2">
+      <.inputs_for :let={image_meta} field={f[:image_meta]}>
+        <.input
+          field={image_meta[:license]}
+          type="select"
+          class="w-full"
+          label="License"
+          options={Rocketsized.Rocket.Vehicle.ImageMeta.image_licenses()}
+        />
+        <.input field={image_meta[:attribution]} label="Attribution" />
+      </.inputs_for>
+    </div>
+  </fieldset>
   <.input field={f[:description]} type="textarea" label="Description" />
   <.input field={f[:source]} type="text" label="Source" />
   <.input field={f[:is_published]} type="checkbox" label="Is Published" />

@@ -35,6 +35,13 @@ defmodule Rocketsized.RocketFixtures do
           filename: "rocket.svg",
           path: "test/support/fixtures/images/rocket.svg"
         },
+        image_meta: %{
+          width: 10.0,
+          height: 10.0,
+          type: :svg,
+          license: :ivan_kerin,
+          attribution: "Test"
+        },
         diameter: 2,
         state: :operational
       })

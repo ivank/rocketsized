@@ -2,6 +2,7 @@ defmodule Rocketsized.RocketTest do
   use Rocketsized.DataCase
 
   alias Rocketsized.Rocket
+  alias Rocketsized.Rocket.Vehicle.Image
 
   describe "families" do
     alias Rocketsized.Rocket.Family
@@ -64,6 +65,15 @@ defmodule Rocketsized.RocketTest do
 
     @invalid_attrs %{name: nil}
 
+    test "image_info should be able to parse image to get width and height, as well as image type" do
+      dir = "test/support/fixtures/images"
+      assert {:ok, 24.0, 24.0, :svg} = Image.image_info(Path.join(dir, "org.svg"))
+      assert {:ok, 186, 88, :png} = Image.image_info(Path.join(dir, "d-logo.png"))
+      assert {:ok, 24.0, 24.0, :svg} = Image.image_info(Path.join(dir, "flag.svg"))
+      assert {:ok, 24.0, 24.0, :svg} = Image.image_info(Path.join(dir, "rocket.svg"))
+      assert {:ok, 270.0, 270.0, :svg} = Image.image_info(Path.join(dir, "energia.svg"))
+    end
+
     test "list_vehicles/0 returns all vehicles" do
       vehicle = vehicle_fixture()
       assert Rocket.list_vehicles() == [vehicle]
@@ -75,10 +85,20 @@ defmodule Rocketsized.RocketTest do
     end
 
     test "create_vehicle/1 with valid data creates a vehicle" do
-      valid_attrs = %{name: "some name"}
+      valid_attrs = %{
+        name: "some name",
+        image: %Plug.Upload{
+          content_type: "image/svg+xml",
+          filename: "org.svg",
+          path: "test/support/fixtures/images/org.svg"
+        }
+      }
 
       assert {:ok, %Vehicle{} = vehicle} = Rocket.create_vehicle(valid_attrs)
       assert vehicle.name == "some name"
+      assert vehicle.image_meta.width == 24
+      assert vehicle.image_meta.height == 24
+      assert vehicle.image_meta.type == :svg
     end
 
     test "create_vehicle/1 with invalid data returns error changeset" do
@@ -87,10 +107,38 @@ defmodule Rocketsized.RocketTest do
 
     test "update_vehicle/2 with valid data updates the vehicle" do
       vehicle = vehicle_fixture()
-      update_attrs = %{name: "some updated name"}
+
+      update_attrs = %{
+        name: "some updated name",
+        image: %Plug.Upload{
+          content_type: "image/svg+xml",
+          filename: "energia.svg",
+          path: "test/support/fixtures/images/energia.svg"
+        }
+      }
 
       assert {:ok, %Vehicle{} = vehicle} = Rocket.update_vehicle(vehicle, update_attrs)
       assert vehicle.name == "some updated name"
+      assert vehicle.image_meta.width == 270
+      assert vehicle.image_meta.height == 270
+      assert vehicle.image_meta.type == :svg
+    end
+
+    test "update_vehicle/2 with png populates image_meta" do
+      vehicle = vehicle_fixture()
+
+      update_attrs = %{
+        image: %Plug.Upload{
+          content_type: "image/png",
+          filename: "d-logo.png",
+          path: "test/support/fixtures/images/d-logo.png"
+        }
+      }
+
+      assert {:ok, %Vehicle{} = vehicle} = Rocket.update_vehicle(vehicle, update_attrs)
+      assert vehicle.image_meta.width == 186
+      assert vehicle.image_meta.height == 88
+      assert vehicle.image_meta.type == :png
     end
 
     test "update_vehicle/2 with invalid data returns error changeset" do

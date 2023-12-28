@@ -57,7 +57,8 @@ defmodule Rocketsized.MixProject do
       {:waffle, "~> 1.1.7"},
       {:waffle_ecto, "~> 0.0.12"},
       {:flop, "~> 0.24.1"},
-      {:flop_phoenix, "~> 0.22.4"}
+      {:flop_phoenix, "~> 0.22.4"},
+      {:ex_image_info, "~> 0.2.4"}
     ]
   end
 
