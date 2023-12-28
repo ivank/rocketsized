@@ -3,6 +3,8 @@ defmodule Rocketsized.Rocket.Vehicle do
   use Waffle.Ecto.Schema
   import Ecto.Changeset
 
+  alias Rocketsized.Rocket.Vehicle.Image
+
   @derive {
     Flop.Schema,
     filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search],
@@ -43,6 +45,8 @@ defmodule Rocketsized.Rocket.Vehicle do
     field :alternative_name, :string
     field :diameter, :float
 
+    embeds_one :image_meta, Rocketsized.Rocket.Vehicle.ImageMeta
+
     field :state, Ecto.Enum, values: @states
 
     belongs_to :family, Rocketsized.Rocket.Family
@@ -81,6 +85,8 @@ defmodule Rocketsized.Rocket.Vehicle do
       drop_param: :drop_vehicle_manufacturers
     )
     |> cast_add_assoc(attrs, :vehicle_manufacturers, add_param: :add_vehicle_manufacturers)
+    |> cast_embed(:image_meta)
+    |> Image.cast_image_meta(:image, :image_meta)
     |> validate_required_on_field_value(:is_published, %{
       true => [:name, :image, :is_published, :height, :state, :country_id],
       false => [:name]

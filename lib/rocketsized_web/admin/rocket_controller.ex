@@ -19,8 +19,6 @@ defmodule RocketsizedWeb.Admin.RocketController do
   end
 
   def create(conn, %{"resource" => params}) do
-    IO.inspect(params)
-
     case Rocket.create_vehicle(params) do
       {:ok, resource} ->
         conn
@@ -28,8 +26,6 @@ defmodule RocketsizedWeb.Admin.RocketController do
         |> redirect(to: ~p"/admin/rockets/#{resource}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset)
-
         conn
         |> render(:new,
           changeset: changeset,
@@ -67,8 +63,6 @@ defmodule RocketsizedWeb.Admin.RocketController do
         |> redirect(to: ~p"/admin/rockets/#{resource}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset)
-
         conn
         |> render(:edit,
           resource: resource,
