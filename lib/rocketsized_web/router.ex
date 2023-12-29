@@ -25,13 +25,6 @@ defmodule RocketsizedWeb.Router do
     pipe_through :browser
 
     live "/", RocketgridLive.Index, :index
-
-    live "/vehicles", VehicleLive.Index, :index
-    live "/vehicles/new", VehicleLive.Index, :new
-    live "/vehicles/:id/edit", VehicleLive.Index, :edit
-
-    live "/vehicles/:id", VehicleLive.Show, :show
-    live "/vehicles/:id/show/edit", VehicleLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -96,6 +89,12 @@ defmodule RocketsizedWeb.Router do
 
   scope "/admin", RocketsizedWeb.Admin do
     pipe_through [:browser, :admin, :require_authenticated_user, :require_admin_user]
+
+    live_session :admin,
+      on_mount: [{RocketsizedWeb.UserAuth, :ensure_admin}],
+      layout: {RocketsizedWeb.Layouts, :admin} do
+      live "/tasks", TasksLive.Index, :index
+    end
 
     resources "/rockets", RocketController
     resources "/countries", CountryController

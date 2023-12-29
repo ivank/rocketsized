@@ -1,0 +1,59 @@
+<.admin_header>
+  Image Meta
+  <:actions>
+    <.button phx-click="update-all">
+      Update All Without Meta
+    </.button>
+  </:actions>
+</.admin_header>
+
+<div class="mt-8 flow-root">
+  <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+            >
+              Rocket
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              Image
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              Meta
+            </th>
+            <th scope="col" class="relative py-3.5 pr-4 pl-3 sm:pr-0" />
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200" id="rockets" phx-update="stream" phx-page-loading>
+          <tr :for={{id, rocket} <- @streams.rockets} id={id}>
+            <td class="whitespace-nowrap py-4 pr-3 pl-4 text-sm font-medium text-gray-900 sm:pl-0">
+              <.link
+                navigate={~p"/admin/rockets/#{rocket.id}"}
+                class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+              >
+                <%= rocket.name %>
+              </.link>
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <.icon :if={rocket.image?} name="hero-check" />
+              <.icon :if={not rocket.image?} name="hero-x" />
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <.icon :if={rocket.image_meta?} name="hero-check" />
+              <.icon :if={not rocket.image_meta?} name="hero-x" />
+            </td>
+            <td class="relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-0">
+              <.button variant="secondary" phx-click="update" phx-value-id={rocket.id}>
+                Update
+              </.button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

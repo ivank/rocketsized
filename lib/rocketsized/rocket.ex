@@ -581,4 +581,38 @@ defmodule Rocketsized.Rocket do
       _ -> nil
     end
   end
+
+  def list_vehicles_image_meta() do
+    from(v in Vehicle,
+      select: %{
+        id: v.id,
+        name: v.name,
+        image?: not is_nil(v.image),
+        image_meta?: not is_nil(v.image_meta)
+      },
+      order_by: [asc: v.id]
+    )
+    |> Repo.all()
+  end
+
+  def list_vehicles_image_meta_missing() do
+    from(v in Vehicle,
+      order_by: [asc: v.id],
+      where: not is_nil(v.image) and is_nil(v.image_meta)
+    )
+    |> Repo.all()
+  end
+
+  def to_vehicle_image_meta(v) do
+    %{id: v.id, name: v.name, image?: not is_nil(v.image), image_meta?: not is_nil(v.image_meta)}
+  end
+
+  def put_new_vehicle_image_meta(%Vehicle{} = vehicle) do
+    changeset =
+      vehicle |> Vehicle.changeset(%{}) |> Vehicle.Image.put_image_meta(:image, :image_meta)
+
+    with {:ok, updated} <- changeset |> Repo.update() do
+      {:ok, updated |> to_vehicle_image_meta()}
+    end
+  end
 end
