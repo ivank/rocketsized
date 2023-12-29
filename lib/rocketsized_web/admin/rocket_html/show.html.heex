@@ -62,6 +62,25 @@
       class="max-h-64"
     />
   </:item>
+  <:item :if={@resource.image_meta} title="Meta">
+    <.list>
+      <:item title="Width">
+        <%= @resource.image_meta.width %>
+      </:item>
+      <:item title="Height">
+        <%= @resource.image_meta.height %>
+      </:item>
+      <:item title="Type">
+        <%= @resource.image_meta.type %>
+      </:item>
+      <:item title="License">
+        <%= @resource.image_meta.license %>
+      </:item>
+      <:item title="Attribution">
+        <%= @resource.image_meta.attribution %>
+      </:item>
+    </.list>
+  </:item>
 </.list>
 
 <div class="mt-6 flex items-center gap-x-6">

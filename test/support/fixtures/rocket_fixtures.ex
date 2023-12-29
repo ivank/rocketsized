@@ -23,8 +23,7 @@ defmodule Rocketsized.RocketFixtures do
   """
   def vehicle_fixture(attrs \\ %{}) do
     {:ok, vehicle} =
-      attrs
-      |> Enum.into(%{
+      %{
         name: "rocket",
         native_name: "ракета",
         alternative_name: "BFR",
@@ -44,7 +43,8 @@ defmodule Rocketsized.RocketFixtures do
         },
         diameter: 2,
         state: :operational
-      })
+      }
+      |> Map.merge(attrs)
       |> Rocketsized.Rocket.create_vehicle()
 
     vehicle

@@ -19,26 +19,30 @@ defmodule Rocketsized.Rocket.Vehicle.Image do
   end
 
   @spec cast_image_meta(Changeset.t(), atom(), atom()) :: Changeset.t()
-  def cast_image_meta(%Changeset{data: data} = changeset, field, embed_field) do
+  def cast_image_meta(%Changeset{} = changeset, field, embed_field) do
     if Changeset.changed?(changeset, field) do
-      file = Changeset.get_field(changeset, field)
-
-      path =
-        Path.join([storage_dir_prefix(), storage_dir(:original, {file, data}), file.file_name])
-
-      case image_info(path) do
-        {:ok, width, height, type} ->
-          embed =
-            (Changeset.get_field(changeset, embed_field) || %ImageMeta{})
-            |> Changeset.change(%{width: width, height: height, type: type})
-
-          Changeset.put_embed(changeset, embed_field, embed)
-
-        _ ->
-          Changeset.add_error(changeset, field, "could not fetch meta data for image")
-      end
+      put_image_meta(changeset, field, embed_field)
     else
       changeset
+    end
+  end
+
+  def put_image_meta(%Changeset{data: data} = changeset, field, embed_field) do
+    file = Changeset.get_field(changeset, field)
+
+    path =
+      Path.join([storage_dir_prefix(), storage_dir(:original, {file, data}), file.file_name])
+
+    case image_info(path) do
+      {:ok, width, height, type} ->
+        embed =
+          (Changeset.get_field(changeset, embed_field) || %ImageMeta{})
+          |> Changeset.change(%{width: width, height: height, type: type})
+
+        Changeset.put_embed(changeset, embed_field, embed)
+
+      _ ->
+        Changeset.add_error(changeset, field, "could not fetch meta data for image")
     end
   end
 

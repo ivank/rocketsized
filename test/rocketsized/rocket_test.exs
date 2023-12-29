@@ -157,6 +157,18 @@ defmodule Rocketsized.RocketTest do
       vehicle = vehicle_fixture()
       assert %Ecto.Changeset{} = Rocket.change_vehicle(vehicle)
     end
+
+    test "list_vehicles_image_meta/0 returns a the correct ones" do
+      vehicles = [
+        vehicle_fixture(),
+        vehicle_fixture(%{image: nil, image_meta: nil}),
+        vehicle_fixture(%{image_meta: %{width: 30, height: 20, license: :rf}}),
+        vehicle_fixture(%{image: nil, image_meta: nil})
+      ]
+
+      assert Rocket.list_vehicles_image_meta() ==
+               Enum.map(vehicles, &Rocket.to_vehicle_image_meta/1)
+    end
   end
 
   describe "launches" do
