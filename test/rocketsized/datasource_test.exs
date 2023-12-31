@@ -1,6 +1,5 @@
 defmodule Rocketsized.DatasourceTest do
   use ExUnit.Case
-  require Logger
   alias Rocketsized.Datasource.Wikipedia
 
   @pages [

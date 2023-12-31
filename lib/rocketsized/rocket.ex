@@ -117,8 +117,14 @@ defmodule Rocketsized.Rocket do
     Repo.all(Vehicle)
   end
 
-  def list_vehicles_admin do
+  def list_vehicles_country do
     Repo.all(Vehicle) |> Repo.preload([:country])
+  end
+
+  def list_vehicles_poster do
+    from(v in Vehicle, where: v.is_published, order_by: [desc: v.height])
+    |> Repo.all()
+    |> Repo.preload([:country])
   end
 
   @doc """

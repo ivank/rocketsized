@@ -6,7 +6,7 @@ defmodule RocketsizedWeb.Admin.RocketController do
   alias Rocketsized.Creator
 
   def index(conn, _params) do
-    conn |> render(:index, resources: Rocket.list_vehicles_admin())
+    conn |> render(:index, resources: Rocket.list_vehicles_country())
   end
 
   def new(conn, _params) do

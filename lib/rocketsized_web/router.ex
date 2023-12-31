@@ -25,6 +25,7 @@ defmodule RocketsizedWeb.Router do
     pipe_through :browser
 
     live "/", RocketgridLive.Index, :index
+    get "/poster.svg", PosterController, :index
   end
 
   # Other scopes may use custom stacks.

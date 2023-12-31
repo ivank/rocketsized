@@ -126,7 +126,7 @@
             ]}
           >
             <img
-              src={Rocketsized.Rocket.Vehicle.Image.url({rocket.image, rocket}, signed: true)}
+              src={Image.url({rocket.image, rocket}, signed: true)}
               class="h-[calc((60vh-theme(space.24))*(var(--height)/var(--max-height)))] sm:h-[calc((100vh-theme(space.24))*(var(--height)/var(--max-height)))]"
             />
           </a>
@@ -139,20 +139,12 @@
             href={rocket.country.source}
           >
             <img
-              src={
-                Rocketsized.Creator.Country.Flag.url({rocket.country.flag, rocket.country},
-                  signed: true
-                )
-              }
+              src={Flag.url({rocket.country.flag, rocket.country}, signed: true)}
               class="h-4 w-6 object-contain sm:h-6 sm:w-8"
             />
             <div class="-translate-y-[100%] tooltip -top-2 left-0 flex flex-row ">
               <img
-                src={
-                  Rocketsized.Creator.Country.Flag.url({rocket.country.flag, rocket.country},
-                    signed: true
-                  )
-                }
+                src={Flag.url({rocket.country.flag, rocket.country}, signed: true)}
                 class="h-16 w-20 object-contain"
               />
               <div class="ml-2 flex w-20 flex-col justify-center">
@@ -180,20 +172,12 @@
               href={manufacturer.source}
             >
               <img
-                src={
-                  Rocketsized.Creator.Manufacturer.Logo.url({manufacturer.logo, manufacturer},
-                    signed: true
-                  )
-                }
+                src={Logo.url({manufacturer.logo, manufacturer}, signed: true)}
                 class="h-4 w-6 object-contain sm:h-6 sm:w-8"
               />
               <div class="-translate-y-[100%] tooltip -top-2 right-0 flex flex-row">
                 <img
-                  src={
-                    Rocketsized.Creator.Manufacturer.Logo.url({manufacturer.logo, manufacturer},
-                      signed: true
-                    )
-                  }
+                  src={Logo.url({manufacturer.logo, manufacturer}, signed: true)}
                   class="h-20 w-20 object-contain"
                 />
                 <div class="ml-2 flex w-28 flex-col justify-center">

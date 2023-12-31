@@ -10,7 +10,7 @@ defmodule Rocketsized.Rocket.Vehicle do
     filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search],
     sortable: [:id, :height, :name, :state, :country_id],
     default_order: %{order_by: [:height, :id], order_directions: [:desc, :desc]},
-    default_limit: 16,
+    default_limit: 32,
     default_pagination_type: :first,
     max_limit: 50,
     adapter_opts: [
@@ -44,16 +44,12 @@ defmodule Rocketsized.Rocket.Vehicle do
     field :native_name, :string
     field :alternative_name, :string
     field :diameter, :float
-
-    embeds_one :image_meta, Rocketsized.Rocket.Vehicle.ImageMeta
-
     field :state, Ecto.Enum, values: @states
 
+    embeds_one :image_meta, Rocketsized.Rocket.Vehicle.ImageMeta
     belongs_to :family, Rocketsized.Rocket.Family
     belongs_to :country, Rocketsized.Creator.Country
-
     has_many :vehicle_manufacturers, Rocketsized.Rocket.VehicleManufacturer, on_replace: :delete
-
     has_many :manufacturers, through: [:vehicle_manufacturers, :manufacturer]
 
     timestamps()
@@ -88,7 +84,7 @@ defmodule Rocketsized.Rocket.Vehicle do
     |> cast_embed(:image_meta)
     |> Image.cast_image_meta(:image, :image_meta)
     |> validate_required_on_field_value(:is_published, %{
-      true => [:name, :image, :is_published, :height, :state, :country_id],
+      true => [:name, :image, :image_meta, :height, :state, :country_id, :source],
       false => [:name]
     })
   end
