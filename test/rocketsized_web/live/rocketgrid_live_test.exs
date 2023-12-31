@@ -9,7 +9,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
     country = country_fixture()
 
     vehicles =
-      for item <- 1..20 do
+      for item <- 1..40 do
         vehicle_fixture(%{
           country_id: country.id,
           is_published: true,
@@ -27,7 +27,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
     test "render rocket list", %{conn: conn, vehicles: vehicles, country: country} do
       {:ok, _view, html} = conn |> live(~p"/")
 
-      {page, outside} = Enum.split(vehicles, 16)
+      {page, outside} = Enum.split(vehicles, 32)
 
       for vehicle <- page do
         assert html =~ vehicle.name

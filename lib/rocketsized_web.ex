@@ -39,7 +39,7 @@ defmodule RocketsizedWeb do
   def controller do
     quote do
       use Phoenix.Controller,
-        formats: [:html, :json],
+        formats: [:html, :json, :svg],
         layouts: [html: RocketsizedWeb.Layouts]
 
       import Plug.Conn

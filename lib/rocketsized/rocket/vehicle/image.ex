@@ -27,11 +27,14 @@ defmodule Rocketsized.Rocket.Vehicle.Image do
     end
   end
 
+  def storage_file_path({file, scope}, version \\ :original) do
+    Path.join([storage_dir_prefix(), storage_dir(version, {file, scope}), file.file_name])
+  end
+
   def put_image_meta(%Changeset{data: data} = changeset, field, embed_field) do
     file = Changeset.get_field(changeset, field)
 
-    path =
-      Path.join([storage_dir_prefix(), storage_dir(:original, {file, data}), file.file_name])
+    path = storage_file_path({file, data})
 
     case image_info(path) do
       {:ok, width, height, type} ->

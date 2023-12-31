@@ -2,6 +2,9 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
   use RocketsizedWeb, :live_view
 
   alias Rocketsized.Rocket
+  alias Rocketsized.Rocket.Vehicle.Image
+  alias Rocketsized.Creator.Country.Flag
+  alias Rocketsized.Creator.Manufacturer.Logo
 
   @impl Phoenix.LiveView
   def handle_params(params, _, socket) do
