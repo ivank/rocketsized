@@ -10,7 +10,7 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
   def handle_params(params, _, socket) do
     case Rocket.list_vehicles_with_params(params) do
       {:ok, {rockets, meta, max_height}} ->
-        title = Rocket.vehicle_filters_title_for_flop(meta.flop) || "Launch vehicles list"
+        title = Rocket.vehicle_filters_title_for_flop(meta.flop, "Launch vehicles list")
 
         {:noreply,
          socket
@@ -23,6 +23,7 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
   end
 
   @impl Phoenix.LiveView
+  @spec handle_event(<<_::64, _::_*40>>, map(), Phoenix.LiveView.Socket.t()) :: {:noreply, map()}
   def handle_event("update-filter", params, socket) do
     params = Map.delete(params, "_target")
     {:noreply, push_patch(socket, to: ~p"/?#{params}")}

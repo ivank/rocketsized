@@ -4,6 +4,8 @@ defmodule RocketsizedWeb.PosterHTML do
   alias Rocketsized.Rocket.Vehicle.Image
   alias Rocketsized.Creator.Country.Flag
 
+  import Graphics.Interface
+
   def index(assigns) do
     ~H"""
     <svg
@@ -12,9 +14,9 @@ defmodule RocketsizedWeb.PosterHTML do
       xmlns="http://www.w3.org/2000/svg"
       xml:space="preserve"
       version="1.1"
-      width={@canvas.width}
-      height={@canvas.height}
-      viewBox={"0 0 #{@canvas.width} #{@canvas.height}"}
+      width={width(@canvas)}
+      height={height(@canvas)}
+      viewBox={"0 0 #{width(@canvas)} #{height(@canvas)}"}
     >
       <style>
         @font-face {
@@ -29,8 +31,8 @@ defmodule RocketsizedWeb.PosterHTML do
           font-family: "Space Grotesk", sans-serif;
         }
         .h1 {
-          font-size: 120px;
-          fill: #333333;
+          font-size: 50px;
+          fill: #14213D;
           text-anchor:end;
           dominant-baseline:middle;
           text-decoration:underline;
@@ -41,77 +43,107 @@ defmodule RocketsizedWeb.PosterHTML do
         }
         .h2 {
           text-anchor:middle;
-          font-size: 12px;
-          fill: #333333;
+          font-size: <%= @infobox_height * 0.21 %>px;
+          fill: #14213D;
         }
         .h3 {
           text-anchor:middle;
-          fill: #666666;
-          font-size: 8px;
-        }
-        .flag-border {
-          fill: #F6F6F6;
+          fill: #8f98ae;
+          font-size: <%= @infobox_height * 0.14 %>px;
         }
         .border {
-          stroke: #D0D0D0;
+          stroke: #E5E5E5;
           stroke-width: 2px;
           fill: none;
         }
       </style>
-      <rect x={@border.x} y={@border.y} width={@border.width} height={@border.height} class="border" />
-      <g transform={"translate(#{@text.x}, #{@text.y})"}>
-        <rect width={@text.width} height={@text.height} fill="none" />
-        <text x={@text.width} y={@text.height / 2} class="h1">ROCKETSIZED</text>
-        <text x={@text.width} y={@text.height} class="h1 subtitle">by Ivan Kerin</text>
-      </g>
-      <g :for={group <- @rockets}>
-        <g :for={%{children: [item, flag, text]} <- group.children}>
-          <image
-            width={item.rect.width}
-            height={item.rect.height}
-            x={item.rect.x}
-            y={item.rect.y}
-            xlink:href={
-              image_data(
-                item.value.image_meta.type,
-                Image.storage_file_path({item.value.image, item.value})
-              )
-            }
-          />
+      <defs>
+        <linearGradient id="bg-style">
+          <stop style="stop-color: #ffffff;" offset="0" />
+          <stop style="stop-color: #efefef;" offset="0.15" />
+          <stop style="stop-color: #f2f2f2;" offset="0.4" />
+          <stop style="stop-color: #ffffff;" offset="1" />
+        </linearGradient>
+        <linearGradient
+          :for={{group, index} <- Enum.with_index(@rockets)}
+          gradientUnits="userSpaceOnUse"
+          id={"bg-#{index}"}
+          x1={x(group) + width(group) / 2}
+          y1={y(group) + height(group)}
+          x2={x(group) + width(group) / 2}
+          y2={y(group)}
+          xlink:href="#bg-style"
+        />
+      </defs>
+      <g>
+        <rect
+          id="border"
+          x={x(@border)}
+          y={y(@border)}
+          width={width(@border)}
+          height={height(@border)}
+          class="border"
+          rx="10"
+        />
+        <g :for={{group, index} <- Enum.with_index(@rockets)} id={"row-#{index}"}>
           <rect
-            width={flag.rect.width + 1}
-            height={flag.rect.height + 1}
-            x={flag.rect.x - 0.5}
-            y={flag.rect.y - 0.5}
-            class="flag-border"
+            width={width(@border) - 2}
+            height={height(group) + 50}
+            x={x(@border) + 1}
+            y={y(group)}
+            stroke="none"
+            style={"fill: url(#bg-#{index});"}
           />
-          <image
-            width={flag.rect.width}
-            height={flag.rect.height}
-            x={flag.rect.x}
-            y={flag.rect.y}
-            xlink:href={image_data(:svg, Flag.storage_file_path({flag.value.flag, flag.value}))}
-          />
-
-          <g transform={"translate(#{text.rect.x},#{text.rect.y})"}>
-            <rect width={text.rect.width} height={text.rect.height} fill="none" />
-            <text x={text.rect.width / 2} y="7" class="h2">
-              <%= item.value.name %>
-            </text>
-            <text
-              :for={
-                {subtitle, index} <-
-                  [item.value.alternative_name, item.value.native_name]
-                  |> Enum.filter(& &1)
-                  |> Enum.with_index()
+          <g :for={%{children: [item, flag, text]} <- group.children} id={"rocket-#{item.value.id}"}>
+            <image
+              width={width(item)}
+              height={height(item)}
+              x={x(item)}
+              y={y(item)}
+              xlink:href={
+                image_data(
+                  item.value.image_meta.type,
+                  Image.storage_file_path({item.value.image, item.value})
+                )
               }
-              x={text.rect.width / 2}
-              y={20 + index * 10}
-              class="h3"
-            >
-              <%= subtitle %>
-            </text>
+            />
+            <image
+              width={width(flag)}
+              height={height(flag)}
+              x={x(flag)}
+              y={y(flag)}
+              xlink:href={image_data(:svg, Flag.storage_file_path({flag.value.flag, flag.value}))}
+            />
+
+            <g transform={"translate(#{x(text)},#{y(text)})"}>
+              <rect width={width(text)} height={height(text)} fill="none" />
+              <text x={width(text) / 2} y={@infobox_height * 0.12} class="h2">
+                <%= item.value.name %>
+              </text>
+              <text
+                :for={
+                  {subtitle, index} <-
+                    [item.value.alternative_name, item.value.native_name]
+                    |> Enum.filter(& &1)
+                    |> Enum.with_index()
+                }
+                x={width(text) / 2}
+                y={@infobox_height * 0.32 + index * @infobox_height * 0.18}
+                class="h3"
+              >
+                <%= subtitle %>
+              </text>
+            </g>
           </g>
+        </g>
+        <g transform={"translate(#{x(@title)}, #{y(@title)})"} id="title">
+          <rect width={width(@title)} height={height(@title)} fill="none" id="spacer" />
+          <text x={width(@title)} y={height(@title) / 2} class="h1" id="h1">
+            LAUNCH VEHICLES <%= @title.value %>
+          </text>
+          <text x={width(@title)} y={height(@title)} class="h1 subtitle" id="h1-sub">
+            ROCKETSIZED by Ivan Kerin
+          </text>
         </g>
       </g>
     </svg>
