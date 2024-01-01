@@ -59,6 +59,26 @@
           on_reset="reset-filter"
           meta={@meta}
         />
+
+        <p>
+          Download rockets as a A4 poster
+        </p>
+
+        <div class="isolate flex w-full rounded-md shadow-sm">
+          <a
+            href={Flop.Phoenix.build_path(~p"/poster/portrait", @meta.flop)}
+            class="relative flex flex-grow items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+          >
+            <span class="flex-grow">Portait</span> <.icon name="hero-arrow-down-tray" />
+          </a>
+
+          <a
+            href={Flop.Phoenix.build_path(~p"/poster/landscape", @meta.flop)}
+            class="relative -ml-px flex flex-grow items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+          >
+            <span class="flex-grow">Landscape</span> <.icon name="hero-arrow-down-tray" />
+          </a>
+        </div>
       </div>
 
       <ul class="flex flex-col gap-2 p-6">

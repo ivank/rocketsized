@@ -122,7 +122,7 @@ defmodule Rocketsized.Rocket do
   end
 
   def list_vehicles_poster do
-    from(v in Vehicle, where: v.is_published, order_by: [desc: v.height])
+    from(v in Vehicle, where: v.is_published, order_by: [desc: v.height], limit: 12)
     |> Repo.all()
     |> Repo.preload([:country])
   end
@@ -567,8 +567,8 @@ defmodule Rocketsized.Rocket do
     from(vf in VehicleFilter, where: ^groups, limit: 20) |> Repo.all()
   end
 
-  @spec vehicle_filters_title_for_flop(Flop.t()) :: String.t() | nil
-  def vehicle_filters_title_for_flop(%Flop{} = flop) do
+  @spec vehicle_filters_title_for_flop(Flop.t(), String.t()) :: String.t()
+  def vehicle_filters_title_for_flop(%Flop{} = flop, default \\ "") do
     with %Flop{filters: filters} <- flop,
          [%Flop.Filter{value: value}] <- filters,
          ids = [_ | _] <- value,
@@ -584,7 +584,7 @@ defmodule Rocketsized.Rocket do
       end
       |> Enum.join(" or ")
     else
-      _ -> nil
+      _ -> default
     end
   end
 

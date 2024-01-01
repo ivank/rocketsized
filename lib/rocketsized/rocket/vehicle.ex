@@ -12,7 +12,7 @@ defmodule Rocketsized.Rocket.Vehicle do
     default_order: %{order_by: [:height, :id], order_directions: [:desc, :desc]},
     default_limit: 32,
     default_pagination_type: :first,
-    max_limit: 50,
+    max_limit: 500,
     adapter_opts: [
       join_fields: [
         manufacturer_ids: [

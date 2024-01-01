@@ -20,16 +20,18 @@ defmodule RocketsizedWeb.PosterControllerTest do
     }
   end
 
-  describe "GET /poster.svg" do
-    test "should show the poster", %{conn: conn, vehicles: vehicles} do
-      conn = get(conn, ~p"/poster.svg")
+  describe "GET /poster/:type" do
+    test "should show the poster portrait", %{conn: conn, vehicles: vehicles} do
+      for type <- ["portrait", "landscape"] do
+        conn = get(conn, ~p"/poster/#{type}")
 
-      assert response_content_type(conn, :xml) =~ "image/svg+xml"
+        assert response_content_type(conn, :xml) =~ "image/svg+xml"
 
-      body = response(conn, 200)
+        body = response(conn, 200)
 
-      for vehicle <- vehicles do
-        assert body =~ vehicle.name
+        for vehicle <- vehicles do
+          assert body =~ vehicle.name
+        end
       end
     end
   end
