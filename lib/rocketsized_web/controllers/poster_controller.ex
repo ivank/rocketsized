@@ -1,9 +1,7 @@
 defmodule RocketsizedWeb.PosterController do
   use RocketsizedWeb, :controller
 
-  import Graphics.Interface
-  import Graphics.Utils
-
+  import RectLayout
   alias Rocketsized.Rocket
 
   plug :put_layout, false
@@ -65,20 +63,20 @@ defmodule RocketsizedWeb.PosterController do
         |> Enum.map(fn items ->
           group(
             items
-            |> Enum.map(&transform(&1, set_height(&1.value.height * row_height_zoom)))
-            |> transform(spread_horizontal(width, x: padding, cols: cols, gap: gap))
-            |> transform(align(bottom: true))
+            |> Enum.map(&constrain_height(&1, sprite_content(&1).height * row_height_zoom))
+            |> spread_horizontal(width, x: padding, cols: cols, gap: gap)
+            |> align_bottom()
             |> Enum.map(fn image ->
               flag =
-                sprite(rect(24, 15), image.value.country)
-                |> transform(set_height(infobox_height * 0.25))
+                sprite(rect(24, 15), sprite_content(image).country)
+                |> constrain_height(infobox_height * 0.25)
                 |> y(bottom(image) + infobox_height * 0.08)
                 |> center_x(center_x(image))
 
               text =
                 sprite(
                   rect(Integer.floor_div(width, cols) - gap, infobox_height * 0.5),
-                  image.value.name
+                  sprite_content(image).name
                 )
                 |> y(bottom(flag) + infobox_height * 0.08)
                 |> center_x(center_x(image))
@@ -87,7 +85,7 @@ defmodule RocketsizedWeb.PosterController do
             end)
           )
         end)
-        |> transform(flow_vertical(gap: gap, y: padding))
+        |> flow_vertical(gap: gap, y: padding)
     ]
   end
 end

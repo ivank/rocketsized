@@ -3,8 +3,7 @@ defmodule RocketsizedWeb.PosterHTML do
 
   alias Rocketsized.Rocket.Vehicle.Image
   alias Rocketsized.Creator.Country.Flag
-
-  import Graphics.Interface
+  import RectLayout
 
   def index(assigns) do
     ~H"""
@@ -94,7 +93,10 @@ defmodule RocketsizedWeb.PosterHTML do
             stroke="none"
             style={"fill: url(#bg-#{index});"}
           />
-          <g :for={%{children: [item, flag, text]} <- group.children} id={"rocket-#{item.value.id}"}>
+          <g
+            :for={%{children: [item, flag, text]} <- group_children(group)}
+            id={"rocket-#{sprite_content(item).id}"}
+          >
             <image
               width={width(item)}
               height={height(item)}
@@ -102,8 +104,8 @@ defmodule RocketsizedWeb.PosterHTML do
               y={y(item)}
               xlink:href={
                 image_data(
-                  item.value.image_meta.type,
-                  Image.storage_file_path({item.value.image, item.value})
+                  sprite_content(item).image_meta.type,
+                  Image.storage_file_path({sprite_content(item).image, sprite_content(item)})
                 )
               }
             />
@@ -112,18 +114,23 @@ defmodule RocketsizedWeb.PosterHTML do
               height={height(flag)}
               x={x(flag)}
               y={y(flag)}
-              xlink:href={image_data(:svg, Flag.storage_file_path({flag.value.flag, flag.value}))}
+              xlink:href={
+                image_data(
+                  :svg,
+                  Flag.storage_file_path({sprite_content(flag).flag, sprite_content(flag)})
+                )
+              }
             />
 
             <g transform={"translate(#{x(text)},#{y(text)})"}>
               <rect width={width(text)} height={height(text)} fill="none" />
               <text x={width(text) / 2} y={@infobox_height * 0.12} class="h2">
-                <%= item.value.name %>
+                <%= sprite_content(text) %>
               </text>
               <text
                 :for={
                   {subtitle, index} <-
-                    [item.value.alternative_name, item.value.native_name]
+                    [sprite_content(item).alternative_name, sprite_content(item).native_name]
                     |> Enum.filter(& &1)
                     |> Enum.with_index()
                 }
@@ -139,7 +146,7 @@ defmodule RocketsizedWeb.PosterHTML do
         <g transform={"translate(#{x(@title)}, #{y(@title)})"} id="title">
           <rect width={width(@title)} height={height(@title)} fill="none" id="spacer" />
           <text x={width(@title)} y={height(@title) / 2} class="h1" id="h1">
-            LAUNCH VEHICLES <%= @title.value %>
+            LAUNCH VEHICLES <%= sprite_content(@title) %>
           </text>
           <text x={width(@title)} y={height(@title)} class="h1 subtitle" id="h1-sub">
             ROCKETSIZED by Ivan Kerin
