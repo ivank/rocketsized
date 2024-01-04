@@ -30,6 +30,5 @@ defmodule Rocketsized.Rocket.Vehicle.ImageMeta do
   def changeset(meta, attrs \\ %{}) do
     meta
     |> cast(attrs, [:width, :height, :license, :attribution, :type])
-    |> validate_required([:width, :height, :license])
   end
 end
