@@ -34,6 +34,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
         assert html =~ vehicle.alternative_name
         assert html =~ vehicle.native_name
         assert html =~ country.name
+        assert html =~ vehicle.image_meta.attribution
       end
 
       for vehicle <- outside do

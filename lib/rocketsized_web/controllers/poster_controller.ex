@@ -13,6 +13,14 @@ defmodule RocketsizedWeb.PosterController do
 
     title = Rocket.vehicle_filters_title_for_flop(meta.flop)
 
+    credit =
+      rockets
+      |> Enum.map(& &1.image_meta.attribution)
+      |> Enum.filter(& &1)
+      |> Enum.map(&Floki.text(Floki.parse_document!(&1)))
+      |> Enum.uniq()
+      |> Enum.join(", ")
+
     dimensions =
       case type do
         "portrait" -> {2828, 4000}
@@ -21,17 +29,17 @@ defmodule RocketsizedWeb.PosterController do
 
     conn
     |> put_resp_content_type("image/svg+xml")
-    |> put_resp_header(
-      "content-disposition",
-      ~s[attachment; filename="rockets-#{Slug.slugify(title)}-#{type}.svg"]
-    )
+    # |> put_resp_header(
+    #   "content-disposition",
+    #   ~s[attachment; filename="rockets-#{Slug.slugify(title)}-#{type}.svg"]
+    # )
     |> put_root_layout(false)
-    |> render(:index, rockets_position(rockets, title, dimensions))
+    |> render(:index, rockets_position(rockets, title, credit, dimensions))
   end
 
   defp rockets_max_height(items), do: items |> Enum.map(& &1.height) |> Enum.max()
 
-  defp rockets_position(rockets, title, {to_width, to_height}) do
+  defp rockets_position(rockets, title, credit, {to_width, to_height}) do
     padding = 40
     gap = 40
     width = to_width - 2 * padding
@@ -56,6 +64,7 @@ defmodule RocketsizedWeb.PosterController do
       canvas: rect(to_width, to_height),
       border: rect(to_width, to_height) |> extrude(-padding / 2),
       title: sprite(rect(900, 70) |> right(to_width - 70) |> y(70), String.upcase(title)),
+      credit: sprite(rect(to_width, 8, to_width - padding, to_height - padding), credit),
       rockets:
         rockets
         |> Enum.map(&sprite(rect(&1.image_meta.width, &1.image_meta.height), &1))
