@@ -32,6 +32,8 @@ defmodule RocketsizedWeb.PosterControllerTest do
         for vehicle <- vehicles do
           assert body =~ vehicle.name
         end
+
+        assert body =~ "Credit: AttribTest"
       end
     end
   end

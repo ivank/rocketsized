@@ -50,6 +50,11 @@ defmodule RocketsizedWeb.PosterHTML do
           fill: #8f98ae;
           font-size: <%= @infobox_height * 0.14 %>px;
         }
+        .credit {
+          fill: #8f98ae;
+          font-size: 8px;
+          text-anchor: end;
+        }
         .border {
           stroke: #E5E5E5;
           stroke-width: 2px;
@@ -152,6 +157,16 @@ defmodule RocketsizedWeb.PosterHTML do
             ROCKETSIZED by Ivan Kerin
           </text>
         </g>
+        <text
+          :if={sprite_content(@credit) != ""}
+          x={x(@credit)}
+          y={y(@credit)}
+          width={x(@credit)}
+          height={height(@credit)}
+          class="credit"
+        >
+          Credit: <%= sprite_content(@credit) %>
+        </text>
       </g>
     </svg>
     """

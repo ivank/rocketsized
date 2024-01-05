@@ -77,7 +77,9 @@
         <%= @resource.image_meta.license %>
       </:item>
       <:item title="Attribution">
-        <%= @resource.image_meta.attribution %>
+        <div class="attribution-raw">
+          <%= raw(@resource.image_meta.attribution) %>
+        </div>
       </:item>
     </.list>
   </:item>

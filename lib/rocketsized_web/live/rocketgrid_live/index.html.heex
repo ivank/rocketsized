@@ -184,6 +184,20 @@
             <h2 class="text-xs sm:-mt-0.5 sm:text-lg"><%= rocket.name %></h2>
           </a>
           <div class="flex w-6 flex-col gap-1 sm:w-8">
+            <span :if={rocket.image_meta.attribution} class="group relative">
+              <img
+                src="/images/copyright.svg"
+                alt="copyright"
+                title="Copyright"
+                class="h-4 w-6 object-contain opacity-30 sm:h-6 sm:w-8"
+              />
+              <div class="tooltip -bottom-[9px] -right-[13px] flex max-w-full flex-row items-end gap-1">
+                <div class="attribution-raw ml-2 flex max-w-full flex-col justify-center">
+                  <%= raw(rocket.image_meta.attribution) %>
+                </div>
+                <img src="/images/copyright.svg" class="h-4 w-6 object-contain sm:h-6 sm:w-8" />
+              </div>
+            </span>
             <a
               :for={manufacturer <- rocket.manufacturers}
               title={manufacturer.name}

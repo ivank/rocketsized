@@ -39,7 +39,7 @@ defmodule Rocketsized.RocketFixtures do
           height: 10.0,
           type: :svg,
           license: :ivan_kerin,
-          attribution: "Test"
+          attribution: "AttribTest"
         },
         diameter: 2,
         state: :operational
