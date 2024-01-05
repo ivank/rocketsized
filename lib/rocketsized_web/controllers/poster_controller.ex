@@ -29,10 +29,10 @@ defmodule RocketsizedWeb.PosterController do
 
     conn
     |> put_resp_content_type("image/svg+xml")
-    # |> put_resp_header(
-    #   "content-disposition",
-    #   ~s[attachment; filename="rockets-#{Slug.slugify(title)}-#{type}.svg"]
-    # )
+    |> put_resp_header(
+      "content-disposition",
+      ~s[attachment; filename="rockets-#{Slug.slugify(title)}-#{type}.svg"]
+    )
     |> put_root_layout(false)
     |> render(:index, rockets_position(rockets, title, credit, dimensions))
   end

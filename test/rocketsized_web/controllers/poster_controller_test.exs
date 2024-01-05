@@ -27,6 +27,8 @@ defmodule RocketsizedWeb.PosterControllerTest do
 
         assert response_content_type(conn, :xml) =~ "image/svg+xml"
 
+        assert get_resp_header(conn, "content-disposition") |> Enum.at(0) =~ type
+
         body = response(conn, 200)
 
         for vehicle <- vehicles do
