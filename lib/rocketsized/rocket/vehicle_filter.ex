@@ -10,4 +10,13 @@ defmodule Rocketsized.Rocket.VehicleFilter do
     field :source, :string
     field :image, :string
   end
+
+  @type t :: %__MODULE__{
+          type: :vehicle | :country | :manufacturer,
+          id: integer(),
+          title: String.t(),
+          image: String.t() | nil,
+          source: String.t() | nil,
+          subtitle: String.t() | nil
+        }
 end

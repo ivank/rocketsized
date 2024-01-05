@@ -3,6 +3,7 @@ defmodule Rocketsized.Rocket.Vehicle do
   use Waffle.Ecto.Schema
   import Ecto.Changeset
 
+  alias Rocketsized.Rocket.Vehicle
   alias Rocketsized.Rocket.Vehicle.Image
 
   @derive {
@@ -55,8 +56,32 @@ defmodule Rocketsized.Rocket.Vehicle do
     timestamps()
   end
 
+  @type t :: %__MODULE__{
+          name: String.t(),
+          source: String.t() | nil,
+          height: Float.t() | nil,
+          is_published: boolean(),
+          image: Rocketsized.Rocket.Vehicle.Image.Type.type(),
+          image_meta: Rocketsized.Rocket.Vehicle.ImageMeta.t(),
+          description: String.t() | nil,
+          native_name: String.t() | nil,
+          alternative_name: String.t() | nil,
+          diameter: Float.t() | nil,
+          state: :planned | :in_development | :operational | :retired | :canceled | nil
+        }
+
   def states() do
     @states
+  end
+
+  @spec to_title(list(Vehicle.t())) :: String.t()
+  def to_title(vehicles) do
+    vehicles
+    |> Enum.map(& &1.image_meta.attribution)
+    |> Enum.filter(& &1)
+    |> Enum.map(&Floki.text(Floki.parse_document!(&1)))
+    |> Enum.uniq()
+    |> Enum.join(", ")
   end
 
   @doc false

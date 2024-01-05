@@ -24,6 +24,24 @@ defmodule Rocketsized.Rocket.Vehicle.ImageMeta do
     field :type, Ecto.Enum, values: @image_type
   end
 
+  @type t :: %__MODULE__{
+          width: number() | nil,
+          height: number() | nil,
+          license:
+            :rf
+            | :rm
+            | :cc_by
+            | :cc_by_sa
+            | :cc_by_nd
+            | :cc_by_nc
+            | :public_domain
+            | :unknown
+            | :ivan_kerin
+            | :rocketsized,
+          attribution: String.t() | nil,
+          type: :png | :svg | :jpg | :webp | :heif
+        }
+
   def image_licenses(), do: @image_license
   def image_types(), do: @image_type
 

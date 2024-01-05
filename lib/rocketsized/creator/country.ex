@@ -15,6 +15,14 @@ defmodule Rocketsized.Creator.Country do
     timestamps()
   end
 
+  @type t :: %__MODULE__{
+          code: String.t(),
+          name: String.t() | nil,
+          short_name: Float.t() | nil,
+          flag: Rocketsized.Creator.Country.Flag.Type.type(),
+          source: String.t() | nil
+        }
+
   @doc false
   def changeset(country, attrs) do
     country
