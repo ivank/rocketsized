@@ -29,7 +29,8 @@ defmodule Rocketsized.Creator.Manufacturer do
     |> cast(attrs, [:name, :source, :short_name, :slug])
     |> cast_attachments(attrs, [:logo])
     |> unique_constraint(:name)
-    |> validate_required([:name, :logo, :short_name])
+    |> unique_constraint(:slug)
+    |> validate_required([:name, :logo, :short_name, :slug])
     |> validate_format(:slug, ~r/^[a-z0-5]+$/, message: "must be only small letters or numbers")
   end
 end

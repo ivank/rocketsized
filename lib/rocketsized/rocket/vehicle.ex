@@ -92,6 +92,7 @@ defmodule Rocketsized.Rocket.Vehicle do
     ])
     |> validate_format(:slug, ~r/^[a-z0-9]+$/, message: "must be only small letters or numbers")
     |> unique_constraint([:name, :country_id], name: "vehicles_name_country_id_index")
+    |> unique_constraint(:slug)
     |> cast_attachments(attrs, [:image])
     |> cast_assoc(:vehicle_manufacturers,
       with: &Rocketsized.Rocket.VehicleManufacturer.changeset/2,
@@ -101,7 +102,7 @@ defmodule Rocketsized.Rocket.Vehicle do
     |> cast_embed(:image_meta)
     |> Image.cast_image_meta(:image, :image_meta)
     |> validate_required_on_field_value(:is_published, %{
-      true => [:name, :image, :image_meta, :height, :state, :country_id, :source],
+      true => [:name, :image, :image_meta, :height, :state, :country_id, :source, :slug],
       false => [:name]
     })
   end
