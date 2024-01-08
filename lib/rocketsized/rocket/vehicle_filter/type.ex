@@ -22,6 +22,11 @@ defmodule Rocketsized.Rocket.VehicleFilter.Type do
 
   def dump(_), do: :error
 
+  def dump!(value) when is_struct(value, Rocketsized.Rocket.VehicleFilter) do
+    {:ok, dump} = dump(value)
+    dump
+  end
+
   def equal?(a, b) do
     a == b
   end
@@ -62,5 +67,9 @@ defmodule Rocketsized.Rocket.VehicleFilter.Type do
       |> Enum.reduce(&dynamic([_], ^&1 or ^&2))
 
     where(query, [_], ^groups)
+  end
+
+  def display(query, %Flop.Filter{value: _value, op: _op}, _opts) do
+    query
   end
 end

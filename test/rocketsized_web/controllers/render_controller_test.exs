@@ -1,4 +1,4 @@
-defmodule RocketsizedWeb.PosterControllerTest do
+defmodule RocketsizedWeb.RenderControllerTest do
   use RocketsizedWeb.ConnCase, async: true
 
   import Rocketsized.RocketFixtures
@@ -20,10 +20,10 @@ defmodule RocketsizedWeb.PosterControllerTest do
     }
   end
 
-  describe "GET /poster/:type" do
+  describe "GET /render/:type" do
     test "should show the poster portrait", %{conn: conn, vehicles: vehicles} do
-      for type <- ["portrait", "landscape"] do
-        conn = get(conn, ~p"/poster/#{type}")
+      for type <- ["poster_portrait", "poster_landscape", "wallpaper"] do
+        conn = get(conn, ~p"/render/#{type}")
 
         assert response_content_type(conn, :xml) =~ "image/svg+xml"
 

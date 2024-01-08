@@ -10,7 +10,7 @@ defmodule Rocketsized.Rocket.Vehicle do
     filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search],
     sortable: [:id, :height, :name, :state, :country_id],
     default_order: %{order_by: [:height, :id], order_directions: [:desc, :desc]},
-    default_limit: 32,
+    default_limit: 24,
     default_pagination_type: :first,
     max_limit: 500,
     adapter_opts: [
@@ -54,6 +54,20 @@ defmodule Rocketsized.Rocket.Vehicle do
 
     timestamps()
   end
+
+  @type t :: %__MODULE__{
+          name: String.t(),
+          source: String.t() | nil,
+          height: Float.t() | nil,
+          is_published: boolean(),
+          image: Rocketsized.Rocket.Vehicle.Image.Type.type(),
+          image_meta: Rocketsized.Rocket.Vehicle.ImageMeta.t(),
+          description: String.t() | nil,
+          native_name: String.t() | nil,
+          alternative_name: String.t() | nil,
+          diameter: Float.t() | nil,
+          state: :planned | :in_development | :operational | :retired | :canceled | nil
+        }
 
   def states() do
     @states

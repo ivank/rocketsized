@@ -35,16 +35,6 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
           <.input field={f.field} label={f.label} type={f.type} phx-debounce={120} {f.rest} />
         </.filter_fields>
       </.form>
-
-      <div>
-        <.link
-          :if={Enum.any?(@form.data.filters, &(not is_nil(&1.value) and not Enum.empty?(&1.value)))}
-          navigate={~p"/"}
-          class="btn btn-secondary"
-        >
-          Reset
-        </.link>
-      </div>
     </div>
     """
   end

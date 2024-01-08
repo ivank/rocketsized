@@ -1,15 +1,14 @@
-defmodule RocketsizedWeb.PosterHTML do
-  use RocketsizedWeb, :html
+defmodule RocketsizedWeb.RenderComponent do
+  use Phoenix.Component
 
   alias Rocketsized.Rocket.Vehicle.Image
   alias Rocketsized.Creator.Country.Flag
   import RectLayout
 
-  def index(assigns) do
+  def poster(assigns) do
     ~H"""
     <svg
       style="stroke-linecap:round;stroke-linejoin:round;"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns="http://www.w3.org/2000/svg"
       xml:space="preserve"
       version="1.1"
@@ -32,8 +31,6 @@ defmodule RocketsizedWeb.PosterHTML do
         .h1 {
           font-size: 50px;
           fill: #14213D;
-          text-anchor:end;
-          dominant-baseline:middle;
           text-decoration:underline;
         }
         .h1.subtitle {
@@ -42,13 +39,13 @@ defmodule RocketsizedWeb.PosterHTML do
         }
         .h2 {
           text-anchor:middle;
-          font-size: <%= @infobox_height * 0.21 %>px;
+          font-size: <%= @font_size * 0.21 %>px;
           fill: #14213D;
         }
         .h3 {
           text-anchor:middle;
           fill: #8f98ae;
-          font-size: <%= @infobox_height * 0.14 %>px;
+          font-size: <%= @font_size * 0.14 %>px;
         }
         .credit {
           fill: #8f98ae;
@@ -69,14 +66,14 @@ defmodule RocketsizedWeb.PosterHTML do
           <stop style="stop-color: #ffffff;" offset="1" />
         </linearGradient>
         <linearGradient
-          :for={{group, index} <- Enum.with_index(@rockets)}
+          :for={{row, index} <- Enum.with_index(@rows)}
           gradientUnits="userSpaceOnUse"
           id={"bg-#{index}"}
-          x1={x(group) + width(group) / 2}
-          y1={y(group) + height(group)}
-          x2={x(group) + width(group) / 2}
-          y2={y(group)}
-          xlink:href="#bg-style"
+          x1={x(row) + width(row) / 2}
+          y1={y(row) + height(row)}
+          x2={x(row) + width(row) / 2}
+          y2={y(row)}
+          href="#bg-style"
         />
       </defs>
       <g>
@@ -89,17 +86,17 @@ defmodule RocketsizedWeb.PosterHTML do
           class="border"
           rx="10"
         />
-        <g :for={{group, index} <- Enum.with_index(@rockets)} id={"row-#{index}"}>
+        <g :for={{row, index} <- Enum.with_index(@rows)} id={"row-#{index}"}>
           <rect
             width={width(@border) - 2}
-            height={height(group) + 50}
+            height={height(row) + 50}
             x={x(@border) + 1}
-            y={y(group)}
+            y={y(row)}
             stroke="none"
             style={"fill: url(#bg-#{index});"}
           />
           <g
-            :for={%{children: [item, flag, text]} <- group_children(group)}
+            :for={%{children: [item, flag, text]} <- group_children(row)}
             id={"rocket-#{sprite_content(item).id}"}
           >
             <image
@@ -107,7 +104,7 @@ defmodule RocketsizedWeb.PosterHTML do
               height={height(item)}
               x={x(item)}
               y={y(item)}
-              xlink:href={
+              href={
                 image_data(
                   sprite_content(item).image_meta.type,
                   Image.storage_file_path({sprite_content(item).image, sprite_content(item)})
@@ -119,18 +116,20 @@ defmodule RocketsizedWeb.PosterHTML do
               height={height(flag)}
               x={x(flag)}
               y={y(flag)}
-              xlink:href={
+              href={
                 image_data(
                   :svg,
-                  Flag.storage_file_path({sprite_content(flag).flag, sprite_content(flag)})
+                  Flag.storage_file_path(
+                    {sprite_content(item).country.flag, sprite_content(item).country}
+                  )
                 )
               }
             />
 
             <g transform={"translate(#{x(text)},#{y(text)})"}>
               <rect width={width(text)} height={height(text)} fill="none" />
-              <text x={width(text) / 2} y={@infobox_height * 0.12} class="h2">
-                <%= sprite_content(text) %>
+              <text x={width(text) / 2} y={@font_size * 0.12} class="h2">
+                <%= sprite_content(item).name %>
               </text>
               <text
                 :for={
@@ -140,7 +139,7 @@ defmodule RocketsizedWeb.PosterHTML do
                     |> Enum.with_index()
                 }
                 x={width(text) / 2}
-                y={@infobox_height * 0.32 + index * @infobox_height * 0.18}
+                y={@font_size * 0.32 + index * @font_size * 0.18}
                 class="h3"
               >
                 <%= subtitle %>
@@ -148,15 +147,13 @@ defmodule RocketsizedWeb.PosterHTML do
             </g>
           </g>
         </g>
-        <g transform={"translate(#{x(@title)}, #{y(@title)})"} id="title">
-          <rect width={width(@title)} height={height(@title)} fill="none" id="spacer" />
-          <text x={width(@title)} y={height(@title) / 2} class="h1" id="h1">
-            LAUNCH VEHICLES <%= sprite_content(@title) %>
-          </text>
-          <text x={width(@title)} y={height(@title)} class="h1 subtitle" id="h1-sub">
-            ROCKETSIZED by Ivan Kerin
-          </text>
-        </g>
+        <text class="h1" id="h1" x={x(@title)} y={y(@title) + height(@title)}>
+          <%= sprite_content(@title) %>
+        </text>
+        <text x={x(@title)} y={y(@title) + height(@title) + 30} class="h1 subtitle" id="h1-sub">
+          ROCKETSIZED by Ivan Kerin
+        </text>
+
         <text
           :if={sprite_content(@credit) != ""}
           x={x(@credit)}
@@ -177,4 +174,102 @@ defmodule RocketsizedWeb.PosterHTML do
   defp image_data(:svg, path), do: "data:image/svg+xml;base64,#{Base.encode64(File.read!(path))}"
   defp image_data(:ttf, path), do: "data:font/ttf;base64,#{Base.encode64(File.read!(path))}"
   defp image_data(:woff2, path), do: "data:font/woff2;base64,#{Base.encode64(File.read!(path))}"
+
+  @type positions_option :: [
+          {:title, String.t()}
+          | {:credit, String.t()}
+          | {:width, number()}
+          | {:height, number()}
+          | {:padding, number()}
+          | {:gap, number()}
+        ]
+  @spec positions(rockets :: list(map()), options :: positions_option()) :: [
+          font_size: number(),
+          canvas: number(),
+          border: number(),
+          title: String.t() | nil,
+          credit: String.t() | nil,
+          rows: list(RectLayout.Group.t())
+        ]
+  def positions(rockets, options) do
+    options =
+      Keyword.validate!(options,
+        title: nil,
+        credit: nil,
+        width: 100,
+        height: 100,
+        padding: 40,
+        gap: 40
+      )
+
+    width = options[:width] - 2 * options[:padding]
+    height = options[:height] - 2 * options[:padding]
+
+    pixels_per_rocket = width * height / length(rockets)
+    ratios = rockets |> Enum.map(&(&1.image_meta.width / &1.image_meta.height))
+    average_ratio = Enum.sum(ratios) / length(ratios)
+    rocket_width = round(average_ratio * (pixels_per_rocket / average_ratio) ** 0.5 * 1.3)
+
+    font_size = rocket_width * 0.4
+    cols = Integer.floor_div(width, rocket_width)
+
+    row_heights =
+      rockets
+      |> Enum.chunk_every(cols)
+      |> Enum.map(fn col -> col |> Enum.map(& &1.height) |> Enum.max() end)
+
+    row_count = length(row_heights)
+
+    row_height_zoom =
+      (height - (row_count - 1) * options[:gap] - row_count * font_size) /
+        Enum.sum(row_heights)
+
+    [
+      font_size: font_size,
+      canvas: rect(options[:width], options[:height]),
+      border: rect(options[:width], options[:height]) |> extrude(-options[:padding] / 2),
+      title:
+        sprite(
+          rect(900, 40, options[:padding] + 30, options[:padding] + 30),
+          String.upcase(options[:title])
+        ),
+      credit:
+        sprite(
+          rect(
+            options[:width],
+            8,
+            options[:width] - options[:padding],
+            options[:height] - options[:padding]
+          ),
+          options[:credit]
+        ),
+      rows:
+        rockets
+        |> Enum.map(&sprite(rect(&1.image_meta.width, &1.image_meta.height), &1))
+        |> Enum.chunk_every(cols)
+        |> Enum.map(fn items ->
+          group(
+            items
+            |> Enum.map(&constrain_height(&1, sprite_content(&1).height * row_height_zoom))
+            |> spread_left(width, x: width + options[:padding], cols: cols, gap: options[:gap])
+            |> align_bottom()
+            |> Enum.map(fn item ->
+              flag =
+                rect(24, 15)
+                |> constrain_height(font_size * 0.25)
+                |> y(bottom(item) + font_size * 0.08)
+                |> center_x(center_x(item))
+
+              text =
+                rect(Integer.floor_div(width, cols) - options[:gap], font_size * 0.5)
+                |> y(bottom(flag) + font_size * 0.08)
+                |> center_x(center_x(item))
+
+              group([item, flag, text])
+            end)
+          )
+        end)
+        |> flow_bottom(gap: options[:gap], y: options[:padding])
+    ]
+  end
 end

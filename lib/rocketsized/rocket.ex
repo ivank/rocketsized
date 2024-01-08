@@ -160,6 +160,8 @@ defmodule Rocketsized.Rocket do
 
   """
   def create_vehicle(attrs \\ %{}) do
+    delete_all_renders()
+
     %Vehicle{}
     |> Vehicle.changeset(attrs)
     |> Repo.insert()
@@ -178,6 +180,8 @@ defmodule Rocketsized.Rocket do
 
   """
   def update_vehicle(%Vehicle{} = vehicle, attrs) do
+    delete_all_renders()
+
     vehicle
     |> Vehicle.changeset(attrs)
     |> Repo.update()
@@ -196,6 +200,8 @@ defmodule Rocketsized.Rocket do
 
   """
   def delete_vehicle(%Vehicle{} = vehicle) do
+    delete_all_renders()
+
     Repo.delete(vehicle)
   end
 
@@ -500,37 +506,50 @@ defmodule Rocketsized.Rocket do
     Motor.changeset(motor, attrs)
   end
 
-  def list_vehicles_with_params(params) do
+  @spec flop_vehicles_grid(Flop.t()) :: {list(), Flop.Meta.t()}
+  def flop_vehicles_grid(%Flop{} = flop) do
     opts = [for: Vehicle]
-
-    with {:ok, %Flop{} = flop} <- Flop.validate(params, opts) do
-      {data, meta} = list_vehicles_with_flop(flop)
-      max_height = max_height_vehicles_with_flop(flop)
-
-      {:ok, {data, meta, max_height}}
-    end
+    flop_vehicle_query(flop, opts) |> preload([:manufacturers, :country]) |> Flop.run(flop, opts)
   end
 
-  def max_height_vehicles_with_flop(%Flop{} = flop) do
+  @spec flop_vehicles_max_height(Flop.t()) :: number()
+  def flop_vehicles_max_height(%Flop{} = flop) do
     opts = [for: Vehicle]
 
-    from(p in Vehicle, where: p.is_published == true, select: max(p.height))
+    from(v in Vehicle, where: v.is_published == true, select: max(v.height))
     |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
-    |> Flop.query(flop |> Flop.reset_order(), opts)
+    |> Flop.query(Flop.reset_order(flop), opts)
     |> Repo.one()
   end
 
-  def list_vehicles_with_flop(%Flop{} = flop) do
-    opts = [for: Vehicle]
+  @spec flop_vehicles_file(Flop.t()) :: {list(), Flop.Meta.t()}
+  def flop_vehicles_file(%Flop{} = flop) do
+    opts = [for: Vehicle, default_limit: false, pagination: false]
+    reset_flop = Flop.reset_cursors(%{flop | first: nil})
+    flop_vehicle_query(reset_flop, opts) |> preload([:country]) |> Flop.run(reset_flop, opts)
+  end
 
-    from(p in Vehicle,
-      where: p.is_published == true,
-      order_by: [desc: p.height],
-      group_by: p.id,
-      preload: [:manufacturers, :country]
-    )
+  def flop_vehicles_title(%Flop{} = flop, default \\ "") do
+    with ids = [_ | _] <- Flop.Filter.get_value(flop.filters, :search),
+         items = [_ | _] <- list_vehicle_filters_by_ids(ids) do
+      for {type, filters} <- items |> Enum.group_by(& &1.type) do
+        filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
+
+        case type do
+          :country -> "from #{filters_title}"
+          :vehicle -> "#{filters_title}"
+          :manufacturer -> "by #{filters_title}"
+        end
+      end
+      |> Enum.join(" or ")
+    else
+      _ -> default
+    end
+  end
+
+  defp flop_vehicle_query(%Flop{} = flop, opts) do
+    from(v in Vehicle, where: v.is_published == true, group_by: v.id)
     |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
-    |> Flop.run(flop, opts)
   end
 
   defp join_vehicle_assoc(query, :vehicle_manufacturers) do
@@ -539,6 +558,70 @@ defmodule Rocketsized.Rocket do
 
   defp join_vehicle_assoc(query, :manufacturers) do
     join(query, :inner, [v], assoc(v, :manufacturers), as: :manufacturers)
+  end
+
+  @spec vehicles_attribution_list(list(%{image_meta: %{attribution: String.t()}})) :: String.t()
+  def vehicles_attribution_list(vehicles) do
+    vehicles
+    |> Enum.map(& &1.image_meta.attribution)
+    |> Enum.filter(& &1)
+    |> Enum.map(&Floki.text(Floki.parse_document!(&1)))
+    |> Enum.uniq()
+    |> Enum.join(", ")
+  end
+
+  alias Rocketsized.Rocket.Render
+  alias RocketsizedWeb.RenderComponent
+
+  def flop_render_find_or_create(%Flop{filters: filters} = flop, type) do
+    search = Flop.Filter.get_value(filters, :search) || []
+    render = from(r in Render, where: r.type == ^type and r.filters == ^search) |> Repo.one()
+
+    if render do
+      render
+    else
+      title = flop_vehicles_title(flop, "of the world") |> String.replace(",", " ")
+      filename = "Rockets #{title} #{type}.svg"
+      image = %{filename: filename, binary: flop_render_binary(flop, type)}
+
+      {:ok, render} =
+        %Render{}
+        |> Render.changeset(%{type: type, filters: search, image: image})
+        |> Repo.insert()
+
+      render
+    end
+  end
+
+  @spec flop_render_binary(Flop.t(), :poster_landscape | :poster_portrait | :wallpaper) ::
+          binary()
+  def flop_render_binary(%Flop{} = flop, type) do
+    {rockets, _meta} = flop_vehicles_file(flop)
+    title = "Rockets #{flop_vehicles_title(flop, "of the world")}"
+    credit = vehicles_attribution_list(rockets)
+
+    {width, height} =
+      case type do
+        :poster_portrait -> {2480, 3508}
+        :poster_landscape -> {3508, 2480}
+        :wallpaper -> {3840, 2160}
+      end
+
+    attributes =
+      RenderComponent.positions(rockets,
+        title: title,
+        credit: credit,
+        width: width,
+        height: height
+      )
+
+    RenderComponent.poster(Enum.into(attributes, %{}))
+    |> Phoenix.HTML.Safe.to_iodata()
+    |> IO.iodata_to_binary()
+  end
+
+  def delete_all_renders() do
+    Repo.delete_all(Render)
   end
 
   alias Rocketsized.Rocket.VehicleFilter
@@ -565,27 +648,6 @@ defmodule Rocketsized.Rocket do
       |> Enum.reduce(fn group, query -> dynamic([_], ^query or ^group) end)
 
     from(vf in VehicleFilter, where: ^groups, limit: 20) |> Repo.all()
-  end
-
-  @spec vehicle_filters_title_for_flop(Flop.t(), String.t()) :: String.t()
-  def vehicle_filters_title_for_flop(%Flop{} = flop, default \\ "") do
-    with %Flop{filters: filters} <- flop,
-         [%Flop.Filter{value: value}] <- filters,
-         ids = [_ | _] <- value,
-         items = [_ | _] <- list_vehicle_filters_by_ids(ids) do
-      for {type, filters} <- items |> Enum.group_by(& &1.type) do
-        filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
-
-        case type do
-          :country -> "From #{filters_title}"
-          :vehicle -> "#{filters_title}"
-          :manufacturer -> "By #{filters_title}"
-        end
-      end
-      |> Enum.join(" or ")
-    else
-      _ -> default
-    end
   end
 
   def list_vehicles_image_meta() do

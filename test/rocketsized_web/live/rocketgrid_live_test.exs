@@ -27,7 +27,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
     test "render rocket list", %{conn: conn, vehicles: vehicles, country: country} do
       {:ok, _view, html} = conn |> live(~p"/")
 
-      {page, outside} = Enum.split(vehicles, 32)
+      {page, outside} = Enum.split(vehicles, 24)
 
       for vehicle <- page do
         assert html =~ vehicle.name
@@ -58,7 +58,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
     test "rocket filter by vehicle id", %{conn: conn, vehicles: vehicles} do
       {:ok, view, _html} = conn |> live(~p"/")
 
-      assert page_title(view) =~ "Launch vehicles list"
+      assert page_title(view) =~ "Rockets of the world"
 
       v = List.last(vehicles)
       filtered_out_v = List.first(vehicles)
@@ -84,7 +84,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
       |> element("#filter-form")
       |> render_submit(%{"filters" => %{0 => %{"field" => "search", "op" => "in", "value" => []}}})
 
-      assert page_title(view) =~ "Launch vehicles list"
+      assert page_title(view) =~ "Rockets of the world"
     end
   end
 end

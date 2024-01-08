@@ -15,6 +15,13 @@ defmodule Rocketsized.Creator.Manufacturer do
     timestamps()
   end
 
+  @type t :: %__MODULE__{
+          name: String.t() | nil,
+          short_name: Float.t() | nil,
+          logo: Rocketsized.Creator.Manufacturer.Logo.Type.type(),
+          source: String.t() | nil
+        }
+
   @doc false
   def changeset(manufacturer, attrs) do
     manufacturer
