@@ -4,7 +4,7 @@ defmodule RocketsizedWeb.PosterHTML do
   def index(assigns) do
     ~H"""
     <RocketsizedWeb.RenderComponent.poster
-      infobox_height={@infobox_height}
+      font_size={@font_size}
       canvas={@canvas}
       border={@border}
       title={@title}

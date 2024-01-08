@@ -247,7 +247,7 @@ defmodule RocketsizedWeb.CoreComponents do
   attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file hidden month number password
-               range radio search select tel text textarea time url week)
+               range radio radioselect search select tel text textarea time url week)
 
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
@@ -292,6 +292,47 @@ defmodule RocketsizedWeb.CoreComponents do
         />
         <%= @label %>
       </label>
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    """
+  end
+
+  def input(%{type: "radioselect", value: value, options: options} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :options,
+        options |> Enum.map(fn {label, key, icon} -> {label, key, icon, key == value} end)
+      )
+
+    ~H"""
+    <div phx-feedback-for={@name}>
+      <.label for={@id}><%= @label %></.label>
+
+      <div class="mt-1 grid grid-cols-2 gap-3">
+        <label
+          :for={{label, key, icon, active} <- @options}
+          class={[
+            "flex cursor-pointer items-center justify-center rounded-md px-3 py-2 text-sm font-semibold focus:outline-none active:ring-2 active:ring-sky-600 active:ring-offset-2 sm:flex-1",
+            active && "bg-sky-600 text-white hover:bg-sky-500",
+            not active && "bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          ]}
+        >
+          <input
+            type="radio"
+            name={@name}
+            value={key}
+            class="sr-only"
+            aria-labelledby={"#{@id}-#{key}"}
+            checked={active}
+          />
+          <span id={"#{@id}-#{key}"} class="flex-grow">
+            <%= label %>
+          </span>
+          <.icon :if={icon} name={"hero-#{icon}"} class="w-6 h-6" />
+        </label>
+      </div>
+
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """

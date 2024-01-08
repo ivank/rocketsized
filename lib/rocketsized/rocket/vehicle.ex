@@ -3,15 +3,14 @@ defmodule Rocketsized.Rocket.Vehicle do
   use Waffle.Ecto.Schema
   import Ecto.Changeset
 
-  alias Rocketsized.Rocket.Vehicle
   alias Rocketsized.Rocket.Vehicle.Image
 
   @derive {
     Flop.Schema,
-    filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search],
+    filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search, :display],
     sortable: [:id, :height, :name, :state, :country_id],
     default_order: %{order_by: [:height, :id], order_directions: [:desc, :desc]},
-    default_limit: 32,
+    default_limit: 24,
     default_pagination_type: :first,
     max_limit: 500,
     adapter_opts: [
@@ -28,6 +27,11 @@ defmodule Rocketsized.Rocket.Vehicle do
           filter: {Rocketsized.Rocket.VehicleFilter.Type, :search, []},
           ecto_type: Rocketsized.Rocket.VehicleFilter.Type,
           operators: [:in]
+        ],
+        display: [
+          filter: {Rocketsized.Rocket.VehicleFilter.Type, :display, []},
+          ecto_type: {:ecto_enum, [:grid, :download]},
+          operators: [:==]
         ]
       ]
     ]
@@ -72,16 +76,6 @@ defmodule Rocketsized.Rocket.Vehicle do
 
   def states() do
     @states
-  end
-
-  @spec to_title(list(Vehicle.t())) :: String.t()
-  def to_title(vehicles) do
-    vehicles
-    |> Enum.map(& &1.image_meta.attribution)
-    |> Enum.filter(& &1)
-    |> Enum.map(&Floki.text(Floki.parse_document!(&1)))
-    |> Enum.uniq()
-    |> Enum.join(", ")
   end
 
   @doc false

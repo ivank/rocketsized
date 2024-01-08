@@ -29,22 +29,19 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
               multiple: true,
               search: &Rocket.list_vehicle_filters_by_query/1,
               to_options: &Rocket.list_vehicle_filters_by_ids/1
+            ],
+            display: [
+              label: "Display",
+              type: "radioselect",
+              default: :grid,
+              op: :==,
+              options: [{"Grid", :grid, "view-columns"}, {"Download", :download, "arrow-down-tray"}]
             ]
           ]}
         >
           <.input field={f.field} label={f.label} type={f.type} phx-debounce={120} {f.rest} />
         </.filter_fields>
       </.form>
-
-      <div>
-        <.link
-          :if={Enum.any?(@form.data.filters, &(not is_nil(&1.value) and not Enum.empty?(&1.value)))}
-          navigate={~p"/"}
-          class="btn btn-secondary"
-        >
-          Reset
-        </.link>
-      </div>
     </div>
     """
   end

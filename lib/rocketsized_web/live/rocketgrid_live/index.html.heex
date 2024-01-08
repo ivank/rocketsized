@@ -48,9 +48,6 @@
             <.icon name="hero-x-mark" class="w-6 h-6" />
           </button>
         </div>
-        <p>
-          Search and compare various launch vehicle heights
-        </p>
 
         <.live_component
           id="filter-form"
@@ -59,26 +56,6 @@
           on_reset="reset-filter"
           meta={@meta}
         />
-
-        <p>
-          Download rockets as a A4 poster
-        </p>
-
-        <div class="isolate flex w-full rounded-md shadow-sm">
-          <a
-            href={Flop.Phoenix.build_path(~p"/poster/portrait", @meta.flop)}
-            class="relative flex flex-grow items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-          >
-            <span class="flex-grow">Portait</span> <.icon name="hero-arrow-down-tray" />
-          </a>
-
-          <a
-            href={Flop.Phoenix.build_path(~p"/poster/landscape", @meta.flop)}
-            class="relative -ml-px flex flex-grow items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-          >
-            <span class="flex-grow">Landscape</span> <.icon name="hero-arrow-down-tray" />
-          </a>
-        </div>
       </div>
 
       <ul class="flex flex-col gap-2 p-6">
@@ -110,115 +87,143 @@
     </div>
   </nav>
 
-  <main class="lg:pl-72">
-    <div
-      id="grid"
-      phx-update="stream"
-      phx-viewport-top={
-        @meta.has_previous_page? && JS.push("paginate", value: %{"to" => "previous"})
-      }
-      phx-viewport-bottom={@meta.has_next_page? && JS.push("paginate", value: %{"to" => "next"})}
-      phx-page-loading
-      class="grid grid-cols-2 gap-2 border-gray-100 p-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-      style={"--max-height:#{@max_height}"}
-    >
-      <div
-        :for={{id, rocket} <- @streams.rockets}
-        id={id}
-        style={"--height:#{rocket.height}"}
-        class={[
-          "bg-gradient-171 via-gray-50/10 justify-stretch flex flex-col overflow-clip rounded from-gray-100 to-gray-100 px-2 py-2 sm:px-4",
-          "h-[calc(60vh-theme(space.4))] sm:h-[calc(100vh-theme(space.4))]"
-        ]}
-      >
-        <div class="flex flex-grow flex-col items-center justify-end">
-          <a
-            data-height={rocket.height}
-            href={rocket.source}
-            target="_blank"
-            class={[
-              "relative",
-              "before:content-[attr(data-height)'m'] before:right-[50%] before:absolute before:top-0 before:w-40 before:border-gray-400 before:text-right",
-              if(rocket.height <= @max_height - 10,
-                do: "before:-translate-y-[100%] before:border-b",
-                else: "before:border-t before:pr-6"
-              )
-            ]}
-          >
-            <img
-              src={Image.url({rocket.image, rocket}, signed: true)}
-              class="h-[calc((60vh-theme(space.24))*(var(--height)/var(--max-height)))] sm:h-[calc((100vh-theme(space.24))*(var(--height)/var(--max-height)))]"
-            />
-          </a>
+  <main class="py-10 lg:pl-72">
+    <div class="px-4 sm:px-6 lg:px-8">
+      <div class="md:flex md:items-center md:justify-between">
+        <div class="min-w-0 flex-1">
+          <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+            <%= @page_title %>
+          </h2>
+          <p>
+            Search and compare various launch vehicle heights
+          </p>
         </div>
-        <div class="mt-2 flex h-14 flex-row items-end">
-          <a
-            class="group relative w-8"
-            title={rocket.country.name}
-            target="_blank"
-            href={rocket.country.source}
-          >
-            <img
-              src={Flag.url({rocket.country.flag, rocket.country}, signed: true)}
-              class="h-4 w-6 object-contain sm:h-6 sm:w-8"
-            />
-            <div class="-translate-y-[100%] tooltip -top-2 left-0 flex flex-row ">
-              <img
-                src={Flag.url({rocket.country.flag, rocket.country}, signed: true)}
-                class="h-16 w-20 object-contain"
-              />
-              <div class="ml-2 flex w-20 flex-col justify-center">
-                <%= rocket.country.name %>
-              </div>
-            </div>
-          </a>
-          <a
-            class="flex h-12 flex-grow flex-col justify-end sm:pl-2"
-            href={rocket.source}
-            target="_blank"
-          >
-            <p :if={rocket.alternative_name} class="text-x2s sm:text-xs">
-              <%= rocket.alternative_name %>
-            </p>
-            <p :if={rocket.native_name} class="text-x2s sm:text-xs"><%= rocket.native_name %></p>
-            <h2 class="text-xs sm:-mt-0.5 sm:text-lg"><%= rocket.name %></h2>
-          </a>
-          <div class="flex w-6 flex-col gap-1 sm:w-8">
-            <span :if={rocket.image_meta.attribution} class="group relative">
-              <img
-                src="/images/copyright.svg"
-                alt="copyright"
-                title="Copyright"
-                class="h-4 w-6 object-contain opacity-30 sm:h-6 sm:w-8"
-              />
-              <div class="tooltip -bottom-[9px] -right-[13px] flex max-w-full flex-row items-end gap-1">
-                <div class="attribution-raw ml-2 flex max-w-full flex-col justify-center">
-                  <%= raw(rocket.image_meta.attribution) %>
-                </div>
-                <img src="/images/copyright.svg" class="h-4 w-6 object-contain sm:h-6 sm:w-8" />
-              </div>
-            </span>
+      </div>
+      <div :if={@display == :download} class="grid grid-cols-2 gap-2">
+        <div>
+          Portrait A4
+        </div>
+        <div>
+          Landscape A4
+        </div>
+        <div class="col-span-2">
+          Wallpaper
+        </div>
+      </div>
+      <div
+        :if={@display == :grid}
+        id="grid"
+        phx-update="stream"
+        phx-viewport-top={
+          @meta.has_previous_page? && JS.push("paginate", value: %{"to" => "previous"})
+        }
+        phx-viewport-bottom={
+          @meta.has_next_page? && JS.push("paginate", value: %{"to" => "next"})
+        }
+        phx-page-loading
+        class="grid grid-cols-2 gap-2 border-gray-100 p-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+        style={"--max-height:#{@max_height}"}
+      >
+        <div
+          :for={{id, rocket} <- @streams.rockets}
+          id={id}
+          style={"--height:#{rocket.height}"}
+          class={[
+            "bg-gradient-171 via-gray-50/10 justify-stretch flex flex-col overflow-clip rounded from-gray-100 to-gray-100 px-2 py-2 sm:px-4",
+            "h-[calc(60vh-theme(space.4))] sm:h-[calc(100vh-theme(space.4))]"
+          ]}
+        >
+          <div class="flex flex-grow flex-col items-center justify-end">
             <a
-              :for={manufacturer <- rocket.manufacturers}
-              title={manufacturer.name}
+              data-height={rocket.height}
+              href={rocket.source}
               target="_blank"
-              class="group relative"
-              href={manufacturer.source}
+              class={[
+                "relative",
+                "before:content-[attr(data-height)'m'] before:right-[50%] before:absolute before:top-0 before:w-40 before:border-gray-400 before:text-right",
+                if(rocket.height <= @max_height - 10,
+                  do: "before:-translate-y-[100%] before:border-b",
+                  else: "before:border-t before:pr-6"
+                )
+              ]}
             >
               <img
-                src={Logo.url({manufacturer.logo, manufacturer}, signed: true)}
+                src={Image.url({rocket.image, rocket}, signed: true)}
+                class="h-[calc((60vh-theme(space.24))*(var(--height)/var(--max-height)))] sm:h-[calc((100vh-theme(space.24))*(var(--height)/var(--max-height)))]"
+              />
+            </a>
+          </div>
+          <div class="mt-2 flex h-14 flex-row items-end">
+            <a
+              class="group relative w-8"
+              title={rocket.country.name}
+              target="_blank"
+              href={rocket.country.source}
+            >
+              <img
+                src={Flag.url({rocket.country.flag, rocket.country}, signed: true)}
                 class="h-4 w-6 object-contain sm:h-6 sm:w-8"
               />
-              <div class="-translate-y-[100%] tooltip -top-2 right-0 flex flex-row">
+              <div class="-translate-y-[100%] tooltip -top-2 left-0 flex flex-row ">
                 <img
-                  src={Logo.url({manufacturer.logo, manufacturer}, signed: true)}
-                  class="h-20 w-20 object-contain"
+                  src={Flag.url({rocket.country.flag, rocket.country}, signed: true)}
+                  class="h-16 w-20 object-contain"
                 />
-                <div class="ml-2 flex w-28 flex-col justify-center">
-                  <%= manufacturer.name %>
+                <div class="ml-2 flex w-20 flex-col justify-center">
+                  <%= rocket.country.name %>
                 </div>
               </div>
             </a>
+            <a
+              class="flex h-12 flex-grow flex-col justify-end sm:pl-2"
+              href={rocket.source}
+              target="_blank"
+            >
+              <p :if={rocket.alternative_name} class="text-x2s sm:text-xs">
+                <%= rocket.alternative_name %>
+              </p>
+              <p :if={rocket.native_name} class="text-x2s sm:text-xs">
+                <%= rocket.native_name %>
+              </p>
+              <h2 class="text-xs sm:-mt-0.5 sm:text-lg"><%= rocket.name %></h2>
+            </a>
+            <div class="flex w-6 flex-col gap-1 sm:w-8">
+              <span :if={rocket.image_meta.attribution} class="group relative">
+                <img
+                  src="/images/copyright.svg"
+                  alt="copyright"
+                  title="Copyright"
+                  class="h-4 w-6 object-contain opacity-30 sm:h-6 sm:w-8"
+                />
+                <div class="tooltip -bottom-[9px] -right-[13px] flex max-w-full flex-row items-end gap-1">
+                  <div class="attribution-raw ml-2 flex max-w-full flex-col justify-center">
+                    <%= raw(rocket.image_meta.attribution) %>
+                  </div>
+                  <img src="/images/copyright.svg" class="h-4 w-6 object-contain sm:h-6 sm:w-8" />
+                </div>
+              </span>
+              <a
+                :for={manufacturer <- rocket.manufacturers}
+                title={manufacturer.name}
+                target="_blank"
+                class="group relative"
+                href={manufacturer.source}
+              >
+                <img
+                  src={Logo.url({manufacturer.logo, manufacturer}, signed: true)}
+                  class="h-4 w-6 object-contain sm:h-6 sm:w-8"
+                />
+                <div class="-translate-y-[100%] tooltip -top-2 right-0 flex flex-row">
+                  <img
+                    src={Logo.url({manufacturer.logo, manufacturer}, signed: true)}
+                    class="h-20 w-20 object-contain"
+                  />
+                  <div class="ml-2 flex w-28 flex-col justify-center">
+                    <%= manufacturer.name %>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>
