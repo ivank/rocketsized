@@ -44,6 +44,7 @@ defmodule Rocketsized.Rocket.Vehicle do
     field :native_name, :string
     field :alternative_name, :string
     field :diameter, :float
+    field :slug, :string
     field :state, Ecto.Enum, values: @states
 
     embeds_one :image_meta, Rocketsized.Rocket.Vehicle.ImageMeta
@@ -86,8 +87,10 @@ defmodule Rocketsized.Rocket.Vehicle do
       :country_id,
       :description,
       :native_name,
-      :alternative_name
+      :alternative_name,
+      :slug
     ])
+    |> validate_format(:slug, ~r/^[a-z0-5]+$/, message: "must be only small letters or numbers")
     |> unique_constraint([:name, :country_id], name: "vehicles_name_country_id_index")
     |> cast_attachments(attrs, [:image])
     |> cast_assoc(:vehicle_manufacturers,

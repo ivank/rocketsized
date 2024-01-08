@@ -8,6 +8,7 @@ defmodule Rocketsized.Creator.Manufacturer do
     field :short_name, :string
     field :logo, Rocketsized.Creator.Manufacturer.Logo.Type
     field :source, :string
+    field :slug, :string
 
     has_many :vehicle_manufacturers, Rocketsized.Rocket.VehicleManufacturer
     has_many :vehicles, through: [:vehicle_manufacturers, :vehicle]
@@ -25,9 +26,10 @@ defmodule Rocketsized.Creator.Manufacturer do
   @doc false
   def changeset(manufacturer, attrs) do
     manufacturer
-    |> cast(attrs, [:name, :source, :short_name])
+    |> cast(attrs, [:name, :source, :short_name, :slug])
     |> cast_attachments(attrs, [:logo])
     |> unique_constraint(:name)
     |> validate_required([:name, :logo, :short_name])
+    |> validate_format(:slug, ~r/^[a-z0-5]+$/, message: "must be only small letters or numbers")
   end
 end

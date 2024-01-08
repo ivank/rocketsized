@@ -153,7 +153,6 @@ defmodule RocketsizedWeb.RenderComponent do
         <text x={x(@title)} y={y(@title) + height(@title) + 30} class="h1 subtitle" id="h1-sub">
           ROCKETSIZED by Ivan Kerin
         </text>
-
         <text
           :if={sprite_content(@credit) != ""}
           x={x(@credit)}
