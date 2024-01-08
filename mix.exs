@@ -59,7 +59,7 @@ defmodule Rocketsized.MixProject do
       {:flop, "~> 0.24.1"},
       {:flop_phoenix, "~> 0.22.4"},
       {:ex_image_info, "~> 0.2.4"},
-      {:rect_layout, "~> 0.1.3"}
+      {:rect_layout, "~> 0.2.1"}
     ]
   end
 

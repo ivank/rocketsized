@@ -31,8 +31,6 @@ defmodule RocketsizedWeb.RenderComponent do
         .h1 {
           font-size: 50px;
           fill: #14213D;
-          text-anchor:end;
-          dominant-baseline:hanging;
           text-decoration:underline;
         }
         .h1.subtitle {
@@ -149,13 +147,13 @@ defmodule RocketsizedWeb.RenderComponent do
             </g>
           </g>
         </g>
-        <g transform={"translate(#{x(@title)}, #{y(@title)})"} id="title">
-          <rect width={width(@title)} height={height(@title)} fill="none" id="spacer" />
-          <text x={width(@title)} class="h1" id="h1"><%= sprite_content(@title) %></text>
-          <text x={width(@title)} y={height(@title)} class="h1 subtitle" id="h1-sub">
-            ROCKETSIZED by Ivan Kerin
-          </text>
-        </g>
+        <text class="h1" id="h1" x={x(@title)} y={y(@title) + height(@title)}>
+          <%= sprite_content(@title) %>
+        </text>
+        <text x={x(@title)} y={y(@title) + height(@title) + 30} class="h1 subtitle" id="h1-sub">
+          ROCKETSIZED by Ivan Kerin
+        </text>
+
         <text
           :if={sprite_content(@credit) != ""}
           x={x(@credit)}
@@ -232,7 +230,7 @@ defmodule RocketsizedWeb.RenderComponent do
       border: rect(options[:width], options[:height]) |> extrude(-options[:padding] / 2),
       title:
         sprite(
-          rect(900, 50) |> right(options[:width] - 70) |> y(70),
+          rect(900, 40, options[:padding] + 30, options[:padding] + 30),
           String.upcase(options[:title])
         ),
       credit:
@@ -253,7 +251,7 @@ defmodule RocketsizedWeb.RenderComponent do
           group(
             items
             |> Enum.map(&constrain_height(&1, sprite_content(&1).height * row_height_zoom))
-            |> spread_horizontal(width, x: options[:padding], cols: cols, gap: options[:gap])
+            |> spread_left(width, x: width + options[:padding], cols: cols, gap: options[:gap])
             |> align_bottom()
             |> Enum.map(fn item ->
               flag =
@@ -271,7 +269,7 @@ defmodule RocketsizedWeb.RenderComponent do
             end)
           )
         end)
-        |> flow_vertical(gap: options[:gap], y: options[:padding])
+        |> flow_bottom(gap: options[:gap], y: options[:padding])
     ]
   end
 end
