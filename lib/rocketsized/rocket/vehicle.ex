@@ -90,7 +90,7 @@ defmodule Rocketsized.Rocket.Vehicle do
       :alternative_name,
       :slug
     ])
-    |> validate_format(:slug, ~r/^[a-z0-5]+$/, message: "must be only small letters or numbers")
+    |> validate_format(:slug, ~r/^[a-z0-9]+$/, message: "must be only small letters or numbers")
     |> unique_constraint([:name, :country_id], name: "vehicles_name_country_id_index")
     |> cast_attachments(attrs, [:image])
     |> cast_assoc(:vehicle_manufacturers,
