@@ -4,7 +4,7 @@ defmodule Rocketsized.Rocket.Render do
   import Ecto.Changeset
 
   schema "renders" do
-    field :filters, {:array, Rocketsized.Rocket.VehicleFilter.Type}
+    field :filters, {:array, :string}
     field :type, Ecto.Enum, values: [:poster_portrait, :poster_landscape, :wallpaper]
     field :image, Rocketsized.Rocket.Render.Image.Type
 

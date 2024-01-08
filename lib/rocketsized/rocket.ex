@@ -160,6 +160,8 @@ defmodule Rocketsized.Rocket do
 
   """
   def create_vehicle(attrs \\ %{}) do
+    delete_all_renders()
+
     %Vehicle{}
     |> Vehicle.changeset(attrs)
     |> Repo.insert()
@@ -178,6 +180,8 @@ defmodule Rocketsized.Rocket do
 
   """
   def update_vehicle(%Vehicle{} = vehicle, attrs) do
+    delete_all_renders()
+
     vehicle
     |> Vehicle.changeset(attrs)
     |> Repo.update()
@@ -196,6 +200,8 @@ defmodule Rocketsized.Rocket do
 
   """
   def delete_vehicle(%Vehicle{} = vehicle) do
+    delete_all_renders()
+
     Repo.delete(vehicle)
   end
 
@@ -511,6 +517,7 @@ defmodule Rocketsized.Rocket do
     opts = [for: Vehicle]
 
     from(v in Vehicle, where: v.is_published == true, select: max(v.height))
+    |> Flop.with_named_bindings(flop, &join_vehicle_assoc/2, opts)
     |> Flop.query(Flop.reset_order(flop), opts)
     |> Repo.one()
   end
@@ -522,16 +529,6 @@ defmodule Rocketsized.Rocket do
     flop_vehicle_query(reset_flop, opts) |> preload([:country]) |> Flop.run(reset_flop, opts)
   end
 
-  @spec flop_vehicles_preview(Flop.t()) :: {list(), Flop.Meta.t()}
-  def flop_vehicles_preview(%Flop{} = flop) do
-    reset_flop = Flop.reset_cursors(%{flop | first: nil})
-    opts = [for: Vehicle, default_limit: false, pagination: false]
-
-    flop_vehicle_query(reset_flop, opts)
-    |> select([v], %{id: v.id, height: v.height, image_meta: v.image_meta})
-    |> Flop.run(reset_flop, opts)
-  end
-
   def flop_vehicles_title(%Flop{} = flop, default \\ "") do
     with ids = [_ | _] <- Flop.Filter.get_value(flop.filters, :search),
          items = [_ | _] <- list_vehicle_filters_by_ids(ids) do
@@ -539,9 +536,9 @@ defmodule Rocketsized.Rocket do
         filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
 
         case type do
-          :country -> "From #{filters_title}"
+          :country -> "from #{filters_title}"
           :vehicle -> "#{filters_title}"
-          :manufacturer -> "By #{filters_title}"
+          :manufacturer -> "by #{filters_title}"
         end
       end
       |> Enum.join(" or ")
@@ -578,27 +575,26 @@ defmodule Rocketsized.Rocket do
 
   def flop_render_find_or_create(%Flop{filters: filters} = flop, type) do
     search = Flop.Filter.get_value(filters, :search) || []
-    Repo.delete_all(Render)
-    # render = from(r in Render, where: r.type == ^type and r.filters == ^search) |> Repo.one()
+    render = from(r in Render, where: r.type == ^type and r.filters == ^search) |> Repo.one()
 
-    # if render do
-    #   render
-    # else
-    filename = "render_#{Enum.join(search, ",")}_#{type}.jpg"
+    if render do
+      render
+    else
+      title = flop_vehicles_title(flop, "of the world") |> String.replace(",", " ")
+      filename = "Rockets #{title} #{type}.svg"
+      image = %{filename: filename, binary: flop_render_binary(flop, type)}
 
-    binary =
-      Image.from_binary!(flop_render_binary(flop, type))
-      |> Image.write!(:memory, suffix: ".jpg")
+      {:ok, render} =
+        %Render{}
+        |> Render.changeset(%{type: type, filters: search, image: image})
+        |> Repo.insert()
 
-    image = %{filename: filename, binary: binary}
-
-    %Render{}
-    |> Render.changeset(%{type: type, filters: search, image: image})
-    |> Repo.insert()
-
-    # end
+      render
+    end
   end
 
+  @spec flop_render_binary(Flop.t(), :poster_landscape | :poster_portrait | :wallpaper) ::
+          binary()
   def flop_render_binary(%Flop{} = flop, type) do
     {rockets, _meta} = flop_vehicles_file(flop)
     title = "Rockets #{flop_vehicles_title(flop, "of the world")}"
@@ -622,6 +618,10 @@ defmodule Rocketsized.Rocket do
     RenderComponent.poster(Enum.into(attributes, %{}))
     |> Phoenix.HTML.Safe.to_iodata()
     |> IO.iodata_to_binary()
+  end
+
+  def delete_all_renders() do
+    Repo.delete_all(Render)
   end
 
   alias Rocketsized.Rocket.VehicleFilter

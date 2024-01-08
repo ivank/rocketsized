@@ -29,13 +29,6 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
               multiple: true,
               search: &Rocket.list_vehicle_filters_by_query/1,
               to_options: &Rocket.list_vehicle_filters_by_ids/1
-            ],
-            display: [
-              label: "Display",
-              type: "radioselect",
-              default: :grid,
-              op: :==,
-              options: [{"Grid", :grid, "view-columns"}, {"Download", :download, "arrow-down-tray"}]
             ]
           ]}
         >

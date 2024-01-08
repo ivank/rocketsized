@@ -11,40 +11,15 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
   def handle_params(params, _, socket) do
     case Flop.validate(params, for: Vehicle) do
       {:ok, flop} ->
-        title = Rocket.flop_vehicles_title(flop, "Rockets of the world")
-        display = Flop.Filter.get_value(flop.filters, :display) || :grid
+        title = "Rockets " <> Rocket.flop_vehicles_title(flop, "of the world")
 
-        case display do
-          :grid ->
-            {rockets, meta} = Rocket.flop_vehicles_grid(flop)
-            max_height = Rocket.flop_vehicles_max_height(flop)
+        {rockets, meta} = Rocket.flop_vehicles_grid(flop)
+        max_height = Rocket.flop_vehicles_max_height(flop)
 
-            {:noreply,
-             socket
-             |> stream(:rockets, rockets, reset: true)
-             |> assign(%{
-               meta: meta,
-               max_height: max_height,
-               page_title: title,
-               preview: [],
-               display: display
-             })}
-
-          :download ->
-            {preview, meta} = Rocket.flop_vehicles_preview(flop)
-            credit = Rocket.vehicles_attribution_list(preview)
-
-            {:noreply,
-             socket
-             |> stream(:rockets, [], reset: true)
-             |> assign(%{
-               meta: meta,
-               preview: preview,
-               page_title: title,
-               credit: credit,
-               display: display
-             })}
-        end
+        {:noreply,
+         socket
+         |> stream(:rockets, rockets, reset: true)
+         |> assign(%{meta: meta, max_height: max_height, page_title: title})}
 
       {:error, meta} ->
         {:noreply,

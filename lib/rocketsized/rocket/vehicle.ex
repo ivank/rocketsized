@@ -7,7 +7,7 @@ defmodule Rocketsized.Rocket.Vehicle do
 
   @derive {
     Flop.Schema,
-    filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search, :display],
+    filterable: [:id, :name, :state, :country_id, :manufacturer_ids, :search],
     sortable: [:id, :height, :name, :state, :country_id],
     default_order: %{order_by: [:height, :id], order_directions: [:desc, :desc]},
     default_limit: 24,
@@ -27,11 +27,6 @@ defmodule Rocketsized.Rocket.Vehicle do
           filter: {Rocketsized.Rocket.VehicleFilter.Type, :search, []},
           ecto_type: Rocketsized.Rocket.VehicleFilter.Type,
           operators: [:in]
-        ],
-        display: [
-          filter: {Rocketsized.Rocket.VehicleFilter.Type, :display, []},
-          ecto_type: {:ecto_enum, [:grid, :download]},
-          operators: [:==]
         ]
       ]
     ]

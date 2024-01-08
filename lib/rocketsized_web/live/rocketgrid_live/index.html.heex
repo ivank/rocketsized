@@ -65,7 +65,8 @@
             title="Rocketsized Opensource Github Repo"
             target="_blank"
           >
-            <img class="w-6" src="/images/github-mark.svg" alt="Github Octocat" />
+            <img class="inline-block w-6" src="/images/github-mark.svg" alt="Github Octocat" />
+            Ivan Kerin
           </a>
         </li>
       </ul>
@@ -87,31 +88,45 @@
     </div>
   </nav>
 
-  <main class="py-10 lg:pl-72">
-    <div class="px-4 sm:px-6 lg:px-8">
+  <main class="py-5 lg:pl-72">
+    <div class="px-2">
       <div class="md:flex md:items-center md:justify-between">
         <div class="min-w-0 flex-1">
           <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
             <%= @page_title %>
           </h2>
-          <p>
-            Search and compare various launch vehicle heights
-          </p>
+          <div class="mt-4 mb-6 flex flex-col gap-2">
+            <p>
+              You can view and campare rocket sizes, as well as download them all as a poster or desktop wallpaper.
+            </p>
+            <p class="flex gap-2">
+              <.link
+                navigate={Flop.Phoenix.build_path("/render/poster_portrait", @meta)}
+                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                A4 Portrait
+                <.icon class="h-4 w-4 align-text-bottom" name="hero-document-arrow-down" />
+              </.link>
+              <.link
+                navigate={Flop.Phoenix.build_path("/render/poster_landscape", @meta)}
+                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                A4 Landscape
+                <.icon class="h-4 w-4 align-text-bottom" name="hero-document-arrow-down" />
+              </.link>
+              <.link
+                navigate={Flop.Phoenix.build_path("/render/wallpaper", @meta)}
+                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                1080p Wallpaper
+                <.icon class="h-4 w-4 align-text-bottom" name="hero-document-arrow-down" />
+              </.link>
+            </p>
+          </div>
         </div>
       </div>
-      <div :if={@display == :download} class="grid grid-cols-2 gap-2">
-        <div>
-          Portrait A4
-        </div>
-        <div>
-          Landscape A4
-        </div>
-        <div class="col-span-2">
-          Wallpaper
-        </div>
-      </div>
+
       <div
-        :if={@display == :grid}
         id="grid"
         phx-update="stream"
         phx-viewport-top={
@@ -121,7 +136,7 @@
           @meta.has_next_page? && JS.push("paginate", value: %{"to" => "next"})
         }
         phx-page-loading
-        class="grid grid-cols-2 gap-2 border-gray-100 p-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+        class="grid grid-cols-2 gap-2 border-gray-100 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
         style={"--max-height:#{@max_height}"}
       >
         <div

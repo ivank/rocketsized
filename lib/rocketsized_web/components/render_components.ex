@@ -9,7 +9,6 @@ defmodule RocketsizedWeb.RenderComponent do
     ~H"""
     <svg
       style="stroke-linecap:round;stroke-linejoin:round;"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns="http://www.w3.org/2000/svg"
       xml:space="preserve"
       version="1.1"
@@ -76,7 +75,7 @@ defmodule RocketsizedWeb.RenderComponent do
           y1={y(row) + height(row)}
           x2={x(row) + width(row) / 2}
           y2={y(row)}
-          xlink:href="#bg-style"
+          href="#bg-style"
         />
       </defs>
       <g>
@@ -107,7 +106,7 @@ defmodule RocketsizedWeb.RenderComponent do
               height={height(item)}
               x={x(item)}
               y={y(item)}
-              xlink:href={
+              href={
                 image_data(
                   sprite_content(item).image_meta.type,
                   Image.storage_file_path({sprite_content(item).image, sprite_content(item)})
@@ -119,7 +118,7 @@ defmodule RocketsizedWeb.RenderComponent do
               height={height(flag)}
               x={x(flag)}
               y={y(flag)}
-              xlink:href={
+              href={
                 image_data(
                   :svg,
                   Flag.storage_file_path(
@@ -152,9 +151,7 @@ defmodule RocketsizedWeb.RenderComponent do
         </g>
         <g transform={"translate(#{x(@title)}, #{y(@title)})"} id="title">
           <rect width={width(@title)} height={height(@title)} fill="none" id="spacer" />
-          <text x={width(@title)} class="h1" id="h1">
-            LAUNCH VEHICLES <%= sprite_content(@title) %>
-          </text>
+          <text x={width(@title)} class="h1" id="h1"><%= sprite_content(@title) %></text>
           <text x={width(@title)} y={height(@title)} class="h1 subtitle" id="h1-sub">
             ROCKETSIZED by Ivan Kerin
           </text>

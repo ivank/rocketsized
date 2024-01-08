@@ -4,6 +4,77 @@ defmodule Rocketsized.RocketTest do
   alias Rocketsized.Rocket
   alias Rocketsized.Rocket.Vehicle.Image
 
+  import Rocketsized.RocketFixtures
+  import Rocketsized.CreatorFixtures
+
+  defp create_flop_data(_) do
+    country = country_fixture()
+    manufacturer = manufacturer_fixture()
+
+    other_country = country_fixture(%{code: "CN", name: "China"})
+    other_manufacturer = manufacturer_fixture(%{name: "CSA"})
+
+    vehicles =
+      for item <- 1..20 do
+        vehicle_fixture(%{
+          country_id: country.id,
+          is_published: true,
+          height: 100 - item,
+          name: "rocket #{item}",
+          vehicle_manufacturers: [
+            %{manufacturer_id: manufacturer.id}
+          ]
+        })
+      end
+
+    other_vehicles =
+      for item <- 1..20 do
+        vehicle_fixture(%{
+          country_id: other_country.id,
+          is_published: true,
+          height: 50 - item,
+          name: "other rocket #{item}",
+          vehicle_manufacturers: [
+            %{manufacturer_id: other_manufacturer.id}
+          ]
+        })
+      end
+
+    flop = %Flop{
+      filters: Flop.Filter.put_value([], :search, nil)
+    }
+
+    flop_vehicle = %Flop{
+      filters: Flop.Filter.put_value([], :search, ["vehicle_#{Enum.at(vehicles, 0).id}"])
+    }
+
+    flop_country = %Flop{
+      filters: Flop.Filter.put_value([], :search, ["country_#{country.id}"])
+    }
+
+    flop_other_country = %Flop{
+      filters: Flop.Filter.put_value([], :search, ["country_#{other_country.id}"])
+    }
+
+    flop_manufacturer = %Flop{
+      filters: Flop.Filter.put_value([], :search, ["manufacturer_#{manufacturer.id}"])
+    }
+
+    %{
+      vehicles: vehicles,
+      country: country,
+      manufacturer: manufacturer,
+      other_vehicles: other_vehicles,
+      other_country: other_country,
+      other_manufacturer: other_manufacturer,
+      flop: flop,
+      flop_vehicle: flop_vehicle,
+      flop_country: flop_country,
+      flop_other_country: flop_other_country,
+      flop_manufacturer: flop_manufacturer
+    }
+  end
+
   describe "families" do
     alias Rocketsized.Rocket.Family
 
@@ -375,6 +446,74 @@ defmodule Rocketsized.RocketTest do
     test "change_motor/1 returns a motor changeset" do
       motor = motor_fixture()
       assert %Ecto.Changeset{} = Rocket.change_motor(motor)
+    end
+  end
+
+  describe "flop" do
+    setup [:create_flop_data]
+
+    test "flop_vehicles_grid/1 should return vehicles based on flop", %{
+      vehicles: vehicles,
+      other_vehicles: other_vehicles,
+      flop: flop,
+      flop_vehicle: flop_vehicle,
+      flop_country: flop_country,
+      flop_manufacturer: flop_manufacturer
+    } do
+      assert Rocket.flop_vehicles_grid(flop) |> elem(0) |> length() ==
+               length(vehicles) + length(other_vehicles)
+
+      assert Rocket.flop_vehicles_grid(flop_vehicle) |> elem(0) |> length() == 1
+
+      assert Rocket.flop_vehicles_grid(flop_country) |> elem(0) |> length() == length(vehicles)
+
+      assert Rocket.flop_vehicles_grid(flop_manufacturer) |> elem(0) |> length() ==
+               length(vehicles)
+    end
+
+    test "flop_vehicles_max_height/1 should return max height based on flop", %{
+      flop: flop,
+      flop_vehicle: flop_vehicle,
+      flop_country: flop_country,
+      flop_manufacturer: flop_manufacturer,
+      flop_other_country: flop_other_country
+    } do
+      assert Rocket.flop_vehicles_max_height(flop) == 99.0
+      assert Rocket.flop_vehicles_max_height(flop_vehicle) == 99.0
+      assert Rocket.flop_vehicles_max_height(flop_country) == 99.0
+      assert Rocket.flop_vehicles_max_height(flop_manufacturer) == 99.0
+      assert Rocket.flop_vehicles_max_height(flop_other_country) == 49.0
+    end
+
+    test "flop_vehicles_file/1 should return vehicles based on flop", %{
+      vehicles: vehicles,
+      other_vehicles: other_vehicles,
+      flop: flop,
+      flop_vehicle: flop_vehicle,
+      flop_country: flop_country,
+      flop_manufacturer: flop_manufacturer
+    } do
+      assert Rocket.flop_vehicles_file(flop) |> elem(0) |> length() ==
+               length(vehicles) + length(other_vehicles)
+
+      assert Rocket.flop_vehicles_file(flop_vehicle) |> elem(0) |> length() == 1
+
+      assert Rocket.flop_vehicles_file(flop_country) |> elem(0) |> length() == length(vehicles)
+
+      assert Rocket.flop_vehicles_file(flop_manufacturer) |> elem(0) |> length() ==
+               length(vehicles)
+    end
+
+    test "flop_vehicles_title/1 should return title on flop", %{
+      flop: flop,
+      flop_vehicle: flop_vehicle,
+      flop_country: flop_country,
+      flop_manufacturer: flop_manufacturer
+    } do
+      assert Rocket.flop_vehicles_title(flop, "all") == "all"
+      assert Rocket.flop_vehicles_title(flop_vehicle) == "rocket 1"
+      assert Rocket.flop_vehicles_title(flop_country) == "from soco"
+      assert Rocket.flop_vehicles_title(flop_manufacturer) == "by sorg"
     end
   end
 end
