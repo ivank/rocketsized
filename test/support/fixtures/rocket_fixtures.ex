@@ -25,6 +25,7 @@ defmodule Rocketsized.RocketFixtures do
     {:ok, vehicle} =
       %{
         name: "rocket",
+        slug: "rocket",
         native_name: "ракета",
         alternative_name: "BFR",
         source: "https://example.com",

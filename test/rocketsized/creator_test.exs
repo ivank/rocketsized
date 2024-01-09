@@ -90,6 +90,7 @@ defmodule Rocketsized.CreatorTest do
       valid_attrs = %{
         name: "some name",
         short_name: "some short",
+        slug: "sm",
         logo: %Plug.Upload{
           content_type: "image/svg",
           filename: "flag.svg",

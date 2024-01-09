@@ -29,6 +29,7 @@ defmodule Rocketsized.Creator.Country do
     |> cast(attrs, [:name, :short_name, :code, :source])
     |> cast_attachments(attrs, [:flag])
     |> unique_constraint(:name)
+    |> unique_constraint(:code)
     |> validate_required([:name, :short_name, :code, :flag])
   end
 end

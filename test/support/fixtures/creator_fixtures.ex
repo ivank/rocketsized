@@ -38,7 +38,8 @@ defmodule Rocketsized.CreatorFixtures do
           path: "test/support/fixtures/images/org.svg"
         },
         name: "some org",
-        short_name: "sorg"
+        short_name: "sorg",
+        slug: "sorg"
       })
       |> Rocketsized.Creator.create_manufacturer()
 

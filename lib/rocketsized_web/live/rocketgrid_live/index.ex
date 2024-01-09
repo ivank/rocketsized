@@ -1,4 +1,5 @@
 defmodule RocketsizedWeb.RocketgridLive.Index do
+  alias RocketsizedWeb.FilterParams
   use RocketsizedWeb, :live_view
 
   alias Rocketsized.Rocket
@@ -9,7 +10,7 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
 
   @impl Phoenix.LiveView
   def handle_params(params, _, socket) do
-    case Flop.validate(params, for: Vehicle) do
+    case Flop.validate(FilterParams.load_params(params), for: Vehicle) do
       {:ok, flop} ->
         title = "Rockets " <> Rocket.flop_vehicles_title(flop, "of the world")
 
