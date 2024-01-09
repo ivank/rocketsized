@@ -9,11 +9,12 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
 
   attr :id, :string, default: nil
   attr :flop, Flop, required: true
+  attr :class, :string, default: nil
 
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class={@class}>
       <.label for={@id}>Filter by</.label>
 
       <input
@@ -114,14 +115,14 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
   end
 
   @impl true
-  def update(%{id: id, flop: %Flop{filters: filters} = flop}, socket) do
+  def update(%{id: id, class: class, flop: %Flop{filters: filters} = flop}, socket) do
     items =
       case Flop.Filter.get_value(filters, :search) do
         [_ | _] = search -> Rocket.search_slugs(search)
         _ -> []
       end
 
-    {:ok, socket |> assign(id: id, options: [], items: items, flop: flop)}
+    {:ok, socket |> assign(id: id, options: [], items: items, flop: flop, class: class)}
   end
 
   @impl true

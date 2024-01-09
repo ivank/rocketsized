@@ -7,7 +7,7 @@
     />
     <div
       id="filter"
-      class="absolute z-50 hidden w-full lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col"
+      class="absolute z-50 hidden w-full gap-3 bg-white p-6 lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col"
       data-show={
         JS.show(
           transition:
@@ -39,7 +39,7 @@
         |> JS.pop_focus()
       }
     >
-      <div class="flex grow flex-col gap-y-6 overflow-y-auto bg-white p-6">
+      <div class="flex grow flex-col gap-y-6 overflow-y-auto">
         <div class="flex h-8 shrink-0 items-center gap-2">
           <img class="h-8 w-auto" src="/images/logo.svg" alt="Rocketsized Logo" />
           <h1 class="flex-grow text-2xl font-bold">Rocketsized</h1>
@@ -52,22 +52,22 @@
         <.live_component
           module={RocketsizedWeb.RocketgridLive.FilterComponent}
           id="filter-form"
+          class="grow"
           flop={@meta.flop}
         />
+        <ul class="flex flex-col gap-2">
+          <li>
+            <a
+              href="https://github.com/ivank/rocketsized"
+              title="Rocketsized Opensource Github Repo"
+              target="_blank"
+            >
+              <img class="inline-block w-6" src="/images/github-mark.svg" alt="Github Octocat" />
+              Ivan Kerin
+            </a>
+          </li>
+        </ul>
       </div>
-
-      <ul class="flex flex-col gap-2 p-6">
-        <li>
-          <a
-            href="https://github.com/ivank/rocketsized"
-            title="Rocketsized Opensource Github Repo"
-            target="_blank"
-          >
-            <img class="inline-block w-6" src="/images/github-mark.svg" alt="Github Octocat" />
-            Ivan Kerin
-          </a>
-        </li>
-      </ul>
     </div>
 
     <div class="flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
