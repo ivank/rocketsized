@@ -19,7 +19,8 @@
           transition: {"transition-opacity ease-linear duration-300", "opacity-0", "opacity-100"}
         )
         |> JS.add_class("overflow-hidden", to: "body")
-        |> JS.focus(to: "#flop_filters_0_value")
+        |> JS.set_attribute({"data-shown", "true"})
+        |> JS.focus(to: "#filter-form")
       }
       data-hide={
         JS.hide(
@@ -36,6 +37,7 @@
           transition: {"transition-opacity ease-in-out duration-300", "opacity-100", "opacity-0"}
         )
         |> JS.remove_class("overflow-hidden", to: "body")
+        |> JS.remove_attribute("data-shown")
         |> JS.pop_focus()
       }
     >
