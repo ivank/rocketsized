@@ -20,11 +20,12 @@ defmodule RocketsizedWeb.FilterParams do
     {search, params} =
       Keyword.get_and_update(params, :filters, &Flop.Filter.pop_value(&1, :search))
 
-    params ++
-      (search
-       |> Enum.map(&Type.load!(&1))
-       |> Enum.group_by(& &1.type, & &1.slug)
-       |> Map.to_list())
+    (params ++
+       (search
+        |> Enum.map(&Type.load!(&1))
+        |> Enum.group_by(& &1.type, & &1.slug)
+        |> Map.to_list()))
+    |> Enum.sort_by(fn {group, _slugs} -> group end)
   end
 
   def load_params(params) do
