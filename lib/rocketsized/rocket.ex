@@ -597,7 +597,7 @@ defmodule Rocketsized.Rocket do
     end
   end
 
-  @spec flop_render_binary(Flop.t(), :poster_landscape | :poster_portrait | :wallpaper) ::
+  @spec flop_render_binary(Flop.t(), :landscape | :portrait | :wallpaper) ::
           binary()
   def flop_render_binary(%Flop{} = flop, type) do
     {rockets, _meta} = flop_vehicles_file(flop)
@@ -606,8 +606,8 @@ defmodule Rocketsized.Rocket do
 
     {width, height} =
       case type do
-        :poster_portrait -> {2480, 3508}
-        :poster_landscape -> {3508, 2480}
+        :portrait -> {2480, 3508}
+        :landscape -> {3508, 2480}
         :wallpaper -> {3840, 2160}
       end
 

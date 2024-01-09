@@ -6,7 +6,7 @@ defmodule Rocketsized.Rocket.Render do
 
   schema "renders" do
     field :filters, {:array, :string}
-    field :type, Ecto.Enum, values: [:poster_portrait, :poster_landscape, :wallpaper]
+    field :type, Ecto.Enum, values: [:portrait, :landscape, :wallpaper]
     field :image, Image.Type
 
     timestamps()
@@ -15,7 +15,7 @@ defmodule Rocketsized.Rocket.Render do
   @type t :: %__MODULE__{
           filters: list(String.t()),
           image: Image.Type.type(),
-          type: :poster_portrait | :poster_landscape | :wallpaper
+          type: :portrait | :landscape | :wallpaper
         }
 
   @doc false

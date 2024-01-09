@@ -25,7 +25,7 @@ defmodule RocketsizedWeb.RenderControllerTest do
 
   describe "GET /render/:type" do
     test "should show the poster portrait", %{conn: conn, vehicles: vehicles} do
-      for type <- ["poster_portrait", "poster_landscape", "wallpaper"] do
+      for type <- ["portrait", "landscape", "wallpaper"] do
         conn = get(conn, ~p"/render/#{type}")
 
         assert response_content_type(conn, :xml) =~ "image/svg+xml"

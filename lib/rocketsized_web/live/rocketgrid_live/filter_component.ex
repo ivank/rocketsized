@@ -42,6 +42,7 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
           class="relative block py-2 pr-9 pl-3 text-left text-gray-900 focus:bg-indigo-600 focus:text-white focus:outline-none"
           role="option"
           tabindex="0"
+          phx-click={JS.exec("data-hide", to: "#filter")}
           navigate={flop_build_path(FilterParams.add(@flop, option))}
         >
           <div class="flex flex-row items-center">
@@ -93,6 +94,7 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
             <.link
               tabindex="0"
               navigate={flop_build_path(FilterParams.remove(@flop, item))}
+              phx-click={JS.exec("data-hide", to: "#filter")}
               class="rounded-md bg-white font-medium text-gray-900 hover:text-gray-600"
             >
               <.icon name="hero-x-mark" />
