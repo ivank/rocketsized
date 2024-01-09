@@ -530,15 +530,15 @@ defmodule Rocketsized.Rocket do
   end
 
   def flop_vehicles_title(%Flop{} = flop, default \\ "") do
-    with ids = [_ | _] <- Flop.Filter.get_value(flop.filters, :search),
-         items = [_ | _] <- list_vehicle_filters_by_ids(ids) do
+    with slugs = [_ | _] <- Flop.Filter.get_value(flop.filters, :search),
+         items = [_ | _] <- search_slugs(slugs) do
       for {type, filters} <- items |> Enum.group_by(& &1.type) do
         filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
 
         case type do
           :country -> "from #{filters_title}"
-          :vehicle -> "#{filters_title}"
-          :manufacturer -> "by #{filters_title}"
+          :rocket -> "#{filters_title}"
+          :org -> "by #{filters_title}"
         end
       end
       |> Enum.join(" or ")
@@ -558,6 +558,10 @@ defmodule Rocketsized.Rocket do
 
   defp join_vehicle_assoc(query, :manufacturers) do
     join(query, :inner, [v], assoc(v, :manufacturers), as: :manufacturers)
+  end
+
+  defp join_vehicle_assoc(query, :country) do
+    join(query, :inner, [v], assoc(v, :country), as: :country)
   end
 
   @spec vehicles_attribution_list(list(%{image_meta: %{attribution: String.t()}})) :: String.t()
@@ -624,10 +628,10 @@ defmodule Rocketsized.Rocket do
     Repo.delete_all(Render)
   end
 
-  alias Rocketsized.Rocket.VehicleFilter
+  alias Rocketsized.Rocket.SearchSlug
 
-  def list_vehicle_filters_by_query(q) do
-    from(vh in VehicleFilter,
+  def search_slugs_query(q) do
+    from(vh in SearchSlug,
       where: ilike(vh.title, ^"#{q}%"),
       or_where: ilike(vh.subtitle, ^"#{q}%"),
       limit: 10
@@ -635,19 +639,18 @@ defmodule Rocketsized.Rocket do
     |> Repo.all()
   end
 
-  @spec list_vehicle_filters_by_ids(list(String.t())) :: list(VehicleFilter.t())
-  def list_vehicle_filters_by_ids(ids) do
+  @spec search_slugs(list(String.t())) :: list(SearchSlug.t())
+  def search_slugs(slugs) do
     groups =
-      ids
-      |> Enum.map(&VehicleFilter.Type.load(&1))
-      |> VehicleFilter.Type.to_valid_list()
-      |> Enum.group_by(& &1.type, & &1.id)
-      |> Enum.map(fn {type, ids} ->
-        dynamic([vf], vf.type == ^type and vf.id in ^ids)
+      slugs
+      |> Enum.map(&SearchSlug.Type.load!(&1))
+      |> Enum.group_by(& &1.type, & &1.slug)
+      |> Enum.map(fn {type, slugs} ->
+        dynamic([s], s.type == ^type and s.slug in ^slugs)
       end)
       |> Enum.reduce(fn group, query -> dynamic([_], ^query or ^group) end)
 
-    from(vf in VehicleFilter, where: ^groups, limit: 20) |> Repo.all()
+    from(s in SearchSlug, where: ^groups, limit: 20) |> Repo.all()
   end
 
   def list_vehicles_image_meta() do

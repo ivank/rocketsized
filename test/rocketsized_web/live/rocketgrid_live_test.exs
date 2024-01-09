@@ -5,16 +5,21 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
   import Rocketsized.RocketFixtures
   import Rocketsized.CreatorFixtures
 
+  alias RocketsizedWeb.RocketgridLive.FilterComponent
+
   defp create_vehicle(_) do
     country = country_fixture()
+    manufacturer = manufacturer_fixture()
 
     vehicles =
       for item <- 1..40 do
         vehicle_fixture(%{
           country_id: country.id,
           is_published: true,
+          vehicle_manufacturers: [%{manufacturer_id: manufacturer.id}],
           height: 100 - item,
-          name: "rocket #{item}"
+          name: "rocket #{item}",
+          slug: "r#{item}"
         })
       end
 
@@ -66,25 +71,29 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
       assert view |> render =~ filtered_out_v.name
       refute view |> has_element?("ul[role=list] > li", v.name)
 
-      view |> element("#flop_filters_0_value") |> render_keyup(%{"value" => v.name})
+      view |> element("#filter-form") |> render_keyup(%{"value" => v.name})
 
-      assert view |> has_element?("#flop_filters_0_value_options > button", v.name)
+      assert view |> has_element?("#filter-form_options > a", v.name)
+    end
+  end
 
-      view
-      |> element("#filter-form")
-      |> render_submit(%{
-        "filters" => %{0 => %{"field" => "search", "op" => "in", "value" => ["vehicle_#{v.id}"]}}
-      })
+  describe "filter-form" do
+    test "flop_build_path/1" do
+      paths = [
+        {["c_ca"], "/?country[]=ca"},
+        {["r_fh", "r_f9"], "/?rocket[]=fh&rocket[]=f9"},
+        {["o_spacex"], "/?org[]=spacex"},
+        {["r_fh", "r_f9", "o_spacex"], "/?org[]=spacex&rocket[]=fh&rocket[]=f9"},
+        {["c_ca", "o_spacex"], "/?country[]=ca&org[]=spacex"},
+        {["c_ca", "r_fh", "r_f9"], "/?country[]=ca&rocket[]=fh&rocket[]=f9"},
+        {["c_ca", "r_fh", "r_f9", "o_spacex"],
+         "/?country[]=ca&org[]=spacex&rocket[]=fh&rocket[]=f9"}
+      ]
 
-      assert page_title(view) =~ v.name
-      assert view |> has_element?("ul[role=list] > li", v.name)
-      refute view |> has_element?("ul[role=list] > li", filtered_out_v.name)
-
-      view
-      |> element("#filter-form")
-      |> render_submit(%{"filters" => %{0 => %{"field" => "search", "op" => "in", "value" => []}}})
-
-      assert page_title(view) =~ "Rockets of the world"
+      for {search, expected} <- paths do
+        flop = %Flop{filters: [] |> Flop.Filter.put_value(:search, search), first: 24}
+        assert FilterComponent.flop_build_path(flop) == expected
+      end
     end
   end
 end

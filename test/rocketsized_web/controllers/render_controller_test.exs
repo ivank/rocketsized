@@ -6,15 +6,18 @@ defmodule RocketsizedWeb.RenderControllerTest do
 
   setup do
     country = country_fixture()
+    manufacturer = manufacturer_fixture()
 
     %{
       vehicles:
         for item <- 1..40 do
           vehicle_fixture(%{
             country_id: country.id,
+            vehicle_manufacturers: [%{manufacturer_id: manufacturer.id}],
             is_published: true,
             height: 100 - item,
-            name: "rocket #{item}"
+            name: "rocket #{item}",
+            slug: "r#{item}"
           })
         end
     }

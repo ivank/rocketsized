@@ -23,9 +23,9 @@ defmodule Rocketsized.Rocket.Vehicle do
       ],
       custom_fields: [
         search: [
-          bindings: [:vehicle_manufacturers],
-          filter: {Rocketsized.Rocket.VehicleFilter.Type, :search, []},
-          ecto_type: Rocketsized.Rocket.VehicleFilter.Type,
+          bindings: [:manufacturers, :country],
+          filter: {Rocketsized.Rocket.SearchSlug.Type, :apply, []},
+          ecto_type: Rocketsized.Rocket.SearchSlug.Type,
           operators: [:in]
         ]
       ]

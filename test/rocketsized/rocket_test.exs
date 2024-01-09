@@ -12,12 +12,13 @@ defmodule Rocketsized.RocketTest do
     manufacturer = manufacturer_fixture()
 
     other_country = country_fixture(%{code: "CN", name: "China"})
-    other_manufacturer = manufacturer_fixture(%{name: "CSA"})
+    other_manufacturer = manufacturer_fixture(%{name: "CSA", slug: "csa"})
 
     vehicles =
       for item <- 1..20 do
         vehicle_fixture(%{
           country_id: country.id,
+          slug: "r#{item}",
           is_published: true,
           height: 100 - item,
           name: "rocket #{item}",
@@ -32,6 +33,7 @@ defmodule Rocketsized.RocketTest do
         vehicle_fixture(%{
           country_id: other_country.id,
           is_published: true,
+          slug: "o#{item}",
           height: 50 - item,
           name: "other rocket #{item}",
           vehicle_manufacturers: [
@@ -45,19 +47,19 @@ defmodule Rocketsized.RocketTest do
     }
 
     flop_vehicle = %Flop{
-      filters: Flop.Filter.put_value([], :search, ["vehicle_#{Enum.at(vehicles, 0).id}"])
+      filters: Flop.Filter.put_value([], :search, ["r_#{Enum.at(vehicles, 0).slug}"])
     }
 
     flop_country = %Flop{
-      filters: Flop.Filter.put_value([], :search, ["country_#{country.id}"])
+      filters: Flop.Filter.put_value([], :search, ["c_#{country.code}"])
     }
 
     flop_other_country = %Flop{
-      filters: Flop.Filter.put_value([], :search, ["country_#{other_country.id}"])
+      filters: Flop.Filter.put_value([], :search, ["c_#{other_country.code}"])
     }
 
     flop_manufacturer = %Flop{
-      filters: Flop.Filter.put_value([], :search, ["manufacturer_#{manufacturer.id}"])
+      filters: Flop.Filter.put_value([], :search, ["o_#{manufacturer.slug}"])
     }
 
     %{
@@ -231,10 +233,10 @@ defmodule Rocketsized.RocketTest do
 
     test "list_vehicles_image_meta/0 returns a the correct ones" do
       vehicles = [
-        vehicle_fixture(),
-        vehicle_fixture(%{image: nil, image_meta: nil}),
-        vehicle_fixture(%{image_meta: %{width: 30, height: 20, license: :rf}}),
-        vehicle_fixture(%{image: nil, image_meta: nil})
+        vehicle_fixture(%{slug: "r1"}),
+        vehicle_fixture(%{slug: "r2", image: nil, image_meta: nil}),
+        vehicle_fixture(%{slug: "r3", image_meta: %{width: 30, height: 20, license: :rf}}),
+        vehicle_fixture(%{slug: "r4", image: nil, image_meta: nil})
       ]
 
       assert Rocket.list_vehicles_image_meta() ==
@@ -446,6 +448,52 @@ defmodule Rocketsized.RocketTest do
     test "change_motor/1 returns a motor changeset" do
       motor = motor_fixture()
       assert %Ecto.Changeset{} = Rocket.change_motor(motor)
+    end
+  end
+
+  describe "search_slug" do
+    test "search_slugs/1 should search for slugs" do
+      country = country_fixture(%{name: "Canada", code: "ca"})
+
+      vehicle =
+        vehicle_fixture(%{
+          name: "Falcon Heavy",
+          slug: "fh",
+          is_published: true,
+          country_id: country.id
+        })
+
+      org = manufacturer_fixture(%{name: "Space X", slug: "spacex"})
+
+      search1 = Rocket.search_slugs(["c_ca"])
+      search2 = Rocket.search_slugs(["c_ca", "r_fh", "o_spacex"])
+
+      assert Enum.at(search1, 0).subtitle == country.name
+      assert Enum.find(search2, &(&1.slug == "ca")).subtitle == country.name
+      assert Enum.find(search2, &(&1.slug == "fh")).title == vehicle.name
+      assert Enum.find(search2, &(&1.slug == "spacex")).subtitle == org.name
+    end
+
+    test "search_slugs_query/1 should search for slugs" do
+      country = country_fixture(%{name: "Canada", code: "ca"})
+
+      vehicle =
+        vehicle_fixture(%{
+          name: "Falcon Heavy",
+          slug: "fh",
+          is_published: true,
+          country_id: country.id
+        })
+
+      org = manufacturer_fixture(%{name: "Space X", slug: "spacex"})
+
+      search1 = Rocket.search_slugs_query("Canada")
+      search2 = Rocket.search_slugs_query("Space X")
+      search3 = Rocket.search_slugs_query("Falcon Heavy")
+
+      assert Enum.at(search1, 0).subtitle == country.name
+      assert Enum.at(search2, 0).subtitle == org.name
+      assert Enum.at(search3, 0).title == vehicle.name
     end
   end
 

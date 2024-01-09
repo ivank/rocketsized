@@ -1,10 +1,10 @@
-defmodule Rocketsized.Rocket.VehicleFilter do
+defmodule Rocketsized.Rocket.SearchSlug do
   use Ecto.Schema
 
   @primary_key false
-  schema "vehicle_filters" do
-    field :type, Ecto.Enum, values: [:vehicle, :country, :manufacturer]
-    field :id, :integer
+  schema "search_slugs" do
+    field :type, Ecto.Enum, values: [:rocket, :country, :org]
+    field :slug, :string
     field :title, :string
     field :subtitle, :string
     field :source, :string
@@ -12,8 +12,8 @@ defmodule Rocketsized.Rocket.VehicleFilter do
   end
 
   @type t :: %__MODULE__{
-          type: :vehicle | :country | :manufacturer,
-          id: integer(),
+          type: :rocket | :country | :org,
+          slug: String.t(),
           title: String.t(),
           image: String.t() | nil,
           source: String.t() | nil,

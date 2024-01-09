@@ -50,11 +50,9 @@
         </div>
 
         <.live_component
-          id="filter-form"
           module={RocketsizedWeb.RocketgridLive.FilterComponent}
-          on_change="update-filter"
-          on_reset="reset-filter"
-          meta={@meta}
+          id="filter-form"
+          flop={@meta.flop}
         />
       </div>
 
@@ -165,6 +163,7 @@
               <img
                 src={Image.url({rocket.image, rocket}, signed: true)}
                 class="h-[calc((60vh-theme(space.24))*(var(--height)/var(--max-height)))] sm:h-[calc((100vh-theme(space.24))*(var(--height)/var(--max-height)))]"
+                alt={"Diagram of #{rocket.name}"}
               />
             </a>
           </div>
@@ -183,6 +182,7 @@
                 <img
                   src={Flag.url({rocket.country.flag, rocket.country}, signed: true)}
                   class="h-16 w-20 object-contain"
+                  alt={"Flag of #{rocket.country.name}"}
                 />
                 <div class="ml-2 flex w-20 flex-col justify-center">
                   <%= rocket.country.name %>
@@ -227,6 +227,7 @@
                 <img
                   src={Logo.url({manufacturer.logo, manufacturer}, signed: true)}
                   class="h-4 w-6 object-contain sm:h-6 sm:w-8"
+                  alt={"Logo of #{manufacturer.name}"}
                 />
                 <div class="-translate-y-[100%] tooltip -top-2 right-0 flex flex-row">
                   <img
