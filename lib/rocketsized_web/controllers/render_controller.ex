@@ -3,17 +3,18 @@ defmodule RocketsizedWeb.RenderController do
 
   alias Rocketsized.Rocket
   alias Rocketsized.Rocket.Render.Image
+  alias RocketsizedWeb.FilterParams
 
   def render(conn, %{"type" => type} = params)
       when type in ["portrait", "landscape", "wallpaper"] do
-    {:ok, flop} = Flop.validate(params, for: Rocket.Vehicle)
+    {:ok, flop} = Flop.validate(FilterParams.load_params(params), for: Rocket.Vehicle)
     render = Rocket.flop_render_find_or_create(flop, to_type(type))
     send_download(conn, {:file, Image.storage_file_path({render.image, render})})
   end
 
   def preview(conn, %{"type" => type} = params)
       when type in ["portrait", "landscape", "wallpaper"] do
-    {:ok, flop} = Flop.validate(params, for: Rocket.Vehicle)
+    {:ok, flop} = Flop.validate(FilterParams.load_params(params), for: Rocket.Vehicle)
 
     conn
     |> put_resp_content_type("image/svg+xml")

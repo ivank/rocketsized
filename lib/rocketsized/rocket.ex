@@ -640,7 +640,7 @@ defmodule Rocketsized.Rocket do
   end
 
   @spec search_slugs(list(String.t())) :: list(SearchSlug.t())
-  def search_slugs(slugs) do
+  def search_slugs([_ | _] = slugs) do
     groups =
       slugs
       |> Enum.map(&SearchSlug.Type.load!(&1))
@@ -652,6 +652,8 @@ defmodule Rocketsized.Rocket do
 
     from(s in SearchSlug, where: ^groups, limit: 20) |> Repo.all()
   end
+
+  def search_slugs(_), do: []
 
   def list_vehicles_image_meta() do
     from(v in Vehicle,

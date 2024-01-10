@@ -45,4 +45,11 @@ defmodule RocketsizedWeb.RocketgridLive.Index do
 
   defp direction(_to = "next"), do: :next
   defp direction(_to = "previous"), do: :previous
+
+  defp render_build_path(%Flop{} = flop, type) do
+    Flop.Phoenix.build_path(
+      &~p"/render/#{type}?#{FilterParams.dump_params(&1)}",
+      %{flop | first: nil, last: nil} |> Flop.reset_order() |> Flop.reset_cursors()
+    )
+  end
 end

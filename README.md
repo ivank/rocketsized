@@ -1,6 +1,6 @@
 # Rocketsized
 
-[![Rocketsized landscape portrait](/assets/poster_landscape.jpg)](https://rocketsized.com)
+[![Rocketsized landscape portrait](/priv/static/images/poster_landscape.jpg)](https://rocketsized.com)
 
 A small hobby project to list and compare various launch vehicles against one another. I've always seen those rockets lined up side by side but its always a one-off thing, I wanted an automated tool that could do that for any combination of rockets.
 

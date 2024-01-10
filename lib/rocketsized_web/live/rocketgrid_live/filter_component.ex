@@ -116,12 +116,7 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
 
   @impl true
   def update(%{id: id, class: class, flop: %Flop{filters: filters} = flop}, socket) do
-    items =
-      case Flop.Filter.get_value(filters, :search) do
-        [_ | _] = search -> Rocket.search_slugs(search)
-        _ -> []
-      end
-
+    items = Rocket.search_slugs(Flop.Filter.get_value(filters, :search) || [])
     {:ok, socket |> assign(id: id, options: [], items: items, flop: flop, class: class)}
   end
 
