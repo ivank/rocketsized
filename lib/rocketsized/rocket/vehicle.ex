@@ -79,7 +79,7 @@ defmodule Rocketsized.Rocket.Vehicle do
 
   @spec state_title(state :: state()) :: String.t()
   def state_title(:planned), do: "planned"
-  def state_title(:in_development), do: "development"
+  def state_title(:in_development), do: "developed"
   def state_title(:operational), do: "operational"
   def state_title(:retired), do: "retired"
   def state_title(:canceled), do: "canceled"
