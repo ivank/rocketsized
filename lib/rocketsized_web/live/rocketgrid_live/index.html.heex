@@ -144,10 +144,18 @@
           id={id}
           style={"--height:#{rocket.height}"}
           class={[
-            "bg-gradient-171 via-gray-50/10 justify-stretch flex flex-col overflow-clip rounded from-gray-100 to-gray-100 px-2 py-2 sm:px-4",
-            "h-[calc(60vh-theme(space.4))] sm:h-[calc(100vh-theme(space.4))]"
+            "bg-gradient-171 via-gray-50/10 justify-stretch relative flex flex-col overflow-clip rounded px-2 py-2 sm:px-4",
+            "h-[calc(60vh-theme(space.4))] sm:h-[calc(100vh-theme(space.4))]",
+            rocket.state == :planned && "from-gray-100 to-gray-100",
+            rocket.state == :in_development && "from-sky-50 to-sky-50",
+            rocket.state == :operational && "from-green-50 to-green-50",
+            rocket.state == :retired && "from-gray-200 to-gray-200",
+            rocket.state == :canceled && "from-red-50 to-red-50"
           ]}
         >
+          <div class="absolute top-2 right-4 text-xs">
+            <%= Rocketsized.Rocket.Vehicle.state_title(rocket.state) %>
+          </div>
           <div class="flex flex-grow flex-col items-center justify-end">
             <a
               data-height={rocket.height}

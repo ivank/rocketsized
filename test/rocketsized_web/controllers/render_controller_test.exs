@@ -1,4 +1,5 @@
 defmodule RocketsizedWeb.RenderControllerTest do
+  alias Rocketsized.Rocket.Vehicle
   use RocketsizedWeb.ConnCase, async: true
 
   import Rocketsized.RocketFixtures
@@ -36,6 +37,7 @@ defmodule RocketsizedWeb.RenderControllerTest do
 
         for vehicle <- vehicles do
           assert body =~ vehicle.name
+          assert body =~ Vehicle.state_title(vehicle.state)
         end
 
         assert body =~ "Credit: AttribTest"

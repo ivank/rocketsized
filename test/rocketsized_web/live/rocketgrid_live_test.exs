@@ -5,6 +5,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
   import Rocketsized.RocketFixtures
   import Rocketsized.CreatorFixtures
 
+  alias Rocketsized.Rocket.Vehicle
   alias RocketsizedWeb.RocketgridLive.FilterComponent
 
   defp create_vehicle(_) do
@@ -40,6 +41,7 @@ defmodule RocketsizedWeb.RocketgridLiveTest do
         assert html =~ vehicle.native_name
         assert html =~ country.name
         assert html =~ vehicle.image_meta.attribution
+        assert html =~ Vehicle.state_title(vehicle.state)
       end
 
       for vehicle <- outside do

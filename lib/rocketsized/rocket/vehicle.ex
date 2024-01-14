@@ -56,6 +56,8 @@ defmodule Rocketsized.Rocket.Vehicle do
     timestamps()
   end
 
+  @type state() :: :planned | :in_development | :operational | :retired | :canceled | nil
+
   @type t :: %__MODULE__{
           name: String.t(),
           source: String.t() | nil,
@@ -67,12 +69,21 @@ defmodule Rocketsized.Rocket.Vehicle do
           native_name: String.t() | nil,
           alternative_name: String.t() | nil,
           diameter: Float.t() | nil,
-          state: :planned | :in_development | :operational | :retired | :canceled | nil
+          state: state()
         }
 
+  @spec states() :: [state()]
   def states() do
     @states
   end
+
+  @spec state_title(state :: state()) :: String.t()
+  def state_title(:planned), do: "planned"
+  def state_title(:in_development), do: "development"
+  def state_title(:operational), do: "operational"
+  def state_title(:retired), do: "retired"
+  def state_title(:canceled), do: "canceled"
+  def state_title(_state), do: nil
 
   @doc false
   def changeset(vehicle, attrs) do
