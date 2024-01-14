@@ -54,7 +54,8 @@ defmodule RocketsizedWeb.FilterParams do
     countries = Map.get(params, "country", []) |> Enum.map(&%SearchSlug{type: :country, slug: &1})
     rockets = Map.get(params, "rocket", []) |> Enum.map(&%SearchSlug{type: :rocket, slug: &1})
     orgs = Map.get(params, "org", []) |> Enum.map(&%SearchSlug{type: :org, slug: &1})
-    value = (countries ++ rockets ++ orgs) |> Enum.map(&Type.dump!(&1))
+    states = Map.get(params, "state", []) |> Enum.map(&%SearchSlug{type: :state, slug: &1})
+    value = (countries ++ rockets ++ orgs ++ states) |> Enum.map(&Type.dump!(&1))
 
     Map.put(params, "filters", [%{"field" => "search", "op" => "in", "value" => value}])
   end

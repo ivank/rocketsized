@@ -62,6 +62,7 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
               src={Logo.url({option.image, option})}
               class="h-8 w-8 object-contain"
             />
+            <img :if={option.type == :state} src={option.image} class="h-8 w-8 object-contain" />
             <div class="ml-3 truncate">
               <p class="truncate"><%= option.title %></p>
               <p :if={option.subtitle} class="truncate text-gray-400"><%= option.subtitle %></p>
@@ -87,6 +88,7 @@ defmodule RocketsizedWeb.RocketgridLive.FilterComponent do
             src={Logo.url({item.image, item})}
             class="h-8 w-8 object-contain"
           />
+          <img :if={item.type == :state} src={item.image} class="h-8 w-8 object-contain" />
           <div class="ml-3 flex-grow truncate">
             <p class="truncate"><%= item.title %></p>
             <p :if={item.subtitle} class="truncate text-gray-400"><%= item.subtitle %></p>

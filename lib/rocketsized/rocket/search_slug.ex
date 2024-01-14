@@ -3,7 +3,7 @@ defmodule Rocketsized.Rocket.SearchSlug do
 
   @primary_key false
   schema "search_slugs" do
-    field :type, Ecto.Enum, values: [:rocket, :country, :org]
+    field :type, Ecto.Enum, values: [:rocket, :country, :org, :state]
     field :slug, :string
     field :title, :string
     field :subtitle, :string
@@ -12,7 +12,7 @@ defmodule Rocketsized.Rocket.SearchSlug do
   end
 
   @type t :: %__MODULE__{
-          type: :rocket | :country | :org,
+          type: :rocket | :country | :org | :state,
           slug: String.t(),
           title: String.t(),
           image: String.t() | nil,

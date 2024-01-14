@@ -532,16 +532,31 @@ defmodule Rocketsized.Rocket do
   def flop_vehicles_title(%Flop{} = flop, default \\ "") do
     with slugs = [_ | _] <- Flop.Filter.get_value(flop.filters, :search),
          items = [_ | _] <- search_slugs(slugs) do
-      for {type, filters} <- items |> Enum.group_by(& &1.type) do
-        filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
+      {and_groups, or_groups} = Map.split(items |> Enum.group_by(& &1.type), [:state])
 
-        case type do
-          :country -> "from #{filters_title}"
-          :rocket -> "#{filters_title}"
-          :org -> "by #{filters_title}"
+      or_title =
+        for {type, filters} <- or_groups do
+          filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
+
+          case type do
+            :country -> "from #{filters_title}"
+            :rocket -> "#{filters_title}"
+            :org -> "by #{filters_title}"
+          end
         end
-      end
-      |> Enum.join(" or ")
+        |> Enum.join(" or ")
+
+      and_title =
+        for {type, filters} <- and_groups do
+          filters_title = filters |> Enum.map(& &1.title) |> Enum.join(", ")
+
+          case type do
+            :state -> "that are #{filters_title}"
+          end
+        end
+        |> Enum.join(" and ")
+
+      [or_title, and_title] |> Enum.filter(&(String.length(&1) > 0)) |> Enum.join(" ")
     else
       _ -> default
     end
@@ -650,7 +665,8 @@ defmodule Rocketsized.Rocket do
       end)
       |> Enum.reduce(fn group, query -> dynamic([_], ^query or ^group) end)
 
-    from(s in SearchSlug, where: ^groups, limit: 20) |> Repo.all()
+    from(s in SearchSlug, order_by: [desc: s.type, asc: s.slug], where: ^groups, limit: 20)
+    |> Repo.all()
   end
 
   def search_slugs(_), do: []
