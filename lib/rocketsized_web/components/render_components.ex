@@ -1,6 +1,7 @@
 defmodule RocketsizedWeb.RenderComponent do
   use Phoenix.Component
 
+  alias Rocketsized.Rocket.Vehicle
   alias Rocketsized.Rocket.Vehicle.Image
   alias Rocketsized.Creator.Country.Flag
   import RectLayout
@@ -134,7 +135,11 @@ defmodule RocketsizedWeb.RenderComponent do
               <text
                 :for={
                   {subtitle, index} <-
-                    [sprite_content(item).alternative_name, sprite_content(item).native_name]
+                    [
+                      sprite_content(item).alternative_name,
+                      sprite_content(item).native_name,
+                      Vehicle.state_title(sprite_content(item).state)
+                    ]
                     |> Enum.filter(& &1)
                     |> Enum.with_index()
                 }
